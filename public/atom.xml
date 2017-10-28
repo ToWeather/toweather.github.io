@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Heathcliff&#39;s Notes</title>
+  
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://heathcliff.me/"/>
+  <updated>2017-10-28T15:41:25.409Z</updated>
+  <id>http://heathcliff.me/</id>
+  
+  <author>
+    <name>Heathcliff</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Python 中的 Unicode String 和 Byte String</title>
+    <link href="http://heathcliff.me/Python-%E4%B8%AD%E7%9A%84-Unicode-string-%E5%92%8C-Byte-string/"/>
+    <id>http://heathcliff.me/Python-中的-Unicode-string-和-Byte-string/</id>
+    <published>2017-10-27T13:32:38.000Z</published>
+    <updated>2017-10-28T15:41:25.409Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;python-2-x- 和 -python-3-x- 字符串类型的区别&quot;&gt;&lt;a href=&quot;#python-2-x- 和 -python-3-x- 字符串类型的区别&quot; class=&quot;headerlink&quot; title=&quot;python 2.x 和 python 3.
+      
+    
+    </summary>
+    
+      <category term="python学习笔记" scheme="http://heathcliff.me/categories/python-notes/"/>
+    
+    
+      <category term="python" scheme="http://heathcliff.me/tags/python/"/>
+    
+      <category term="unicode" scheme="http://heathcliff.me/tags/unicode/"/>
+    
+  </entry>
+  
+</feed>
