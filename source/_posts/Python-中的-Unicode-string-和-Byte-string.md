@@ -49,7 +49,7 @@ python 2.x 中字符编码的坑是历史遗留问题，到 python 3.x 已经得
 
 # Unicode 字符串的存储方式 #
 ## 在内存中的存储方式 ##
-unicode 字符串在内存中以一种**与编码方式无关**的方式存储：[unicode code points](https://www.wikiwand.com/en/List_of_Unicode_characters)，在表示 unicode 字符串时可以以 unicode code points 的方式表示，例如在下面的例子 中，`a` 和 `b` 表示的是同一字符串（其中 `'\uNNNN' ` 即为 unicode code points，`N` 为一个十六进制位；当 unicode code points 的取值在 0~255 范围内时，也可以 `'\xNN'` 的形式表示）：
+unicode 字符串在内存中以一种**与编码方式无关**的方式存储：[unicode code point](https://www.wikiwand.com/en/List_of_Unicode_characters)，在表示 unicode 字符串时可以以 unicode code point 的方式表示，例如在下面的例子 中，`a` 和 `b` 表示的是同一字符串（其中 `'\uNNNN' ` 即为 unicode code point，`N` 为一个十六进制位；当 unicode code point 的取值在 0~255 范围内时，也可以 `'\xNN'` 的形式表示）：
 ```python
 # python 2.7
 >>> a = u'\u5a1c\u5854\u838e'
@@ -64,7 +64,7 @@ unicode 字符串在文件等外部媒介中须按照指定的编码方式将字
 
 # 字符表示 #
 ## python 3.x ##
-在 python 3.x 中，`str` 类型即可满足日常的字符需求（不论是否为 ASCII 字符还是国际字符），如下例所示：
+在 python 3.x 中，`str` 类型即可满足日常的字符需求（不论是 ASCII 字符还是国际字符），如下例所示：
 ```python
 # python 3.6
 >>> a = 'Natasha, 娜塔莎'
@@ -82,7 +82,7 @@ b'Natasha, \xe5\xa8\x9c\xe5\xa1\x94\xe8\x8e\x8e'
 >>> type(b)
 bytes
 ```
-从上面可以看出，`bytes` 类型的对象中的某个字节的取值在 `0x00` ~ `0x7F` 时，控制台的输出会显示出其对应的 ASCII 码，但其本质上是一个原始字节，不应与任何字符等同。
+从上面可以看出，`bytes` 类型的对象中的某个字节的取值在 `0x00` ~ `0x7F` 时，控制台的输出会显示出其对应的 ASCII 码字符，但其本质上是一个原始字节，不应与任何字符等同。
 同理，我们也可以将一个 `bytes` 类型的对象译码为一个 `str` 类型的对象：
 ```python
 # python 3.6
@@ -114,7 +114,25 @@ Natasha, 娜塔莎
 >>> sys.stdout.encoding # 控制台的输出编码，可解释前例中打印 a 的显示结果
 'utf-8'
 ```
-另外，`sys.getdefaultencoding()`函数也会得到一种编码方式，得到的结果是系统的默认编码方式，在 python 2.x 中，该函数总是返回 `'ascii'`, 这表明 ASCII 编码方式会被用作隐式转换，例如 `json.dumps()` 函数在默认情况下总是返回一串字节串，不论输入的数据结构里面的字符串是 unicode 类型还是 str 类型。在 python 3.x 中，隐式转换已经被禁止（也可以说，python 3.x 用不到隐式转换：>）。
+另外，`sys.getdefaultencoding()`函数也会得到一种编码方式，得到的结果是系统的默认编码方式，在 python 2.x 中，该函数总是返回 `'ascii'`, 这表明在对字符串编译码时不指定编码方式时所采用的编码方式为ASCII 编码；除此之外，在 python 2.x 中，ASCII 编码方式还会被用作隐式转换，例如 `json.dumps()` 函数在默认情况下总是返回一串字节串，不论输入的数据结构里面的字符串是 unicode 类型还是 str 类型。在 python 3.x 中，隐式转换已经被禁止（也可以说，python 3.x 用不到隐式转换：>）。
+切回正题，在 python 2.x 表示国际字符的正确方式应该是定义一个 `unicode` 类型字符串，如下所示：
+```python
+# python 2.7
+>>> a = u'Natasha, 娜塔莎'
+>>> type(a)
+unicode
+>>> len(a)
+12
+>>> b = a.encode('utf-8')
+>>> b
+'Natasha, \xe5\xa8\x9c\xe5\xa1\x94\xe8\x8e\x8e'
+>>> type(b)
+str
+>>> a = b.decode('utf-8')
+>>> a
+u'Natasha, \u5a1c\u5854\u838e'
+```
+另外，我们可以对 `unicode` 类型字符串进行编码操作，对 `str` 类型字符串进行译码操作。
 
 ------------
 
