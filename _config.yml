@@ -34,7 +34,7 @@ titlecase: false # Transform title into titlecase
 external_link: true # Open external links in new tab
 filename_case: 0
 render_drafts: false
-post_asset_folder: false
+post_asset_folder: true
 relative_link: false
 future: true
 highlight:
@@ -56,6 +56,7 @@ index_generator:
 default_category: uncategorized
 category_map:
     python学习笔记: python_notes
+    机器学习算法: machine_learning_algorithms
 tag_map:
 
 # Date / Time format
@@ -104,3 +105,10 @@ search:
   field: post
   format: html
   limit: 10000
+  
+math:
+  engine: 'mathjax' # or 'katex'
+  mathjax:
+    src: custom_mathjax_source
+    config:
+      # MathJax config
