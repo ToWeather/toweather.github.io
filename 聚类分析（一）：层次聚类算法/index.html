@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.0.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/myicon.JPEG?v=6.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/myicon.JPEG?v=6.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.0" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+  
+
+
+  <link rel="alternate" href="/atom.xml" title="Heathcliff's Notes" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="We are all in the gutter, but some of us are looking at the stars.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="分类">
+<meta property="og:url" content="http://heathcliff.me/categories/index.html">
+<meta property="og:site_name" content="Heathcliff&#39;s Notes">
+<meta property="og:description" content="We are all in the gutter, but some of us are looking at the stars.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-07T11:03:05.399Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="分类">
+<meta name="twitter:description" content="We are all in the gutter, but some of us are looking at the stars.">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://heathcliff.me/categories/">
+
+
+
+
+
+  <title>聚类分析（一）：层次聚类算法 | Heathcliff's Notes</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Heathcliff's Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+
+            
+              首页
+            
+
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+
+            
+              标签
+            
+
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+
+            
+              分类
+            
+
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+
+            
+              归档
+            
+
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://heathcliff.me/聚类分析（一）：层次聚类算法/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Heathcliff">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myicon.JPEG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Heathcliff's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">聚类分析（一）：层次聚类算法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-01T20:59:23+08:00">2017-12-01</time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/machine-learning-algorithms/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/聚类分析（一）：层次聚类算法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="聚类分析（一）：层次聚类算法/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/聚类分析（一）：层次聚类算法/" class="leancloud_visitors" data-flag-title="聚类分析（一）：层次聚类算法">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
+<h1 id="聚类算法综述"><a href="#聚类算法综述" class="headerlink" title="聚类算法综述"></a>聚类算法综述</h1><p>聚类分析（clustering analysis）是将一组对象根据其特征分成不同的 <code>cluster</code>，使得同一 <code>cluster</code> 内的对象在某种意义上比不同的 <code>cluster</code> 之间的对象更为相似。<br>由于 “<code>cluster</code>” 没有一个明确的定义，因而会有基于不同的模型的聚类算法，其中被广泛运用的聚类算法有以下几类：</p>
+<ul>
+<li>基于<strong>连通模型</strong>（connectivity-based）的聚类算法： 即本文将要讲述的<strong>层次聚类</strong>算法，其核心思想是按照对象之间的距离来聚类，两个离的近的对象要比两个离的远的对象更有可能属于同一 <code>cluster</code>。</li>
+<li>基于<strong>中心点模型</strong>（centroid-based）的聚类算法： 在此类算法中，每个 <code>cluster</code> 都维持一个中心点（centorid），该中心点不一定属于给定的数据集。当预先指定聚类数目 <code>k</code> 时，此类算法需要解决一个优化问题，目标函数为所有的对象距其所属的 <code>cluster</code> 的中心点的距离的平方和，优化变量为每个 <code>cluster</code> 的中心点以及每个对象属于哪个 <code>cluster</code>；此优化问题被证明是 NP-hard 的，但有一些迭代算法可以找到近似解，k-means 算法即是其中的一种。</li>
+<li>基于<strong>分布模型</strong>（distribution-based）的聚类算法： 此类算法认为数据集中的数据是由一种混合概率模型所采样得到的，因而只要将可能属于同一概率分布所产生的数据归为同一 <code>cluster</code> 即可。</li>
+<li>基于<strong>密度</strong>（density-based）的聚类算法： 在此类算法中，密度高的区域被归为一个 <code>cluster</code>，<code>cluster</code> 之间由密度低的区域隔开，密度低的区域中的点被认为是噪声 （noise），常用的密度聚类算法为 DBSCAN 和 OPTICS。</li>
+</ul>
+<hr>
+<h1 id="层次聚类综述"><a href="#层次聚类综述" class="headerlink" title="层次聚类综述"></a>层次聚类综述</h1><p>层次聚类算法 (hierarchical clustering) 将数据集划分为一层一层的 <code>clusters</code>，后面一层生成的 <code>clusters</code> 基于前面一层的结果。层次聚类算法一般分为两类：</p>
+<ul>
+<li>Agglomerative 层次聚类：又称自底向上（bottom-up）的层次聚类，每一个对象最开始都是一个 <code>cluster</code>，每次按一定的准则将最相近的两个 <code>cluster</code> 合并生成一个新的 <code>cluster</code>，如此往复，直至最终所有的对象都属于一个 <code>cluster</code>。本文主要关注此类算法。</li>
+<li>Divisive 层次聚类： 又称自顶向下（top-down）的层次聚类，最开始所有的对象均属于一个 <code>cluster</code>，每次按一定的准则将某个 <code>cluster</code> 划分为多个 <code>cluster</code>，如此往复，直至每个对象均是一个 <code>cluster</code>。</li>
+</ul>
+<p>下图直观的给出了层次聚类的思想以及以上两种聚类策略的异同。</p>
+<div align="center"><br><img src="https://raw.githubusercontent.com/ToWeather/MarkdownPhotos/master/illustration_for_hierarchical_clustering.PNG" width="560" height="400" =="" "层次聚类图示"="" align="center"><br></div>
+
+<p>另外，需指出的是，层次聚类算法是一种贪心算法（greedy algorithm），因其每一次合并或划分都是基于某种局部最优的选择。</p>
+<h2 id="树形图"><a href="#树形图" class="headerlink" title="树形图"></a>树形图</h2><p><a href="https://en.wikipedia.org/wiki/Dendrogram" rel="external nofollow noopener noreferrer" target="_blank"> 树形图 </a>（dendrogram）可以用来直观地表示层次聚类的成果。一个有 <code>5</code> 个点的树形图如下图所示，其中纵坐标高度表示不同的 <code>cluster</code> 之间的距离（“距离”的衡量准则可以多种多样，详见本文后面的定义），可以从这张图看到，\( x_1 \) 和 \( x_2 \) 的距离最近（为 <code>1</code>），因此将 \( x_1 \) 和 \( x_2 \) 合并为一个 <code>cluster</code> \( (x_1, x_2) \)，所以在树形图中首先将节点 \( x_1 \) 和 \( x_2 \) 连接，使其成为一个新的节点  \( (x_1, x_2) \) 的子节点，并将这个新的节点的高度置为 <code>1</code>；之后再在剩下的 <code>4</code> 个 <code>cluster</code> \( (x_1, x_2) \)， \( x_3 \)， \( x_4 \) 和 \( x_5 \) 中选取距离最近的两个 <code>cluster</code> 合并，\( x_4 \) 和 \( x_5 \) 的距离最近（为 <code>2</code>），因此将 \( x_4 \) 和 \( x_5 \) 合并为一个 cluster \( (x_4, x_5) \)，体现在树形图上，是将节点 \( x_4 \) 和 \( x_5 \) 连接，使其成为一个新的节点 \( (x_4, x_5) \) 的子节点，并将此新节点的高度置为 <code>2</code>；….依此模式进行树形图的生成，直至最终只剩下一个 <code>cluster</code> \( ((x_1, x_2), x_3), (x_4, x_5)) \)。<br>可以直观地看到，如果我们想得到一个聚类结果，使任意的两个 <code>cluster</code> 之间的距离都不大于 \( h \)，我们只要在树形图上作一条水平的直线对其进行切割，使其纵坐标等于 \( h \)，即可获得对应的聚类结果。例如，在下面的树形图中，设 \( h=2.5 \)，即可得到 <code>3</code> 个 <code>cluster</code> \( (x_1, x_2) \)， \( x_3 \) 和 \( (x_4, x_5) \)。</p>
+<div align="center"><br><img src="https://raw.githubusercontent.com/ToWeather/MarkdownPhotos/master/a_dendrogram.png" width="550" height="440" alt="树形图示例" align="center"><br></div>
+
+<h2 id="对象之间的距离衡量"><a href="#对象之间的距离衡量" class="headerlink" title="对象之间的距离衡量"></a>对象之间的距离衡量</h2><p>衡量两个对象之间的距离的方式有多种，对于数值类型（Numerical）的数据，常用的距离衡量准则有 Euclidean 距离、Manhattan 距离、Chebyshev 距离、Minkowski 距离等等。对于 \( d \)  维空间的两个对象 \({\bf x} =[ x_1, x_2, …, x_d]^{T} \) 和 \({\bf y} = [y_1, y_2, …, y_d]^{T}\)，其在不同距离准则下的距离计算方法如下表所示:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">距离准则</th>
+<th style="text-align:center">距离计算方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Euclidean 距离</td>
+<td style="text-align:center">\( d({\bf x},{\bf y}) = [\sum_{j=1}^{d} (x_j-y_j)^{2} ]^{\frac{1}{2}} = [({\bf x} - {\bf y})^{T} ({\bf x} - {\bf y})]^{\frac{1}{2}} \)</td>
+</tr>
+<tr>
+<td style="text-align:center">Manhattan 距离</td>
+<td style="text-align:center">\( d({\bf x},{\bf y}) = \sum_{j=1}^{d} \mid{x_j-y_j}\mid \)</td>
+</tr>
+<tr>
+<td style="text-align:center">Chebyshev 距离</td>
+<td style="text-align:center">\( d({\bf x},{\bf y}) = \max_{1\leq{j}\leq{d}} \mid{x_j-y_j}\mid \)</td>
+</tr>
+<tr>
+<td style="text-align:center">Minkowski 距离</td>
+<td style="text-align:center">\( d({\bf x},{\bf y}) = [\sum_{j=1}^{d} (x_j-y_j)^{p} ]^{\frac{1}{p}}, p\geq{1} \)</td>
+</tr>
+</tbody>
+</table>
+<p>Minkowski 距离就是 \( \rm{L}\it{p}\) 范数（\( p\geq{1} \))，而 Manhattan 距离、Euclidean 距离、Chebyshev 距离分别对应 \( p = 1, 2, \infty \) 时的情形。<br>另一种常用的距离是 Maholanobis 距离，其定义如下：<br>$$ d_{mah}({\bf x}, {\bf y}) = \sqrt{({\bf x} - {\bf y})^{T}\Sigma^{-1} ({\bf x} - {\bf y})} $$<br>其中 \( \Sigma \) 为数据集的协方差矩阵，为给出协方差矩阵的定义，我们先给出数据集的一些设定，假设数据集为 \( {\bf{X}} = ({\bf x}_1, {\bf x}_2, …, {\bf x}_n) \in \Bbb{R}^{d \times n}\)，\( {\bf x}_i \in \Bbb{R}^{d} \) 为第 \( i \) 个样本点，每个样本点的维度为 \( d \)，样本点的总数为 \( n \) 个；再假设样本点的平均值 \( m_{\bf x} = \frac{1}{n}\sum_{i=1}^{n} {\bf x}_i \) 为 \( {\bf 0} \) 向量（若不为 \( {\bf 0} \)，我们总可以将每个样本都减去数据集的平均值以得到符合要求的数据集），则协方差矩阵 \( \Sigma \in \Bbb{R}^{d \times d} \) 可被定义为<br>$$ \Sigma = \frac{1}{n} {\bf X}{\bf X}^{T} $$<br>Maholanobis 距离不同于 Minkowski 距离，后者衡量的是两个对象之间的绝对距离，其值不受数据集的整体分布情况的影响；而 Maholanobis 距离则衡量的是将两个对象置于整个数据集这个大环境中的一个相异程度，两个绝对距离较大的对象在一个分布比较分散的数据集中的 Maholanobis 距离有可能会比两个绝对距离较小的对象在一个分布比较密集的数据集中的 Maholanobis 距离更小。更细致地来讲，Maholanobis 距离是这样计算得出的：先对数据进行主成分分析，提取出互不相干的特征，然后再将要计算的对象在这些特征上进行投影得到一个新的数据，再在这些新的数据之间计算一个加权的 Euclidean 距离，每个特征上的权重与该特征在数据集上的方差成反比。由这些去相干以及归一化的操作，我们可以看到，对数据进行任意的可逆变换，Maholanobis 距离都保持不变。</p>
+<h2 id="Cluster-之间的距离衡量"><a href="#Cluster-之间的距离衡量" class="headerlink" title="Cluster 之间的距离衡量"></a>Cluster 之间的距离衡量</h2><p>除了需要衡量对象之间的距离之外，层次聚类算法还需要衡量 <code>cluster</code> 之间的距离，常见的 <code>cluster</code> 之间的衡量方法有 Single-link 方法、Complete-link 方法、UPGMA（Unweighted Pair Group Method using arithmetic Averages）方法、WPGMA（Weighted Pair Group Method using arithmetic Averages）方法、Centroid 方法（又称 UPGMC，Unweighted Pair Group Method using Centroids）、Median 方法（又称 WPGMC，weighted Pair Group Method using Centroids）、Ward 方法。前面四种方法是基于图的，因为在这些方法里面，<code>cluster</code> 是由样本点或一些子 <code>cluster</code> （这些样本点或子 <code>cluster</code> 之间的距离关系被记录下来，可认为是图的连通边）所表示的；后三种方法是基于几何方法的（因而其对象间的距离计算方式一般选用 Euclidean 距离），因为它们都是用一个中心点来代表一个 <code>cluster</code> 。假设 \( C_i \) 和 \( C_j \) 为两个 cluster，则前四种方法定义的  \( C_i \) 和 \( C_j \) 之间的距离如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">方法</th>
+<th style="text-align:center">定义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Single-link</td>
+<td style="text-align:center">\( D(C_i, C_j) = \min_{ {\bf x} \in C_i, {\bf y} \in C_j } d({\bf x}, {\bf y}) \)</td>
+</tr>
+<tr>
+<td style="text-align:center">Complete-link</td>
+<td style="text-align:center">\( D(C_i, C_j) = \max_{ {\bf x} \in C_i, {\bf y} \in C_j} d({\bf x}, {\bf y}) \)</td>
+</tr>
+<tr>
+<td style="text-align:center">UPGMA</td>
+<td style="text-align:center">\( D(C_i, C_j) = \frac{1}{\mid C_i \mid \mid C_j \mid} \sum_ { {\bf x} \in C_i, {\bf y} \in C_j}  d({\bf x}, {\bf y}) \)</td>
+</tr>
+<tr>
+<td style="text-align:center">WPGMA</td>
+<td style="text-align:center">omitting</td>
+</tr>
+</tbody>
+</table>
+<p>其中 Single-link 定义两个 <code>cluster</code> 之间的距离为两个 <code>cluster</code> 之间距离最近的两个对象间的距离，这样在聚类的过程中就可能出现链式效应，即有可能聚出长条形状的 <code>cluster</code>；而 Complete-link 则定义两个 <code>cluster</code> 之间的距离为两个 <code>cluster</code> 之间距离最远的两个对象间的距离，这样虽然避免了链式效应，但其对异常样本点（不符合数据集的整体分布的噪声点）却非常敏感，容易产生不合理的聚类；UPGMA 正好是 Single-link 和 Complete-link 的一个折中，其定义两个 <code>cluster</code> 之间的距离为两个 <code>cluster</code> 之间两个对象间的距离的平均值；而 WPGMA 则计算的是两个 <code>cluster</code> 之间两个对象之间的距离的加权平均值，加权的目的是为了使两个 <code>cluster</code> 对距离的计算的影响在同一层次上，而不受 <code>cluster</code> 大小的影响（其计算方法这里没有给出，因为在运行层次聚类算法时，我们并不会直接通过样本点之间的距离之间计算两个 <code>cluster</code> 之间的距离，而是通过已有的 <code>cluster</code> 之间的距离来计算合并后的新的 <code>cluster</code> 和剩余 <code>cluster</code> 之间的距离，这种计算方法将由下一部分中的 Lance-Williams 方法给出）。</p>
+<p>Centroid/UPGMC 方法给每一个 <code>cluster</code> 计算一个质心，两个 <code>cluster</code> 之间的距离即为对应的两个质心之间的距离，一般计算方法如下：<br>$$ D_{\rm{UPGMC}}(C_i, C_j) =  \frac{1}{\mid C_i \mid \mid C_j \mid} \sum_ { {\bf x} \in C_i, {\bf y}\in C_j}  d({\bf x}, {\bf y}) - \frac{1}{2{\mid C_i \mid }^{2}} \sum_ { {\bf x}, {\bf y}\in C_i}  d( {\bf x}, {\bf y}) - \frac{1}{2{\mid \it{C_j} \mid }^{2}} \sum_ { {\bf x}, {\bf y} \in C_j}  d( {\bf x}, {\bf y}) $$<br>当上式中的 \( d(.,.) \) 为平方 Euclidean 距离时，\( D_{\rm{UPGMC}}(C_i, C_j) \) 为 \( C_i \) 和 \( C_j \) 的中心点（每个 <code>cluster</code> 内所有样本点之间的平均值）之间的平方 Euclidean 距离。<br>Median/WPGMC 方法为每个 <code>cluster</code> 计算质心时，引入了权重。<br>Ward 方法提出的动机是最小化每次合并时的信息损失，具体地，其对每一个 <code>cluster</code> 定义了一个 ESS （Error Sum of Squares）量作为衡量信息损失的准则，<code>cluster</code> \( C \) 的 \( {\rm ESS} \) 定义如下：<br>$$  {\rm ESS} ( C ) = \sum_{ {\bf x} \in C} ({\bf x} - m_{\bf x})^{T} ({\bf x} - m_{\bf x}) $$<br>其中 \( m_{\bf x} \) 为 \( C \) 中样本点的均值。可以看到 \( {\rm ESS} \) 衡量的是一个 <code>cluster</code> 内的样本点的聚合程度，样本点越聚合，\( {\rm ESS} \) 的值越小。Ward 方法则是希望找到一种合并方式，使得合并后产生的新的一系列的 <code>cluster</code> 的 \( {\rm ESS} \) 之和相对于合并前的 <code>cluster</code> 的 \( {\rm ESS} \) 之和的增长最小。</p>
+<hr>
+<h1 id="Agglomerative-层次聚类算法"><a href="#Agglomerative-层次聚类算法" class="headerlink" title="Agglomerative 层次聚类算法"></a>Agglomerative 层次聚类算法</h1><p>这里总结有关 Agglomerative 层次聚类算法的内容，包括最简单的算法以及用于迭代计算两个 <code>cluster</code> 之间的距离的 Lance-Williams 方法。</p>
+<h2 id="Lance-Williams-方法"><a href="#Lance-Williams-方法" class="headerlink" title="Lance-Williams 方法"></a>Lance-Williams 方法</h2><p>在 Agglomerative 层次聚类算法中，一个迭代过程通常包含将两个 <code>cluster</code> 合并为一个新的 <code>cluster</code>，然后再计算这个新的 <code>cluster</code> 与其他当前未被合并的 <code>cluster</code> 之间的距离，而 Lance-Williams 方法提供了一个通项公式，使得其对不同的 <code>cluster</code> 距离衡量方法都适用。具体地，对于三个 <code>cluster</code> \( C_k \)，\( C_i \) 和 \( C_j \)， Lance-Williams 给出的 \( C_k \) 与 \( C_i \) 和 \( C_j \) 合并后的新 <code>cluster</code>  之间的距离的计算方法如下式所示：<br>$$  D(C_k, C_i \cup C_j) = \alpha_i D(C_k, C_i) + \alpha_j D(C_k, C_j) + \beta D(C_i, C_j) +  \gamma \mid D(C_k, C_i) - D(C_k, C_j) \mid $$<br>其中，\( \alpha_i \)，\( \alpha_j \)，\( \beta \)，\( \gamma \) 均为参数，随 <code>cluster</code> 之间的距离计算方法的不同而不同，具体总结为下表（注：\( n_i \) 为 <code>cluster</code> \( C_i \) 中的样本点的个数)：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">方法</th>
+<th style="text-align:center">参数 \( \alpha_i \)</th>
+<th style="text-align:center">参数 \( \alpha_j \)</th>
+<th style="text-align:center">参数 \( \beta \)</th>
+<th style="text-align:center">参数 \( \gamma \)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Single-link</td>
+<td style="text-align:center">\( 1/2 \)</td>
+<td style="text-align:center">\( 1/2 \)</td>
+<td style="text-align:center">\( 0 \)</td>
+<td style="text-align:center">\( -1/2 \)</td>
+</tr>
+<tr>
+<td style="text-align:center">Complete-link</td>
+<td style="text-align:center">\( 1/2 \)</td>
+<td style="text-align:center">\( 1/2 \)</td>
+<td style="text-align:center">\( 0 \)</td>
+<td style="text-align:center">\( 1/2 \)</td>
+</tr>
+<tr>
+<td style="text-align:center">UPGMA</td>
+<td style="text-align:center">\( n_i/(n_i + n_j) \)</td>
+<td style="text-align:center">\( n_j/(n_i + n_j) \)</td>
+<td style="text-align:center">\( 0 \)</td>
+<td style="text-align:center">\( 0 \)</td>
+</tr>
+<tr>
+<td style="text-align:center">WPGMA</td>
+<td style="text-align:center">\( 1/2 \)</td>
+<td style="text-align:center">\( 1/2 \)</td>
+<td style="text-align:center">\( 0 \)</td>
+<td style="text-align:center">\( 0 \)</td>
+</tr>
+<tr>
+<td style="text-align:center">UPGMC</td>
+<td style="text-align:center">\( n_i/(n_i + n_j) \)</td>
+<td style="text-align:center">\( n_j/(n_i + n_j) \)</td>
+<td style="text-align:center">\( n_{i}n_{j}/(n_i + n_j)^{2} \)</td>
+<td style="text-align:center">\( 0 \)</td>
+</tr>
+<tr>
+<td style="text-align:center">WPGMC</td>
+<td style="text-align:center">\( 1/2 \)</td>
+<td style="text-align:center">\( 1/2 \)</td>
+<td style="text-align:center">\( 1/4 \)</td>
+<td style="text-align:center">\( 0 \)</td>
+</tr>
+<tr>
+<td style="text-align:center">Ward</td>
+<td style="text-align:center">\( (n_k + n_i)/(n_i + n_j + n_k) \)</td>
+<td style="text-align:center">\( (n_k + n_j)/(n_i + n_j + n_k) \)</td>
+<td style="text-align:center">\( n_k/(n_i + n_j + n_k) \)</td>
+<td style="text-align:center">\( 0 \)</td>
+</tr>
+</tbody>
+</table>
+<p>其中 Ward 方法的参数仅适用于当样本点之间的距离衡量准则为平方 Euclidean 距离时，其他方法的参数适用范围则没有限制。</p>
+<h2 id="Naive-算法"><a href="#Naive-算法" class="headerlink" title="Naive 算法"></a>Naive 算法</h2><p>给定数据集 \( {\bf{X}} = ({\bf x}_1, {\bf x}_2, …, {\bf x}_n) \)，Agglomerative 层次聚类最简单的实现方法分为以下几步：</p>
+<ol>
+<li>初始时每个样本为一个 <code>cluster</code>，计算距离矩阵 \( \bf D \)，其中元素 \( D_{ij} \) 为样本点 \( {\bf x}_i \)  和 \( {\bf x}_j \) 之间的距离；</li>
+<li>遍历距离矩阵 \( \bf D \)，找出其中的最小距离（对角线上的除外），并由此得到拥有最小距离的两个 <code>cluster</code> 的编号，将这两个 <code>cluster</code> 合并为一个新的 <code>cluster</code> 并依据 Lance-Williams 方法更新距离矩阵 \( \bf D \) （删除这两个 <code>cluster</code> 对应的行和列，并把由新  <code>cluster</code> 所算出来的距离向量插入 \( \bf D \) 中），存储本次合并的相关信息；</li>
+<li>重复 2 的过程，直至最终只剩下一个 <code>cluster</code> 。</li>
+</ol>
+<p>当然，其中的一些细节这里都没有给出，比如，我们需要设计一些合适的数据结构来存储层次聚类的过程，以便于我们可以根据距离阈值或期待的聚类个数得到对应的聚类结果。<br>可以看到，该 Naive 算法的时间复杂度为 \( O(n^{3}) \) （由于每次合并两个 <code>cluster</code> 时都要遍历大小为  \( O(n^{2}) \) 的距离矩阵来搜索最小距离，而这样的操作需要进行 \( n - 1 \) 次），空间复杂度为 \( O(n^{2}) \) （由于要存储距离矩阵）。<br>当然，还有一些更高效的算法，它们用到了特殊设计的数据结构或者一些图论算法，是的时间复杂度降低到 \( O(n^{2} ) \) 或更低，例如 <a href="https://www.cs.ucsb.edu/~veronika/MAE/SLINK_sibson.pdf" rel="external nofollow noopener noreferrer" target="_blank">SLINK</a> 算法（Single-link 方法），<a href="https://watermark.silverchair.com/200364.pdf?token=AQECAHi208BE49Ooan9kkhW_Ercy7Dm3ZL_9Cf3qfKAc485ysgAAAaswggGnBgkqhkiG9w0BBwagggGYMIIBlAIBADCCAY0GCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMf_lVS5Dqd4euptUDAgEQgIIBXoHBDW9Uw-YT4wPpKAKR0gkqiihYSy4CLlK_Pm1lZz5SR-2MJyucOW9m523Gx4wPgLpuVr-mcSnq5BOMQRb3RP4QmxEWnImOOXip-Bxz0TGys7iiYn9Ie0Of_9xoR3xmZP8UJY4uVinVSFzPLVlwVpusPrEFjcLABmjjbz5dmGR10kHHrlvtTiS0imCnPKNiZ3zdA8wMNWVM0mOABq4cxCnicAo5iI7zmgIEoYfi23sR6lQ0Y-77ohbWBcm61XMJJh-OTl-xmY6fedf9LdtgcKBiReB1HGH6U6SEDx3cW7I3J9c33YM_cRkFwz1WIkeZI5_fDc-z3Mc_f7c9y0L_zHXYnN1pgQvGTEKeRy1h_w9KjG3D2UKl9JRrE3Kflw_zS8TVGFi8laoU2ZyujHJLLr7F_gsfpyIEDXkelxdVAF2Srnkz_Bk4FhRcsKzx7AspBEFrGbJtDBBZz0uHbvGO" rel="external nofollow noopener noreferrer" target="_blank">CLINK</a> 算法（Complete-link 方法），<a href="http://www.cs.uvm.edu/~xwu/kdd/BIRCH.pdf" rel="external nofollow noopener noreferrer" target="_blank">BIRCH</a> 算法（适用于 Euclidean 距离准则）等等。</p>
+<hr>
+<h1 id="利用-Scipy-实现层次聚类"><a href="#利用-Scipy-实现层次聚类" class="headerlink" title="利用 Scipy 实现层次聚类"></a>利用 Scipy 实现层次聚类</h1><p>在这里我们将利用 <a href="https://www.scipy.org/" rel="external nofollow noopener noreferrer" target="_blank">SciPy</a>（python 中的一个用于数值分析和科学计算的第三方包，功能强大，<a href="http://www.numpy.org/" title="NumPy" rel="external nofollow noopener noreferrer" target="_blank">NumPy</a>+SciPy+<a href="https://matplotlib.org/index.html" rel="external nofollow noopener noreferrer" target="_blank">matplotlib</a> 基本等同于 Matlab）中的层次聚类模块来做一些相关的实验。</p>
+<h2 id="生成实验样本集"><a href="#生成实验样本集" class="headerlink" title="生成实验样本集"></a>生成实验样本集</h2><p>首先，我们需要导入相关的模块，代码如下所示：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># python 3.6</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> scipy.cluster.hierarchy <span class="keyword">import</span> linkage, dendrogram, fcluster</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.datasets.samples_generator <span class="keyword">import</span> make_blobs</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div></pre></td></tr></table></figure></p>
+<p>其中 <a href="http://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_blobs.html#sklearn.datasets.make_blobs" rel="external nofollow noopener noreferrer" target="_blank"><code>make_blobs</code></a> 函数是 python 中的一个第三方机器学习库 scikit-learn 所提供的一个生成指定个数的高斯 <code>cluster</code> 的函数，非常适合用于聚类算法的简单实验，我们用该函数生成实验样本集，生成的样本集 <code>X</code> 的维度为 <code>n*d</code>。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>centers = [[<span class="number">1</span>, <span class="number">1</span>], [<span class="number">-1</span>, <span class="number">-1</span>], [<span class="number">1</span>, <span class="number">-1</span>]]    <span class="comment"># 定义 3 个中心点</span></div><div class="line"><span class="comment"># 生成 n=750 个样本，每个样本的特征个数为 d=2，并返回每个样本的真实类别</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>X, labels_true = make_blobs(n_samples=<span class="number">750</span>, centers=centers, cluster_std=<span class="number">0.4</span>, random_state=<span class="number">0</span>）  </div><div class="line"><span class="meta">&gt;&gt;&gt; </span>plt.figure(figsize=(<span class="number">10</span>, <span class="number">8</span>))</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>plt.scatter(X[:, <span class="number">0</span>], X[:, <span class="number">1</span>], c=<span class="string">'b'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>plt.title(<span class="string">'The dataset'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>plt.show()</div></pre></td></tr></table></figure></p>
+<p>样本的分布如下图所示。</p>
+<div align="center"><br><img src="https://raw.githubusercontent.com/ToWeather/MarkdownPhotos/master/the_dataset_one_for_hierarchy_clustering.png" width="780" height="650" alt="树形图示例" align="center"><br></div>
+
+<h2 id="进行-Agglomerative-层次聚类"><a href="#进行-Agglomerative-层次聚类" class="headerlink" title="进行 Agglomerative 层次聚类"></a>进行 Agglomerative 层次聚类</h2><p>SciPy 里面进行层次聚类非常简单，直接调用 <a href="http://docs.scipy.org/doc/scipy-1.0.0/reference/generated/scipy.cluster.hierarchy.linkage.html#scipy.cluster.hierarchy.linkage" rel="external nofollow noopener noreferrer" target="_blank"><code>linkage</code></a> 函数，一行代码即可搞定。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>Z = linkage(X,  method=<span class="string">'ward'</span>, metric=<span class="string">'euclidean'</span>)</div></pre></td></tr></table></figure></p>
+<p>以上即进行了一次 <code>cluster</code> 间距离衡量方法为 Ward、样本间距离衡量准则为 Euclidean 距离的 Agglomerative 层次聚类；其中 <code>method</code> 参数可以为 <code>&#39;single&#39;</code>、 <code>&#39;complete&#39;</code> 、<code>&#39;average&#39;</code>、 <code>&#39;weighted&#39;</code>、 <code>&#39;centroid&#39;</code>、 <code>&#39;median&#39;</code>、 <code>&#39;ward&#39;</code> 中的一种，分别对应我们前面讲到的 Single-link、Complete-link、UPGMA、WPGMA、UPGMC、WPGMC、Ward 方法；而样本间的距离衡量准则也可以由 <code>metric</code> 参数调整。<br><code>linkage</code> 函数的返回值 <code>Z</code> 为一个维度 <code>(n-1)*4</code> 的矩阵， 记录的是层次聚类每一次的合并信息，里面的 <code>4</code> 个值分别对应合并的两个 <code>cluster</code> 的序号、两个 <code>cluster</code> 之间的距离以及本次合并后产生的新的 <code>cluster</code> 所包含的样本点的个数；具体地，对于第 <code>i</code> 次迭代（对应 <code>Z</code> 的第 <code>i</code> 行），序号为 <code>Z[i, 0]</code> 和序号为 <code>Z[i, 1]</code> 的 <code>cluster</code> 合并产生新的 <code>cluster</code> <code>n + i</code>, <code>Z[i, 2]</code> 为序号为 <code>Z[i, 0]</code> 和序号为 <code>Z[i, 1]</code> 的 <code>cluster</code> 之间的距离，合并后的 <code>cluster</code> 包含 <code>Z[i, 3]</code> 个样本点。<br>例如本次实验中 <code>Z</code> 记录到的前 <code>25</code> 次合并的信息如下所示：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(Z.shape)</div><div class="line">(<span class="number">749</span>, <span class="number">4</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(Z[: <span class="number">25</span>])</div><div class="line">[[<span class="number">253.</span>      <span class="number">491.</span>        <span class="number">0.00185</span>   <span class="number">2.</span>     ]</div><div class="line"> [<span class="number">452.</span>      <span class="number">696.</span>        <span class="number">0.00283</span>   <span class="number">2.</span>     ]</div><div class="line"> [ <span class="number">70.</span>      <span class="number">334.</span>        <span class="number">0.00374</span>   <span class="number">2.</span>     ]</div><div class="line"> [<span class="number">237.</span>      <span class="number">709.</span>        <span class="number">0.00378</span>   <span class="number">2.</span>     ]</div><div class="line"> [<span class="number">244.</span>      <span class="number">589.</span>        <span class="number">0.00423</span>   <span class="number">2.</span>     ]</div><div class="line"> [<span class="number">141.</span>      <span class="number">550.</span>        <span class="number">0.00424</span>   <span class="number">2.</span>     ]</div><div class="line"> [<span class="number">195.</span>      <span class="number">672.</span>        <span class="number">0.00431</span>   <span class="number">2.</span>     ]</div><div class="line"> [ <span class="number">71.</span>      <span class="number">102.</span>        <span class="number">0.00496</span>   <span class="number">2.</span>     ]</div><div class="line"> [<span class="number">307.</span>      <span class="number">476.</span>        <span class="number">0.00536</span>   <span class="number">2.</span>     ]</div><div class="line"> [<span class="number">351.</span>      <span class="number">552.</span>        <span class="number">0.00571</span>   <span class="number">2.</span>     ]</div><div class="line"> [ <span class="number">62.</span>      <span class="number">715.</span>        <span class="number">0.00607</span>   <span class="number">2.</span>     ]</div><div class="line"> [ <span class="number">98.</span>      <span class="number">433.</span>        <span class="number">0.0065</span>    <span class="number">2.</span>     ]</div><div class="line"> [<span class="number">255.</span>      <span class="number">572.</span>        <span class="number">0.00671</span>   <span class="number">2.</span>     ]</div><div class="line"> [<span class="number">437.</span>      <span class="number">699.</span>        <span class="number">0.00685</span>   <span class="number">2.</span>     ]</div><div class="line"> [ <span class="number">55.</span>      <span class="number">498.</span>        <span class="number">0.00765</span>   <span class="number">2.</span>     ]</div><div class="line"> [<span class="number">143.</span>      <span class="number">734.</span>        <span class="number">0.00823</span>   <span class="number">2.</span>     ]</div><div class="line"> [<span class="number">182.</span>      <span class="number">646.</span>        <span class="number">0.00843</span>   <span class="number">2.</span>     ]</div><div class="line"> [ <span class="number">45.</span>      <span class="number">250.</span>        <span class="number">0.0087</span>    <span class="number">2.</span>     ]</div><div class="line"> [<span class="number">298.</span>      <span class="number">728.</span>        <span class="number">0.00954</span>   <span class="number">2.</span>     ]</div><div class="line"> [<span class="number">580.</span>      <span class="number">619.</span>        <span class="number">0.01033</span>   <span class="number">2.</span>     ]</div><div class="line"> [<span class="number">179.</span>      <span class="number">183.</span>        <span class="number">0.01062</span>   <span class="number">2.</span>     ]</div><div class="line"> [<span class="number">101.</span>      <span class="number">668.</span>        <span class="number">0.01079</span>   <span class="number">2.</span>     ]</div><div class="line"> [<span class="number">131.</span>      <span class="number">544.</span>        <span class="number">0.01125</span>   <span class="number">2.</span>     ]</div><div class="line"> [<span class="number">655.</span>      <span class="number">726.</span>        <span class="number">0.01141</span>   <span class="number">2.</span>     ]</div><div class="line"> [<span class="number">503.</span>      <span class="number">756.</span>        <span class="number">0.01265</span>   <span class="number">3.</span>     ]]</div></pre></td></tr></table></figure></p>
+<p>从上面的信息可以看到，在第 <code>6</code> 次合并中，样本点 <code>141</code> 与样本点 <code>550</code> 进行了合并，生成新 <code>cluster</code> <code>756</code>；在第 25 次合并中，样本点 <code>503</code> 与 <code>cluster</code> <code>756</code> 进行了合并，生成新的 <code>cluster</code> <code>770</code>。我们可以将样本点 <code>141</code>、<code>550</code> 和 <code>503</code> 的特征信息打印出来，来看看它们是否确实很接近。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(X[[<span class="number">141</span>, <span class="number">550</span>, <span class="number">503</span>]])</div><div class="line">[[ <span class="number">1.27098</span> <span class="number">-0.97927</span>]</div><div class="line"> [ <span class="number">1.27515</span> <span class="number">-0.98006</span>]</div><div class="line"> [ <span class="number">1.37274</span>  <span class="number">1.13599</span>]]</div></pre></td></tr></table></figure></p>
+<p>看数字，这三个样本点确实很接近，从而也表明了层次聚类算法的核心思想：每次合并的都是当前 <code>cluster</code> 中相隔最近的。</p>
+<h2 id="画出树形图"><a href="#画出树形图" class="headerlink" title="画出树形图"></a>画出树形图</h2><p>SciPy 中给出了根据层次聚类的结果 <code>Z</code> 绘制树形图的函数 <a href="http://docs.scipy.org/doc/scipy-1.0.0/reference/generated/scipy.cluster.hierarchy.dendrogram.html#scipy.cluster.hierarchy.dendrogram" rel="external nofollow noopener noreferrer" target="_blank"><code>dendrogram</code></a>，我们由此画出本次实验中的最后 <code>20</code> 次的合并过程。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>plt.figure(figsize=(<span class="number">10</span>, <span class="number">8</span>))</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>dendrogram(Z, truncate_mode=<span class="string">'lastp'</span>, p=<span class="number">20</span>, show_leaf_counts=<span class="keyword">False</span>, leaf_rotation=<span class="number">90</span>, leaf_font_size=<span class="number">15</span>, show_contracted=<span class="keyword">True</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>plt.title(<span class="string">'Dendrogram for the Agglomerative Clustering'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>plt.xlabel(<span class="string">'sample index'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>plt.ylabel(<span class="string">'distance'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>plt.show()</div></pre></td></tr></table></figure></p>
+<p>得到的树形图如下所示。</p>
+<div align="center"><br><img src="https://raw.githubusercontent.com/ToWeather/MarkdownPhotos/master/dendrogram_for_the_agglomerative_clustering.png" width="780" height="650" alt="树形图示例" align="center"><br></div>
+
+<p>可以看到，该树形图的最后两次合并相比之前合并过程的合并距离要大得多，由此可以说明最后两次合并是不合理的；因而对于本数据集，该算法可以很好地区分出 <code>3</code> 个 <code>cluster</code>（和实际相符），分别在上图中由三种颜色所表示。</p>
+<h2 id="获取聚类结果"><a href="#获取聚类结果" class="headerlink" title="获取聚类结果"></a>获取聚类结果</h2><p>在得到了层次聚类的过程信息 <code>Z</code> 后，我们可以使用 <a href="http://docs.scipy.org/doc/scipy-1.0.0/reference/generated/scipy.cluster.hierarchy.fcluster.html#scipy.cluster.hierarchy.fcluster" rel="external nofollow noopener noreferrer" target="_blank"><code>fcluster</code></a> 函数来获取聚类结果。可以从两个维度来得到距离的结果，一个是指定临界距离 <code>d</code>，得到在该距离以下的未合并的所有 <code>cluster</code> 作为聚类结果；另一个是指定 <code>cluster</code> 的数量 <code>k</code>，函数会返回最后的 <code>k</code> 个 <code>cluster</code> 作为聚类结果。使用哪个维度由参数 <code>criterion</code> 决定，对应的临界距离或聚类的数量则由参数 <code>t</code> 所记录。<code>fcluster</code> 函数的结果为一个一维数组，记录每个样本的类别信息。<br>对应的代码与返回结果如下所示。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 根据临界距离返回聚类结果</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>d = <span class="number">15</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>labels_1 = fcluster(Z, t=d, criterion=<span class="string">'distance'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(labels_1[: <span class="number">100</span>])    <span class="comment"># 打印聚类结果</span></div><div class="line">[<span class="number">2</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">2</span> <span class="number">1</span> <span class="number">1</span> <span class="number">3</span> <span class="number">2</span> <span class="number">2</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">3</span> <span class="number">1</span> <span class="number">2</span> <span class="number">1</span> <span class="number">1</span> <span class="number">3</span> <span class="number">3</span> <span class="number">3</span> <span class="number">3</span> <span class="number">3</span> <span class="number">3</span> <span class="number">1</span> <span class="number">1</span> <span class="number">3</span> <span class="number">2</span> <span class="number">2</span> <span class="number">3</span> <span class="number">2</span> <span class="number">1</span> <span class="number">1</span> <span class="number">2</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span></div><div class="line"> <span class="number">2</span> <span class="number">2</span> <span class="number">3</span> <span class="number">3</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">2</span> <span class="number">1</span> <span class="number">3</span> <span class="number">3</span> <span class="number">1</span> <span class="number">1</span> <span class="number">3</span> <span class="number">3</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">1</span> <span class="number">3</span> <span class="number">3</span> <span class="number">3</span> <span class="number">3</span> <span class="number">3</span> <span class="number">2</span> <span class="number">3</span> <span class="number">3</span> <span class="number">2</span> <span class="number">2</span> <span class="number">2</span> <span class="number">3</span> <span class="number">2</span> <span class="number">2</span></div><div class="line"> <span class="number">3</span> <span class="number">1</span> <span class="number">2</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">1</span> <span class="number">1</span> <span class="number">2</span> <span class="number">2</span> <span class="number">2</span> <span class="number">2</span> <span class="number">1</span> <span class="number">3</span> <span class="number">1</span> <span class="number">3</span> <span class="number">3</span> <span class="number">2</span> <span class="number">1</span> <span class="number">2</span> <span class="number">1</span> <span class="number">2</span> <span class="number">1</span> <span class="number">1</span> <span class="number">2</span> <span class="number">2</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(len(set(labels_1)))   <span class="comment"># 看看在该临界距离下有几个 cluster</span></div><div class="line"><span class="number">3</span>   </div><div class="line"><span class="comment"># 根据聚类数目返回聚类结果</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>k = <span class="number">3</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>labels_2 = fcluster(Z, t=k, criterion=<span class="string">'maxclust'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(labels_2[: <span class="number">100</span>])  </div><div class="line">[<span class="number">2</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">2</span> <span class="number">1</span> <span class="number">1</span> <span class="number">3</span> <span class="number">2</span> <span class="number">2</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">3</span> <span class="number">1</span> <span class="number">2</span> <span class="number">1</span> <span class="number">1</span> <span class="number">3</span> <span class="number">3</span> <span class="number">3</span> <span class="number">3</span> <span class="number">3</span> <span class="number">3</span> <span class="number">1</span> <span class="number">1</span> <span class="number">3</span> <span class="number">2</span> <span class="number">2</span> <span class="number">3</span> <span class="number">2</span> <span class="number">1</span> <span class="number">1</span> <span class="number">2</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span></div><div class="line"> <span class="number">2</span> <span class="number">2</span> <span class="number">3</span> <span class="number">3</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">2</span> <span class="number">1</span> <span class="number">3</span> <span class="number">3</span> <span class="number">1</span> <span class="number">1</span> <span class="number">3</span> <span class="number">3</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">1</span> <span class="number">3</span> <span class="number">3</span> <span class="number">3</span> <span class="number">3</span> <span class="number">3</span> <span class="number">2</span> <span class="number">3</span> <span class="number">3</span> <span class="number">2</span> <span class="number">2</span> <span class="number">2</span> <span class="number">3</span> <span class="number">2</span> <span class="number">2</span></div><div class="line"> <span class="number">3</span> <span class="number">1</span> <span class="number">2</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">1</span> <span class="number">1</span> <span class="number">2</span> <span class="number">2</span> <span class="number">2</span> <span class="number">2</span> <span class="number">1</span> <span class="number">3</span> <span class="number">1</span> <span class="number">3</span> <span class="number">3</span> <span class="number">2</span> <span class="number">1</span> <span class="number">2</span> <span class="number">1</span> <span class="number">2</span> <span class="number">1</span> <span class="number">1</span> <span class="number">2</span> <span class="number">2</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>list(labels_1) == list(labels_2)      <span class="comment"># 看看两种不同维度下得到的聚类结果是否一致</span></div><div class="line"><span class="keyword">True</span></div></pre></td></tr></table></figure></p>
+<p>下面将聚类的结果可视化，相同的类的样本点用同一种颜色表示。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>plt.figure(figsize=(<span class="number">10</span>, <span class="number">8</span>))</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>plt.title(<span class="string">'The Result of the Agglomerative Clustering'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>plt.scatter(X[:, <span class="number">0</span>], X[:, <span class="number">1</span>], c=labels_2, cmap=<span class="string">'prism'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>plt.show()</div></pre></td></tr></table></figure></p>
+<p>可视化结果如下图所示。</p>
+<div align="center"><br><img src="https://raw.githubusercontent.com/ToWeather/MarkdownPhotos/master/result_of_agglomerative_clustering.png" width="780" height="650" alt="树形图示例" align="center"><br></div>
+
+<p>上图的聚类结果和实际的数据分布基本一致，但有几点值得注意，一是在聚类之前我们没法知道合理的聚类的数目或者最大的距离临界值，只有在得到全部的层次聚类信息并对其进行分析后我们才能预估出一个较为合理的数值；二是本次实验的数据集比较简单，所以聚类的结果较好，但对于复杂的数据集（比如非凸的、噪声点比较多的数据集），层次聚类算法有其局限性。</p>
+<h2 id="比较不同方法下的聚类结果"><a href="#比较不同方法下的聚类结果" class="headerlink" title="比较不同方法下的聚类结果"></a>比较不同方法下的聚类结果</h2><p>最后，我们对同一份样本集进行了 <code>cluster</code> 间距离衡量准则分别为 Single-link、Complete-link、UPGMA（Average）和 Ward 的 Agglomerative 层次聚类，取聚类数目为 <code>3</code>，程序如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> time <span class="keyword">import</span> time</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">from</span> scipy.cluster.hierarchy <span class="keyword">import</span> linkage, fcluster</div><div class="line"><span class="keyword">from</span> sklearn.datasets.samples_generator <span class="keyword">import</span> make_blobs</div><div class="line"><span class="keyword">from</span> sklearn.metrics.cluster <span class="keyword">import</span> adjusted_mutual_info_score</div><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line"></div><div class="line"><span class="comment"># 生成样本点</span></div><div class="line">centers = [[<span class="number">1</span>, <span class="number">1</span>], [<span class="number">-1</span>, <span class="number">-1</span>], [<span class="number">1</span>, <span class="number">-1</span>]]</div><div class="line">X, labels = make_blobs(n_samples=<span class="number">750</span>, centers=centers,</div><div class="line">                        cluster_std=<span class="number">0.4</span>, random_state=<span class="number">0</span>)</div><div class="line"></div><div class="line"><span class="comment"># 可视化聚类结果</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_clustering</span><span class="params">(X, labels, title=None)</span>:</span></div><div class="line">    plt.scatter(X[:, <span class="number">0</span>], X[:, <span class="number">1</span>], c=labels, cmap=<span class="string">'prism'</span>)</div><div class="line">    <span class="keyword">if</span> title <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</div><div class="line">        plt.title(title, size=<span class="number">17</span>)</div><div class="line">    plt.axis(<span class="string">'off'</span>)</div><div class="line">    plt.tight_layout()</div><div class="line"></div><div class="line"><span class="comment"># 进行 Agglomerative 层次聚类</span></div><div class="line">linkage_method_list = [<span class="string">'single'</span>, <span class="string">'complete'</span>, <span class="string">'average'</span>, <span class="string">'ward'</span>]</div><div class="line">plt.figure(figsize=(<span class="number">10</span>, <span class="number">8</span>))</div><div class="line">ncols, nrows = <span class="number">2</span>, int(np.ceil(len(linkage_method_list) / <span class="number">2</span>))</div><div class="line">plt.subplots(nrows=nrows, ncols=ncols)</div><div class="line"></div><div class="line"><span class="keyword">for</span> i, linkage_method <span class="keyword">in</span> enumerate(linkage_method_list):</div><div class="line">    print(<span class="string">'method %s:'</span> % linkage_method)</div><div class="line">    start_time = time()</div><div class="line">    Z = linkage(X, method=linkage_method)</div><div class="line">    labels_pred = fcluster(Z, t=<span class="number">3</span>, criterion=<span class="string">'maxclust'</span>)</div><div class="line">    print(<span class="string">'Adjust mutual information: %.3f'</span> %</div><div class="line">            adjusted_mutual_info_score(labels, labels_pred))</div><div class="line">    print(<span class="string">'time used: %.3f seconds'</span> % (time() - start_time))</div><div class="line">    plt.subplot(nrows, ncols, i + <span class="number">1</span>)</div><div class="line">    plot_clustering(X, labels_pred, <span class="string">'%s linkage'</span> % linkage_method)</div><div class="line"></div><div class="line">plt.show()</div></pre></td></tr></table></figure></p>
+<p>可以得到 4 种方法下的聚类结果如下图所示。</p>
+<div align="center"><br><img src="https://raw.githubusercontent.com/ToWeather/MarkdownPhotos/master/aggm_clust_linkage_comparing.png" width="780" height="650" alt="树形图示例" align="center"><br></div>
+
+<p>在上面的过程中，我们还为每一种聚类产生的结果计算了一个用于评估聚类结果与样本的真实类之间的相近程度的 <a href="https://www.wikiwand.com/en/Adjusted_mutual_information" rel="external nofollow noopener noreferrer" target="_blank">AMI</a>（Adjust Mutual Information）量，该量越接近于 <code>1</code> 则说明聚类算法产生的类越接近于真实情况。程序的打印结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">method single:</div><div class="line">Adjust mutual information: 0.001</div><div class="line">time used: 0.008 seconds</div><div class="line">method complete:</div><div class="line">Adjust mutual information: 0.838</div><div class="line">time used: 0.013 seconds</div><div class="line">method average:</div><div class="line">Adjust mutual information: 0.945</div><div class="line">time used: 0.019 seconds</div><div class="line">method ward:</div><div class="line">Adjust mutual information: 0.956</div><div class="line">time used: 0.015 seconds</div></pre></td></tr></table></figure></p>
+<p>从上面的图和 AMI 量的表现来看，Single-link 方法下的层次聚类结果最差，它几乎将所有的点都聚为一个 <code>cluster</code>，而其他两个 <code>cluster</code> 则都仅包含个别稍微有点偏离中心的样本点，这充分体现了 Single-link 方法下的“链式效应”，也体现了 Agglomerative 算法的一个特点，即“赢者通吃”（rich getting richer）： Agglomerative 算法倾向于聚出不均匀的类，尺寸大的类倾向于变得更大，对于 Single-link 和 UPGMA（Average） 方法尤其如此。由于本次实验的样本集较为理想，因此除了 Single-link 之外的其他方法都表现地还可以，但当样本集变复杂时，上述“赢者通吃” 的特点会显现出来。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/聚类/" rel="tag"># 聚类</a>
+          
+            <a href="/tags/非监督学习/" rel="tag"># 非监督学习</a>
+          
+            <a href="/tags/层次聚类/" rel="tag"># 层次聚类</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Python-中的-Unicode-string-和-Byte-string/" rel="next" title="Python 中的 Unicode String 和 Byte String">
+                <i class="fa fa-chevron-left"></i> Python 中的 Unicode String 和 Byte String
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/myicon.JPEG" alt="Heathcliff">
+            
+              <p class="site-author-name" itemprop="name">Heathcliff</p>
+              <p class="site-description motion-element" itemprop="description">We are all in the gutter, but some of us are looking at the stars.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#聚类算法综述"><span class="nav-number">1.</span> <span class="nav-text">聚类算法综述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#层次聚类综述"><span class="nav-number">2.</span> <span class="nav-text">层次聚类综述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#树形图"><span class="nav-number">2.1.</span> <span class="nav-text">树形图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对象之间的距离衡量"><span class="nav-number">2.2.</span> <span class="nav-text">对象之间的距离衡量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cluster-之间的距离衡量"><span class="nav-number">2.3.</span> <span class="nav-text">Cluster 之间的距离衡量</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Agglomerative-层次聚类算法"><span class="nav-number">3.</span> <span class="nav-text">Agglomerative 层次聚类算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Lance-Williams-方法"><span class="nav-number">3.1.</span> <span class="nav-text">Lance-Williams 方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Naive-算法"><span class="nav-number">3.2.</span> <span class="nav-text">Naive 算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#利用-Scipy-实现层次聚类"><span class="nav-number">4.</span> <span class="nav-text">利用 Scipy 实现层次聚类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#生成实验样本集"><span class="nav-number">4.1.</span> <span class="nav-text">生成实验样本集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进行-Agglomerative-层次聚类"><span class="nav-number">4.2.</span> <span class="nav-text">进行 Agglomerative 层次聚类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#画出树形图"><span class="nav-number">4.3.</span> <span class="nav-text">画出树形图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取聚类结果"><span class="nav-number">4.4.</span> <span class="nav-text">获取聚类结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#比较不同方法下的聚类结果"><span class="nav-number">4.5.</span> <span class="nav-text">比较不同方法下的聚类结果</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Heathcliff</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+</span>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.0"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://heathcliff.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://heathcliff.me/聚类分析（一）：层次聚类算法/';
+          this.page.identifier = '聚类分析（一）：层次聚类算法/';
+          this.page.title = '聚类分析（一）：层次聚类算法';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://heathcliff.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("s2RkSDxfHn2dwq6oHcIhF6UI-gzGzoHsz", "MhK9geETXDua79cxpft6W6ne");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="custom_mathjax_source">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+  
+</body>
+</html>
