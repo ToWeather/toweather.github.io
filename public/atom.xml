@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://heathcliff.me/"/>
-  <updated>2018-02-10T11:13:30.603Z</updated>
+  <updated>2018-03-11T14:27:55.660Z</updated>
   <id>http://heathcliff.me/</id>
   
   <author>
@@ -17,11 +17,40 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>聚类分析（二）：k-means 算法</title>
+    <link href="http://heathcliff.me/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9Ak-means-%E7%AE%97%E6%B3%95/"/>
+    <id>http://heathcliff.me/聚类分析（二）：k-means-算法/</id>
+    <published>2018-02-10T12:33:10.000Z</published>
+    <updated>2018-03-11T14:27:55.660Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;script type=&quot;text/javascript&quot; src=&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default&quot;&gt;&lt;/script&gt;
+
+&lt;h1 id=&quot;k-means-聚类算法&quot;&gt;&lt;a hre
+      
+    
+    </summary>
+    
+      <category term="机器学习算法" scheme="http://heathcliff.me/categories/machine-learning-algorithms/"/>
+    
+    
+      <category term="聚类" scheme="http://heathcliff.me/tags/%E8%81%9A%E7%B1%BB/"/>
+    
+      <category term="非监督学习" scheme="http://heathcliff.me/tags/%E9%9D%9E%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="k-means 算法" scheme="http://heathcliff.me/tags/k-means-%E7%AE%97%E6%B3%95/"/>
+    
+  </entry>
+  
+  <entry>
     <title>聚类分析（一）：层次聚类算法</title>
     <link href="http://heathcliff.me/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E5%B1%82%E6%AC%A1%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95/"/>
     <id>http://heathcliff.me/聚类分析（一）：层次聚类算法/</id>
     <published>2017-12-01T12:59:23.000Z</published>
-    <updated>2018-02-10T11:13:30.603Z</updated>
+    <updated>2018-02-26T12:55:53.914Z</updated>
     
     <summary type="html">
     
@@ -50,7 +79,7 @@
     <link href="http://heathcliff.me/Python-%E4%B8%AD%E7%9A%84-Unicode-string-%E5%92%8C-Byte-string/"/>
     <id>http://heathcliff.me/Python-中的-Unicode-string-和-Byte-string/</id>
     <published>2017-10-27T13:32:38.000Z</published>
-    <updated>2018-01-07T11:03:05.398Z</updated>
+    <updated>2018-03-08T11:45:19.570Z</updated>
     
     <summary type="html">
     
