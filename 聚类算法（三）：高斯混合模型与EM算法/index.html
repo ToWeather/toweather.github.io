@@ -81,14 +81,14 @@
 
 <meta name="description" content="We are all in the gutter, but some of us are looking at the stars.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="分类">
-<meta property="og:url" content="http://heathcliff.me/categories/index.html">
+<meta property="og:title" content="标签">
+<meta property="og:url" content="http://heathcliff.me/tags/index.html">
 <meta property="og:site_name" content="Heathcliff&#39;s Notes">
 <meta property="og:description" content="We are all in the gutter, but some of us are looking at the stars.">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-01-07T11:03:05.399Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="分类">
+<meta name="twitter:title" content="标签">
 <meta name="twitter:description" content="We are all in the gutter, but some of us are looking at the stars.">
 
 
@@ -121,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://heathcliff.me/categories/">
+  <link rel="canonical" href="http://heathcliff.me/tags/">
 
 
 
 
 
-  <title>标签 | Heathcliff's Notes</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>聚类算法（三）：高斯混合模型与 EM 算法 | Heathcliff's Notes</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -290,40 +290,198 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://heathcliff.me/聚类算法（三）：高斯混合模型与EM算法/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Heathcliff">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myicon.JPEG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Heathcliff's Notes">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">标签</h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <div class="tag-cloud">
-            <div class="tag-cloud-title">
-                目前共计 10 个标签
-            </div>
-            <div class="tag-cloud-tags">
-              <a href="/tags/EM-算法/" style="font-size: 12px; color: #ccc">EM 算法</a> <a href="/tags/GMM/" style="font-size: 12px; color: #ccc">GMM</a> <a href="/tags/k-means-算法/" style="font-size: 12px; color: #ccc">k-means 算法</a> <a href="/tags/python/" style="font-size: 12px; color: #ccc">python</a> <a href="/tags/unicode/" style="font-size: 12px; color: #ccc">unicode</a> <a href="/tags/层次聚类/" style="font-size: 12px; color: #ccc">层次聚类</a> <a href="/tags/生成模型/" style="font-size: 12px; color: #ccc">生成模型</a> <a href="/tags/聚类/" style="font-size: 30px; color: #111">聚类</a> <a href="/tags/非监督学习/" style="font-size: 30px; color: #111">非监督学习</a> <a href="/tags/高斯混合模型/" style="font-size: 12px; color: #ccc">高斯混合模型</a>
-            </div>
-          </div>
+          <h1 class="post-title" itemprop="name headline">聚类算法（三）：高斯混合模型与 EM 算法</h1>
         
-      </div>
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-12T21:26:08+08:00">2018-03-12</time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/machine-learning-algorithms/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/聚类算法（三）：高斯混合模型与EM算法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="聚类算法（三）：高斯混合模型与EM算法/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/聚类算法（三）：高斯混合模型与EM算法/" class="leancloud_visitors" data-flag-title="聚类算法（三）：高斯混合模型与 EM 算法">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
+
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/聚类/" rel="tag"># 聚类</a>
+          
+            <a href="/tags/非监督学习/" rel="tag"># 非监督学习</a>
+          
+            <a href="/tags/高斯混合模型/" rel="tag"># 高斯混合模型</a>
+          
+            <a href="/tags/GMM/" rel="tag"># GMM</a>
+          
+            <a href="/tags/生成模型/" rel="tag"># 生成模型</a>
+          
+            <a href="/tags/EM-算法/" rel="tag"># EM 算法</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/聚类分析（二）：k-means-算法/" rel="next" title="聚类分析（二）：k-means 算法">
+                <i class="fa fa-chevron-left"></i> 聚类分析（二）：k-means 算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -332,6 +490,20 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -567,6 +739,18 @@
       <script id="dsq-count-scr" src="https://heathcliff.disqus.com/count.js" async></script>
     
 
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://heathcliff.me/聚类算法（三）：高斯混合模型与EM算法/';
+          this.page.identifier = '聚类算法（三）：高斯混合模型与EM算法/';
+          this.page.title = '聚类算法（三）：高斯混合模型与 EM 算法';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://heathcliff.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
     
 
   
