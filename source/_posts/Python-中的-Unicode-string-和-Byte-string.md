@@ -12,6 +12,7 @@ keywords: python,unicode,string
 
 # python 2.x 和 python 3.x 字符串类型的区别
 python 2.x 中字符编码的坑是历史遗留问题，到 python 3.x 已经得到了很好的解决，在这里简要梳理一下二者处理字符串的思路。
+
 ## python 2.x
 - `str` 类型：处理 binary 数据和 ASCII 文本数据。
 - `unicode` 类型：处理**非 ASCII** 文本数据。
@@ -84,6 +85,7 @@ b'Natasha, \xe5\xa8\x9c\xe5\xa1\x94\xe8\x8e\x8e'
 bytes
 ```
 从上面可以看出，`bytes` 类型的对象中的某个字节的取值在 `0x00` \~ `0x7F` 时，控制台的输出会显示出其对应的 ASCII 码字符，但其本质上是一个原始字节，不应与任何字符等同。
+
 同理，我们也可以将一个 `bytes` 类型的对象译码为一个 `str` 类型的对象：
 ```python
 # python 3.6
@@ -116,6 +118,7 @@ Natasha, 娜塔莎
 'utf-8'
 ```
 另外，`sys.getdefaultencoding()`函数也会得到一种编码方式，得到的结果是系统的默认编码方式，在 python 2.x 中，该函数总是返回 `'ascii'`, 这表明在对字符串编译码时不指定编码方式时所采用的编码方式为ASCII 编码；除此之外，在 python 2.x 中，ASCII 编码方式还会被用作隐式转换，例如 `json.dumps()` 函数在默认情况下总是返回一串字节串，不论输入的数据结构里面的字符串是 unicode 类型还是 str 类型。在 python 3.x 中，隐式转换已经被禁止（也可以说，python 3.x 用不到隐式转换：\>）。
+
 切回正题，在 python 2.x 表示国际字符的正确方式应该是定义一个 `unicode` 类型字符串，如下所示：
 ```python
 # python 2.7
@@ -200,6 +203,7 @@ u'Natasha, \u5a1c\u5854\u838e'
 
 # python 2.x 中的 json.dumps() 操作
 json 作为一种广为各大平台所采用的数据交换格式，在 python 中更是被广泛使用，然而，在 python 2.x 中，有些地方需要注意。
+
 对于数据结构中的字符串类型为 `str`、 但实际上定义的是一个国际字符串的情况，`json.dumps()` 的结果如下：
 ```python
 # python 2.7
@@ -233,8 +237,9 @@ u'{"Natasha": "\u5a1c\u5854\u838e"}'
 {"Natasha": "娜塔莎"}
 ```
 在这种情形下，当 `ensure_ascii` 为 `True` 时，`json.dumps()` 操作返回值的类型为 `str`，其得到的结果和前面对 a 操作返回的结果完全一样；而当`ensure_ascii` 为 `False` 时，`json.dumps()` 操作的返回值类型变为 `unicode`，原始数据结构中的中文字符在返回值中完整地保留了下来。
+
 对于数据结构中的字符串类型既有 `unicode` 又有 `str` 的情形，运用 `json.dumps()` 时将 `ensure_ascii` 设为 `False` 的情况又会完全不同。
-当数据结构中的 ASCII 字符串为 `str` 类型，国际字符串为 `unicode` 类型时（如 `u = {'Natasha': u'娜塔莎'}`），`json.dumps()` 的返回值是正常的、符合预期的 `unicode` 字符串；
-当数据结构中有国际字符串为 `str` 类型，又存在其他字符串为 `unicode` 类型时（如 `u = {u'Natasha': '娜塔莎'}` 或 `u = {u'娜塔莉娅': '娜塔莎'}`），`json.dumps()` 会抛出异常 `UnicodeDecodeError`，这是因为系统会将数据结构中 `str` 类型字符串都转换为 `unicode` 类型，而系统的默认编译码方式为 ascii 编码，因而对 `str` 类型的国际字符串进行 ascii 译码就必然会出错。
+
+当数据结构中的 ASCII 字符串为 `str` 类型，国际字符串为 `unicode` 类型时（如 `u = {'Natasha': u'娜塔莎'}`），`json.dumps()` 的返回值是正常的、符合预期的 `unicode` 字符串；当数据结构中有国际字符串为 `str` 类型，又存在其他字符串为 `unicode` 类型时（如 `u = {u'Natasha': '娜塔莎'}` 或 `u = {u'娜塔莉娅': '娜塔莎'}`），`json.dumps()` 会抛出异常 `UnicodeDecodeError`，这是因为系统会将数据结构中 `str` 类型字符串都转换为 `unicode` 类型，而系统的默认编译码方式为 ascii 编码，因而对 `str` 类型的国际字符串进行 ascii 译码就必然会出错。
 
 [1]:	https://www.wikiwand.com/en/List_of_Unicode_characters
