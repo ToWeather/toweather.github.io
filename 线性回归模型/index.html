@@ -81,14 +81,14 @@
 
 <meta name="description" content="We are all in the gutter, but some of us are looking at the stars.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="分类">
-<meta property="og:url" content="http://heathcliff.me/categories/index.html">
+<meta property="og:title" content="标签">
+<meta property="og:url" content="http://heathcliff.me/tags/index.html">
 <meta property="og:site_name" content="Heathcliff&#39;s Notes">
 <meta property="og:description" content="We are all in the gutter, but some of us are looking at the stars.">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-01-07T11:03:05.399Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="分类">
+<meta name="twitter:title" content="标签">
 <meta name="twitter:description" content="We are all in the gutter, but some of us are looking at the stars.">
 
 
@@ -121,7 +121,7 @@
 
 
 
-  <link rel="canonical" href="http://heathcliff.me/categories/">
+  <link rel="canonical" href="http://heathcliff.me/tags/">
 
 
 
@@ -415,36 +415,75 @@
         <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 
 <h1 id="线性回归模型"><a href="#线性回归模型" class="headerlink" title="线性回归模型"></a>线性回归模型</h1><p>一般来讲，监督学习问题可分为两类，一类是分类问题，另一类是回归问题。这两类问题的核心都是“根据一个输入数据预测出一个输出值”，只不过分类问题的输出值是离散、可数的，而回归问题的输出值是连续的。本文主要聚焦用于解决回归问题的一类最基本的模型——线性回归模型。</p>
-<p>最简单的线性回归模型就是将输出表示为输入数据各个特征的一个线性组合：<br>$$<br>y({\bf x}, {\bf w}) = w_{0} + w_{1}x_{1} + … + w_{D}x_{D}<br>\tag{1}<br>$$</p>
-<p>其中 \( {\bf x} = (x_{1}, …, x_{D})^{\text T} \)。可以看到，上式不仅是关于参数 \( w_{0}, …, w_{D} \) 的线性函数，也是关于输入数据各特征 \( x_{i} \) 的线性函数。但这样会对模型造成很大的局限性，所以我们转而考虑以下的线性模型：<br>$$<br>y({\bf x}, {\bf w}) = w_{0} + \sum_{j = 1}^{M - 1} w_{j}\phi_{j}({\bf x})<br>\tag{2}<br>$$ </p>
+<p>最简单的线性回归模型就是将输出表示为输入数据各个特征的线性组合：<br>$$<br>y({\bf x}, {\bf w}) = w_{0} + w_{1}x_{1} + … + w_{D}x_{D}<br>\tag{1}<br>$$</p>
+<p>其中 \( {\bf x} = (x_{1},\cdots, x_{D})^{\text T} \)。可以看到，上式不仅是关于参数 \( w_{0}, \cdots, w_{D} \) 的线性函数，也是关于输入数据各特征 \( x_{i} \) 的线性函数。但这样会对模型造成很大的局限性，所以我们转而考虑以下的线性模型：<br>$$<br>y({\bf x}, {\bf w}) = w_{0} + \sum_{j = 1}^{M - 1} w_{j}\phi_{j}({\bf x})<br>\tag{2}<br>$$ </p>
 <p>其中函数 \( \phi_{j} ({\bf x}) \) 被称为基函数（basis functions），因而以上模型相当于先对输入数据进行了预处理和特征变换，产生出了一组新的特征 \( \phi_{j} ({\bf x}) \)，然后再将这一组新的特征作一个线性组合作为输出，这样一来就大大地增加了模型的丰富程度。注意到，现在式 （2）不再是关于 \( x_{i} \) 的线性函数，但仍然是关于参数 \( w_{i} \) 的线性函数，前者丰富了模型的复杂度，而后者则使得问题的求解仍然十分简单。</p>
 <p>参数 \( w_{0} \) 用来刻画输出相对于输入数据的一个偏移，我们需要它是因为关于输入数据的某个仿射空间比关于输入数据的某个线性空间更加具有一般性。以下为分析方便，假设 \( \phi_{0} = 1 \)，则 式 （2）可以改写为<br>$$<br>y({\bf x}, {\bf w}) = {\bf w}^{\text T} {\bf \phi}({\bf x})<br>\tag{3}<br>$$</p>
-<p>其中 \( {\bf w} = (w_{0}, …, w_{M - 1})^{\text T} \)，\( {\bf \phi} = (\phi_{0}, …, \phi_{M - 1} ^{\text T}) \) 。</p>
-<p>一般情况下，我们会先确定好基函数 \( \phi_{j} ({\bf x}) \) 的形式，常用的有多项式函数、高斯函数、sigmoid 函数等等（预处理、特征变换）；然后我们再用式（3）来拟合训练集，使得某个代价函数最小，以此求得参数 \( {\bf w} \) 的值（训练）；最后再用求得的模型来对新的输入数据进行预测（预测）。</p>
+<p>其中 \( {\bf w} = (w_{0}, \cdots, w_{M - 1})^{\text T} \)，\( {\bf \phi} = (\phi_{0}, \cdots, \phi_{M - 1})^{\text T} \) 。</p>
+<p>一般情况下，我们会先确定好基函数 \( \phi_{j} ({\bf x}) \) 的形式，常用的有多项式函数、高斯函数、sigmoid 函数等等（<strong>预处理、特征变换</strong>）；然后我们再用式（3）来拟合训练集，使得某个代价函数最小，以此求得参数 \( {\bf w} \) 的值（<strong>训练</strong>）；最后再用求得的模型来对新的输入数据进行预测（<strong>预测</strong>）。</p>
 <hr>
 <h1 id="最小二乘估计与最大似然估计"><a href="#最小二乘估计与最大似然估计" class="headerlink" title="最小二乘估计与最大似然估计"></a>最小二乘估计与最大似然估计</h1><p>监督学习的核心问题即是根据训练数据找到一个合理的模型，在线性回归问题中，模型已经确定了下来，所以问题简化为估计模型的参数 \( {\bf w} \)，这一部分将阐述参数 \( {\bf w} \) 的最小二乘估计方法及其与最大似然估计问题的联系。</p>
-<h2 id="最小二乘参数估计"><a href="#最小二乘参数估计" class="headerlink" title="最小二乘参数估计"></a>最小二乘参数估计</h2><p>假设训练集的输入数据为 \( {\bf X} = \lbrace {\bf x}_{1}, …, {\bf x}_{N} \rbrace \)，其中 \( {\bf x}_{i} \in {\Bbb R}^{D} \)，  对应的输出值为 \( {\bf t} = \lbrace t_{1}, …, t_{N} \rbrace \)，那么最小二乘估计希望由下式所表达的真实输出值与拟合得到的输出值之间的平方误差和最小：<br>$$<br>E_{D}({\bf w}) = \frac{1}{2} \sum_{n = 1}^{N} \lbrace t_{n} - {\bf w}^{\text T} {\bf \phi} ({\bf x}_{n}) \rbrace^{2}<br>\tag{4}<br>$$</p>
+<h2 id="最小二乘参数估计"><a href="#最小二乘参数估计" class="headerlink" title="最小二乘参数估计"></a>最小二乘参数估计</h2><p>假设训练集的输入数据为 \( {\bf X} = \lbrace {\bf x}_{1}, \cdots, {\bf x}_{N} \rbrace \)，其中 \( {\bf x}_{i} \in {\Bbb R}^{D} \)，  对应的输出集合为 \( \lbrace t_{1}, \cdots, t_{N} \rbrace \)，将输出数据表示为向量的形式为 \( {\bf t} = (t_{1}, \cdots, t_{N})^{\text T} \)，那么最小二乘估计希望由下式所表达的真实输出值与拟合得到的输出值之间的平方误差和最小：<br>$$<br>E_{D}({\bf w}) = \frac{1}{2} \sum_{n = 1}^{N} \lbrace t_{n} - {\bf w}^{\text T} {\bf \phi} ({\bf x}_{n}) \rbrace^{2}<br>\tag{4}<br>$$</p>
 <p>上式中的系数 \( \frac{1}{2} \) 是为了后续处理的方便。将上式对 \( {\bf w} \) 求导可得<br>$$<br>\nabla E_{D}({\bf w}) = -\sum_{n = 1}^{N} \lbrace t_{n} - {\bf w}^{\text T} {\bf \phi} ({\bf x}_{n}) \rbrace {\bf \phi} ({\bf x}_{n})<br>\tag{5}<br>$$</p>
 <p>将以上关于  \( {\bf w} \) 的导数置为 \( {\bf 0} \) 可得<br>$$<br>\sum_{n = 1}^{N} t_{n} {\bf \phi} ({\bf x}_{n}) - \left( \sum_{n = 1}^{N} {\bf \phi} ({\bf x}_{n}){\bf \phi} ({\bf x}_{n}) ^{\text T} \right) {\bf w} = {\bf 0}<br>\tag{6}<br>$$</p>
 <p>可以求得参数 \( {\bf w} \) 的最小二乘估计为<br>$$<br>{\bf w}_{\text {LS}} = \left( {\bf \Phi}^{\text T} {\bf \Phi} \right)^{-1} {\bf \Phi}^{\text T} {\bf t}<br>\tag{7}<br>$$</p>
 <p>该式被称为最小二乘问题的正规方程（normal equations），其中矩阵 \( {\bf \Phi} \in {\Bbb R}^{N \times M} \) 的具体形式为<br>$$<br>{\bf \Phi} = \begin{pmatrix} {\bf \phi}({\bf x}_{1})^{\text T} \\ {\bf \phi}({\bf x}_{2})^{\text T} \\ \vdots \\ {\bf \phi}({\bf x}_{N})^{\text T} \end{pmatrix} = \begin{pmatrix} \phi_{0}({\bf x}_{1}) &amp; \phi_{1}({\bf x}_{1}) &amp; \cdots &amp; \phi_{M - 1}({\bf x}_{1}) \\ \phi_{0}({\bf x}_{2}) &amp; \phi_{1}({\bf x}_{2}) &amp; \cdots &amp; \phi_{M - 1}({\bf x}_{2}) \\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\ \phi_{0}({\bf x}_{N}) &amp; \phi_{1}({\bf x}_{N}) &amp; \cdots &amp; \phi_{M - 1}({\bf x}_{N}) \end{pmatrix}<br>\tag{8}<br>$$ </p>
 <p>注意到，最小二乘估计的目的是想求得以下线性方程组的近似解：<br>$$<br>{\bf \Phi} {\bf w} = {\bf t}<br>\tag{9}<br>$$</p>
-<p>当 \( N >> M \) 时（一般情况下都会要求训练样本数远远大于数据的维度，否则容易出现过拟合），\( {\bf \Phi} \) 的列空间为一个嵌在 \( N \) 维空间中的 \( M \) 维子空间，而当 \( {\bf t} \) 正好也在该 \( M \) 维子空间中时，方程（7）有解，而由于 \( N >> M \)， \( {\bf t} \) 正好落在 \( {\bf \Phi} \) 的列空间的可能性极小（如果出现这种情况，说明数据集不够好，导致出现过拟合现象），因而我们希望找到一个 \( {\bf w} \)，使得 \( {\bf \Phi} {\bf w} \) 与 \( {\bf t} \) 尽可能地接近，\( {\bf t} \) 到 \( {\bf \Phi} \) 的列空间的最近距离为 \( {\bf t} \) 到其在\( {\bf \Phi} \) 的列空间上的投影的距离，因而我们可以求向量 \( {\bf t} \) 在 \( {\bf \Phi} \) 的列空间上的投影，可求得该投影为<br>$$<br>{\bf y}_{\text {proj}} = {\bf \Phi} \left( {\bf \Phi}^{\text T} {\bf \Phi} \right)^{-1} {\bf \Phi}^{\text T} {\bf t} = {\bf \Phi} {\bf w}_{\text {proj}}<br>\tag{10}<br>$$</p>
+<p>当 \( N >> M \) 时（一般情况下都会要求训练样本数远远大于数据的维度，否则容易出现过拟合），\( {\bf \Phi} \) 的列空间为一个嵌在 \( N \) 维空间中的 \( M \) 维子空间，而当 \( {\bf t} \) 正好也在该 \( M \) 维子空间中时，方程（9）有解，而由于 \( N >> M \)， \( {\bf t} \) 正好落在 \( {\bf \Phi} \) 的列空间的可能性极小（如果出现这种情况，说明数据集不够好，导致出现过拟合现象），因而我们希望找到一个 \( {\bf w} \)，使得 \( {\bf \Phi} {\bf w} \) 与 \( {\bf t} \) 尽可能地接近，\( {\bf t} \) 到 \( {\bf \Phi} \) 的列空间的最近距离为 \( {\bf t} \) 到其在 \( {\bf \Phi} \) 的列空间上的投影的距离，因而我们可以求出向量 \( {\bf t} \) 在 \( {\bf \Phi} \) 的列空间上的投影，可求得该投影为<br>$$<br>{\bf y}_{\text {proj}} = {\bf \Phi} \left( {\bf \Phi}^{\text T} {\bf \Phi} \right)^{-1} {\bf \Phi}^{\text T} {\bf t} = {\bf \Phi} {\bf w}_{\text {proj}}<br>\tag{10}<br>$$</p>
 <p>可以看到，式（10）得出的最佳 \( {\bf w}_{\text {proj}} \) 和式（7）中的 \( {\bf w}_{\text {LS}} \) 一致，而以上的阐述正好直观地反映了最小二乘方法的几何意义。</p>
 <h2 id="与最大似然估计的联系"><a href="#与最大似然估计的联系" class="headerlink" title="与最大似然估计的联系"></a>与最大似然估计的联系</h2><p>假设输出值 \( t \) 是由下式所产生：<br>$$<br>t = y({\bf x}, {\bf w}) + \epsilon<br>\tag{11}<br>$$</p>
-<p>即我们假设 \( t \) 是由 y({\bf x}, {\bf w}) 受到一个加性噪声的扰动所产生的，噪声 \( \epsilon \) 服从均值为 \( 0 \)，方差为 \( \beta^{-1} \) 的高斯分布，则我们可以得出输出值 \( t \) 服从分布<br>$$<br>p(t|{\bf x}, {\bf w}, \beta) = {\cal N}(t| y({\bf x}, {\bf w}), \beta^{-1})<br>\tag{12}<br>$$</p>
+<p>即我们假设 \( t \) 是由 \( y({\bf x}, {\bf w}) \) 受到一个加性噪声的扰动所产生的，噪声 \( \epsilon \) 服从均值为 \( 0 \)，方差为 \( \beta^{-1} \) 的高斯分布，则我们可以得出输出值 \( t \) 服从分布<br>$$<br>p(t|{\bf x}, {\bf w}, \beta) = {\cal N}(t| y({\bf x}, {\bf w}), \beta^{-1})<br>\tag{12}<br>$$</p>
 <p>给定训练集 \( {\bf X} \) 和 \( {\bf t} \) 后，我们可以写出参数 \( {\bf w} \) 的对数似然函数：<br>$$<br>\begin{aligned}<br>\ln p({\bf t} | {\bf w}, \beta) &amp;= \sum_{n = 1}^{N} \ln {\cal N}(t_{n}| {\bf w}^{\text T} {\bf \phi}({\bf x}_{n}), \beta^{-1}) \\<br>&amp;= \frac{N}{2} \ln \beta - \frac{N}{2} \ln(2 \pi) - \beta E_{D}({\bf w})<br>\end{aligned}<br>\tag{13}<br>$$</p>
 <p>其中 \( E_{D}({\bf w}) \) 的定义见式（4），可以看到，为使似然函数最大，我们希望  \( E_{D}({\bf w}) \)  最小（上式中的前两项均为常数），由此说明了该模型下的关于参数 \( {\bf w} \) 的最大似然估计等价于最小二乘估计。</p>
-<h2 id="含正则项的最小二乘估计"><a href="#含正则项的最小二乘估计" class="headerlink" title="含正则项的最小二乘估计"></a>含正则项的最小二乘估计</h2><p>最大似然估计的一大问题就是容易出现过拟合，过拟合就是模型在训练集上表现得太好，学习到了训练集的一些非泛化的特点（如噪声），从而导致训练出来的模型在真实的数据上表现得不佳。当输入数据的维度较大、而训练样本数较少时，容易出现过拟合现象，表现形式为训练出来的模型过于复杂。因而我们需要适当地限制模型的复杂度，这一点可以通过在代价函数中加入一项用来衡量模型复杂度的正则项 \( E_{W}({\bf w}) \)，这样，新的代价函数变为<br>$$<br>E_{D}({\bf w}) + \lambda E_{W}({\bf w})<br>\tag{14}<br>$$</p>
-<p>其中 \( \lambda \) 为权衡正则化项与最小二乘代价项的参数， \( \lambda \) 越大，我们越倾向于选择复杂度越低的模型。值得指出的是，\( \lambda \) 为一个超参数（hyperparameter），属于模型的一部分，需要在确定模型的时候指定它的值。 </p>
+<h2 id="含正则项的最小二乘估计"><a href="#含正则项的最小二乘估计" class="headerlink" title="含正则项的最小二乘估计"></a>含正则项的最小二乘估计</h2><p>最大似然估计的一大问题就是容易出现过拟合，所谓过拟合就是模型在训练集上表现得太好，学习到了训练集的一些非泛化的特点（如噪声），从而导致训练出来的模型在新的数据上表现得不佳。当输入训练样本数相对于参数的个数（模型复杂度的表征）较少时，容易出现过拟合现象，表现形式为训练出来的模型过于复杂。为更好地理解这一点，想象当数据空间所处的维度较大（对应于参数的个数）时，要想得到一个好的模型，是需要足够多的输入样本来填充这个数据空间的，当输入样本数过少，模型就倾向于学习到一些局部的特性，从而导致模型在新数据上的表现很差。因而我们需要适当地限制模型的复杂度，这一点可以通过在代价函数中加入一项用来衡量模型复杂度的正则项 \( E_{W}({\bf w}) \) 来实现，这样，新的代价函数变为<br>$$<br>E_{D}({\bf w}) + \lambda E_{W}({\bf w})<br>\tag{14}<br>$$</p>
+<p>其中 \( \lambda \) 为权衡正则化项与最小二乘代价项的参数， \( \lambda \) 越大，我们越倾向于选择复杂度低的模型。值得指出的是，\( \lambda \) 为一个超参数（hyperparameter），属于模型的一部分，需要在确定模型的时候指定它的值。 </p>
 <p>模型的复杂度常常体现在参数 \( {\bf w} \) 的各个分量的幅度上，因而一个最常用的正则项为 \( {\bf w} \) 的 \( {\text L}2 \) 范数，如下式所示，同样地，前面的 \( \frac{1}{2} \) 系数是为了处理方便。<br>$$<br>E_{W}({\bf w}) = \frac{1}{2} {\bf w}^{\text T}{\bf w}<br>\tag{15}<br>$$</p>
 <p>该正则项会将参数 \( {\bf w} \) 向 \( {\bf 0} \) 的方向引导，将式（4）和式（15）代入式（14），可以写出新的代价函数为<br>$$<br>\frac{1}{2} \sum_{n = 1}^{N} \lbrace t_{n} - {\bf w}^{\text T} {\bf \phi} ({\bf x}_{n}) \rbrace^{2} + \frac{\lambda}{2} {\bf w}^{\text T}{\bf w}<br>\tag{16}<br>$$</p>
 <p>由于式（16）仍然是参数 \( {\bf w} \) 的二次函数，因而将其对 \( {\bf w} \) 求导并置为 \( {\bf 0} \)，可得<br>$$<br>{\bf w}_{\text {LSR}} = (\lambda {\bf I} + {\bf \Phi}^{\text T} {\bf \Phi})^{-1} {\bf \Phi}^{\text T} {\bf t}<br>\tag{17}<br>$$ </p>
-<p>可以看到，加了正则项之后，求得的 \( {\bf w} \) 的表达式中是对 \( (\lambda {\bf I} + {\bf \Phi}^{\text T} {\bf \Phi}) \) 求逆，而原先是直接对 \( {\bf \Phi}^{\text T} {\bf \Phi}) \) 求逆。方阵  \( (\lambda {\bf I} + {\bf \Phi}^{\text T} {\bf \Phi}) \) 相对于 \( {\bf \Phi}^{\text T} {\bf \Phi}) \) 来说有两点好处：一是保证可逆，二是条件数（condition number）比较小。而这两点就可以保证 \( {\bf w} \) 的每个分量不会很大，从而也就抑制了过拟合现象的发生。</p>
-<p>事实上，\( {\bf w} \) 的 \( \rm{L}\it{p}\) 范数都可以被选作正则项。但 \( \rm{L}2\) 范数和 \( \rm{L}1\) 范数被应用的最广泛，将 \( \rm{L}2\) 范数作为正则项的线性回归问题一般被称作 Ridge 回归问题，而含有 \( \rm{L}1\) 范数约束的优化问题被称作 <a href="https://en.wikipedia.org/wiki/Lasso_(statistics)%0A" rel="external nofollow noopener noreferrer" target="_blank"> LASSO 问题 </a>。\( {\bf w} \) 的\( \rm{L}1\) 范数约束相较于 \( \rm{L}2\) 范数约束来说更倾向于选择出一组稀疏的解。</p>
+<p>可以看到，加了正则项之后，求得的 \( {\bf w} \) 的表达式中是对 \( (\lambda {\bf I} + {\bf \Phi}^{\text T} {\bf \Phi}) \) 求逆，而原先是直接对 \( {\bf \Phi}^{\text T} {\bf \Phi} \) 求逆。方阵  \( (\lambda {\bf I} + {\bf \Phi}^{\text T} {\bf \Phi}) \) 相对于 \( {\bf \Phi}^{\text T} {\bf \Phi} \) 来说有两点好处：一是保证可逆，二是条件数（condition number）比较小。而这两点就可以保证 \( {\bf w} \) 的每个分量不会很大，从而也就抑制了过拟合现象的发生。</p>
+<p>事实上，\( {\bf w} \) 的 \( \rm{L}\it{p}\) 范数都可以被选作正则项。但 \( \rm{L}2\) 范数和 \( \rm{L}1\) 范数被应用的最为广泛，将 \( \rm{L}2\) 范数作为正则项的线性回归问题一般被称作 Ridge 回归问题，而含有 \( \rm{L}1\) 范数约束的优化问题被称作 <a href="https://en.wikipedia.org/wiki/Lasso_(statistics)%0A" rel="external nofollow noopener noreferrer" target="_blank"> LASSO 问题 </a>。\( {\bf w} \) 的 \( \rm{L}1\) 范数约束相较于 \( \rm{L}2\) 范数约束来说更倾向于选择出一组稀疏的解（即倾向于将 \( {\bf w} \) 的某些分量置为 0）。</p>
+<p>我们后面可以看到，含正则项的最小二乘估计实际上等价于 Bayesian 线性回归模型（参数的先验概率分布取为零均值球形高斯分布）下对参数的最大后验概率估计，采用 Bayesian 的方法来训练模型一般都可以很好地解决过拟合的问题。</p>
 <hr>
-<h1 id="Bias-Variance-分解与折中"><a href="#Bias-Variance-分解与折中" class="headerlink" title="Bias-Variance 分解与折中"></a>Bias-Variance 分解与折中</h1><hr>
-<h1 id="Bayesian-线性回归模型"><a href="#Bayesian-线性回归模型" class="headerlink" title="Bayesian 线性回归模型"></a>Bayesian 线性回归模型</h1>
+<h1 id="Bias-Variance-分解与折中"><a href="#Bias-Variance-分解与折中" class="headerlink" title="Bias-Variance 分解与折中"></a>Bias-Variance 分解与折中</h1><p>最大似然估计或最小二乘估计倾向于选择较为复杂的模型，从而导致过拟合现象，而加入正则项且将 \( \lambda \) 的值设得比较大时，又会使模型变得过于简单，从而导致其在新的数据上表现得也不好（这种现象被称为“欠拟合”，即模型学习到的有用的东西过少）。最佳的模型的复杂度应该介于以上两者之间。事实上，针对某个模型，我们可以用一套频率学派（freqentist viewpoint）的方法来分析其泛化能力（在测试集上表现的好坏），该方法将模型对输入数据的估计值相对于真实值的均方误差分解为两个部分，一部分由 bias 所表征，另一部分由 variance 所表征，二者此消彼长。这种分解方法非常直观且具有启发性，对于分析模型的泛化能力也非常有帮助，它使得我们可以从 bias 和 variance 这两个维度来分析模型的过拟合\欠拟合程度。</p>
+<p>假设由输入数据产生输出值的条件概率分布为 \( p(t | {\bf x}) \)，那么由信号估计理论可知，在均方误差最小的准则下，对输出值 \( t \) 的最佳估计器为<br>$$<br>h({\bf x}) = {\Bbb E}[t | {\bf x}] = \int t p(t | {\bf x}) {\text d} t<br>\tag{18}<br>$$</p>
+<p>该估计器被称为 <a href="https://en.wikipedia.org/wiki/Minimum_mean_square_error?oldformat=true" rel="external nofollow noopener noreferrer" target="_blank"> MMSE 估计器 </a> （Minimum Mean Square Error），其在信号处理领域和通信领域被广泛使用。</p>
+<p>在机器学习中，一般我们无从得知 \( p(t | {\bf x}) \) 的确切分布，因而我们也无从根据式（18）得出 \( h({\bf x}) \)；但我们可以根据训练集学习到一个模型（或估计器）\( y({\bf x}) \)，然后我们再来用均方误差来衡量该模型的好坏：<br>$$<br>\begin{aligned}<br>{\Bbb E}[L] &amp;= \int \lbrace y({\bf x}) - t \rbrace^{2} p({\bf x}, t) {\text d}{\bf x}{\text d} t \\<br>&amp;= \int \lbrace y({\bf x}) - {\Bbb E}[t | {\bf x}] + {\Bbb E}[t | {\bf x}] - t \rbrace^{2} p({\bf x}, t) {\text d}{\bf x}{\text d} t \\<br>&amp;= \int \lbrace y({\bf x}) - {\Bbb E}[t | {\bf x}] \rbrace^{2} p({\bf x}) {\text d}{\bf x} + 2 \int \lbrace y({\bf x}) - {\Bbb E} [t | {\bf x}] \rbrace \left\lbrace \int \lbrace {\Bbb E}[t | {\bf x}] - t \rbrace p(t | {\bf x}) {\text d} t \right\rbrace p({\bf x}) {\text d}{\bf x}  \\<br>&amp;+ \int \lbrace {\Bbb E}[t | {\bf x}] - t \rbrace^{2} p({\bf x}, t) {\text d}{\bf x} {\text d} t \\<br>&amp;= \int \lbrace y({\bf x}) - h({\bf x}) \rbrace^{2} p({\bf x}) {\text d}{\bf x} + \int \lbrace h({\bf x}) - t \rbrace^{2} p({\bf x}, t) {\text d}{\bf x} {\text d} t<br>\end{aligned}<br>\tag{19}<br>$$</p>
+<p>我们可以看到，模型 \( y({\bf x}) \) 的均方误差可以分为两部分，一部分为 \( y({\bf x}) \) 相对于最佳估计器 \( h({\bf x}) \) 的均方误差，对应于式（19）右侧的第一项；另一部分为系统的固有噪声，与模型无关，对应于式（19）右侧的第二项，因此第一部分对模型的性能的评估意义重大。下面我们来专门分析 \( \lbrace y({\bf x}) - h({\bf x}) \rbrace^{2} \) 这一项。</p>
+<p>注意到，选定一个模型后，我们会根据训练集来计算出该模型的参数，而对于不同的训练集，得到的模型的参数是不同的。所以给定某个训练集 \( {\cal D} \)，式（19）右侧的第一项中的积分项可表示为<br>$$<br>\lbrace y({\bf x}, {\cal D}) - h({\bf x}) \rbrace^{2}<br>\tag{20}<br>$$  </p>
+<p>上式与训练集 \( {\cal D} \) 强相关，因而不能从统计意义上来表征某个模型的好坏。我们假定有无穷个大小相同的训练集 \( {\cal D} \)，每个训练集中的数据都依照某个分布 \( p({\bf x}, t) \) 独立同分布地产生，因而我们可以对式（20）依照训练集 \( {\cal D} \) 求统计平均，而这个统计平均是可以很好地反映出某个模型的好坏的。</p>
+<p>将式（20）分解，可以得到<br>$$<br>\begin{aligned}<br>\lbrace y({\bf x}, {\cal D}) - h({\bf x}) \rbrace^{2} &amp;= \lbrace y({\bf x}, {\cal D}) - {\Bbb E}_{\cal D}[y({\bf x}, {\cal D})] + {\Bbb E}_{\cal D}[y({\bf x}, {\cal D})] - h({\bf x}) \rbrace^{2} \\<br>&amp;= \lbrace y({\bf x}, {\cal D}) - {\Bbb E}_{\cal D}[y({\bf x}, {\cal D})] \rbrace^{2} + \lbrace {\Bbb E}_{\cal D}[y({\bf x}, {\cal D})] - h({\bf x}) \rbrace^{2} \\<br>&amp;+ 2 \lbrace y({\bf x}, {\cal D}) - {\Bbb E}_{\cal D}[y({\bf x}, {\cal D})] \rbrace \lbrace {\Bbb E}_{\cal D}[y({\bf x}, {\cal D})] - h({\bf x}) \rbrace<br>\end{aligned}<br>\tag{21}<br>$$</p>
+<p>对上式两端依照训练集 \( {\cal D} \) 求期望，可以看到上式右端的第三项会变为 \( 0 \)，因而有<br>$$<br>\begin{aligned}<br>&amp;{\Bbb E}_{\cal D}[\lbrace y({\bf x}, {\cal D}) - h({\bf x}) \rbrace^{2}] \\<br>&amp;= \underbrace{\lbrace {\Bbb E}_{\cal D}[y({\bf x}, {\cal D})] - h({\bf x}) \rbrace^{2} }_{(\text {bias})^2} + \underbrace{\Bbb {E}_{\cal D}[\lbrace y({\bf x}, {\cal D}) - {\Bbb E}_{\cal D}[y({\bf x}, {\cal D})] \rbrace^{2}]}_{\text {variance} }<br>\end{aligned}<br>\tag{22}<br>$$</p>
+<p>将上式代入式（19）中，可得<br>$$<br>{\Bbb E}[L] = ({\text {bias}})^{2} + {\text {variance}} + {\text {noise}}<br>\tag{23}<br>$$</p>
+<p>其中<br>$$<br>\begin{align}<br>({\text {bias}})^{2} &amp;= \int \lbrace {\Bbb E}_{\cal D}[y({\bf x}, {\cal D})] - h({\bf x}) \rbrace^{2} p({\bf x}) {\text d} {\bf x}<br>\tag{23}  \\<br>{\text {variance}} &amp;= \int \Bbb {E}_{\cal D}[\lbrace y({\bf x}, {\cal D}) - {\Bbb E}_{\cal D}[y({\bf x}, {\cal D})] \rbrace^{2}] p({\bf x}) {\text d} {\bf x}<br>\tag{24} \\<br>{\text {noise}} &amp;= \int \lbrace h({\bf x}) - t \rbrace^{2} p({\bf x}, t) {\text d}{\bf x} {\text d} t<br>\tag{25}<br>\end{align}<br>$$</p>
+<p>可以看到，某个模型的均方误差由三部分组成，第一部分为模型在无穷个数据集上的平均表现相对于最佳估计器 \( h({\bf x}) \) 的偏差的平方 \( ({\text {bias}})^{2} \)，表征的是模型的学习能力；第二部分为在不同数据集情况下训练出来的具体模型之间的差异的大小 \( {\text {variance}} \)，表征的是模型的过拟合倾向；第三部分为与模型无关的固有噪声 \( {\text {noise}} \)。</p>
+<p>为使模型的泛化能力强（即均方误差尽可能地小），我们要使 \( ({\text {bias}})^{2} \) 与 \( {\text {variance}} \) 之和尽量地小。而 bias  与 variance 之间存在一个 trade-off，对于复杂的模型，其 bias 会很小（学习能力强），variance 大（倾向于过拟合）；而对于简单的模型，其 bias 大（学习能力弱），variance 小（在各个数据集上训练出的参数差异不大）。因而具有最佳泛化能力的模型应当介于以上二者之间，需要在 bias 和 variance 之间寻求一个平衡。</p>
+<p>下面举个具体的例子来阐释 bias-variance 分解与折中。假定输入样本 \( x_{n} \) 由一个取值范围为 \( (0, 1) \) 的均匀分布所产生，输出值 \( t_{n} \) 先由函数 \( h(x) = \text {sin}(2\pi x) \) 计算出一个值，然后再加上一个偏移噪声，噪声由服从均值为 \( 0 \)，标准差为 \( 0.3 \) 的高斯分布产生。依照以上过程产生 100 个数据集，每个数据集包含 \( N = 25 \) 个样本点。我们使用线性回归模型，选取 \( \phi_{m} (x) = x^m \)，其中 \( m = 0,1,\cdots,24 \)，采用含 \( {\text L}2 \) 正则项的最小二乘估计作为对参数的估计方法，分别在每个数据集上计算出一个预测函数 \( y^{(l)}(x) \)，其中 \( l = 1,2,\cdots, 100 \)。为展示不同模型之间的泛化能力的差异，我们使用正则系数 \( \lambda \) 来控制模型的复杂度，这里我们选取了三个模型，分别对应于 \( \ln \lambda = 2.6 \) （低复杂度）、\( \ln \lambda = -0.31 \)（中复杂度）、\( \ln \lambda = 2.6 \) （高复杂度）。</p>
+<p>下图中每一行展示一个模型，每一行的左侧展示了该模型在不同数据集下得到的预测函数的曲线，右侧展示了平均预测函数（红色曲线）和最佳估计器 \( h(x) = \text {sin}(2\pi x) \) （绿色曲线）之间的差异。</p>
+<div align="center"><br><img src="https://raw.githubusercontent.com/ToWeather/MarkdownPhotos/master/illustration_of_bias_variance_tradeoff.png" width="1000" height="600" alt="不同复杂度模型下的预测函数的差异" align="center"><br></div>
+
+<p>可以看到，不同复杂度下的模型的 bias 和 variance 的变化趋势确实如之前分析的一样。</p>
+<p>我们还可以取更多不同的 \( \lambda \) 值，以对应更多不同复杂度的模型，从而将 bias 和 variance 的变化趋势更加直观的画出来，如下图所示。</p>
+<div align="center"><br><img src="https://raw.githubusercontent.com/ToWeather/MarkdownPhotos/master/illustration_of_bias_variance_tradeoff_2.png" width="600" height="350" alt="bias-variance 变化趋势" align="center"><br></div>
+
+<p>上图中我们还画出了不同模型在测试集上的误差变化曲线，和 \( ({\text {bias}})^{2} \) 与 \( {\text {variance}} \) 之和的曲线的变化趋势基本一致。同时还可以看到，具有最佳泛化能力（最佳表示在我们使用的模型空间中的最佳模型）的模型的复杂度既没有太低，也没有太高。</p>
+<hr>
+<h1 id="Bayesian-线性回归模型"><a href="#Bayesian-线性回归模型" class="headerlink" title="Bayesian 线性回归模型"></a>Bayesian 线性回归模型</h1><p>最大似然估计体现了频率学派对未知参数（如 \( {\bf w} \) ）的一种经典的处理手法：假设未知参数是一个我们不知道的确定量，然后再利用手上有的资料或信息（例如训练数据集）来对该未知参数作一个点估计，并利用该估计量去解决现有问题（如对新的数据进行预测）。但由于我们已知的可以用来推断未知参数的信息总是有限的或有偏的，因而非常容易导致过拟合。</p>
+<p>假设我们有多份数据集，每份数据集的样本数都很可观，我们可以根据每份数据集推断出一个对未知参数的估计值，然后再将所有的估计值取平均得到一个新的估计量，这个新的估计量应当更接近未知参数的真实值。而事实上，我们仅有一份数据集，因而无法利用上述的方法来提高估计量的精度，但利用 Bayesian 的方法，我们只需要一份数据集就可以实现上面的取平均的方法，这里的取平均是利用参数的分布做加权平均，而不是对不同的数据集取平均，因而 Bayesian 的方法在抑制过拟合或模型选择方面益处多多。</p>
+<p>Bayesian 学派将未知参数当作一个随机变量，且这个随机变量有一个先验概率分布，当我们有了数据集之后，根据该数据集，我们可以得出一个关于该参数的后验分布。这样我们最终拿到的关于未知参数的信息不再是一个武断的点估计量，而是一个概率分布，而利用该概率分布可做的事情很多，例如对参数进行最大后验概率估计（仍然是点估计）、直接对新数据进行预测等等。</p>
+<p>下面我们利用 Bayesian 的方法来解决线性回归问题。我们首先还是确定一个模型（确定 \( {\bf \phi}({\bf x}) \) 的形式和维度），然后再给参数 \( {\bf w} \) 假定一个先验分布 \( p({\bf w}) \)，为处理方便，我们假定其先验分布服从高斯分布<br>$$<br>p({\bf w}) = {\cal N}({\bf w} | {\bf m}_{0}, {\bf S}_{0})<br>\tag{26}<br>$$</p>
+<p>参数 \( {\bf w} \) 的后验分布满足<br>$$<br>p({\bf w} | {\bf t}) \propto p({\bf w})p({\bf t} | {\bf w})<br>\tag{27}<br>$$</p>
+<p>由式（12）可以写出 \( p({\bf t} | {\bf w}) \) 的形式为<br>$$<br>p({\bf t} | {\bf w}) = \prod_{n = 1}^{N} {\cal N}(t_{n} | {\bf w}^{\text T}{\bf \phi}({\bf x}_{n}), \beta^{-1})<br>\tag{28}<br>$$</p>
+<p>可以算得，参数 \( {\bf w} \) 的后验概率为<br>$$<br>p({\bf w} | {\bf x}) = {\cal N}({\bf w} | {\bf m}_{N}, {\bf S}_{N})<br>\tag{29}<br>$$</p>
+<p>其中<br>$$<br>\begin{align}<br>{\bf m}_{N} &amp;= {\bf S}_{N}({\bf S}_{0}^{-1} {\bf m}_{0} + \beta {\bf \Phi}^{\text T} {\bf t})  \tag{30} \\<br>{\bf S}_{N}^{-1} &amp;= {\bf S}_{0}^{-1} + \beta{\bf \Phi}^{\text T}{\bf \Phi} \tag{31}<br>\end{align}<br>$$</p>
+<p>注意到，由于参数 \( {\bf w} \) 的后验概率为高斯分布，因而其最大值与其均值一致，所以对参数 \( {\bf w} \) 的最大后验概率估计即为 \( {\bf w}_{\text {MAP}} = {\bf m}_{N} \)。当参数 \( {\bf w} \) 的先验分布不偏好于任意的取值时，即 \( {\ S}_{0} = \alpha^{-1} {\bf I} \) 且 \( \alpha \to 0 \)，均值 \( {\bf m}_{N} \) 退化为最大似然估计值 \( {\bf w}_{\text {ML}} \) （或 \( {\bf w}_{\text {LS}} \)）；当样本数量 \( N = 0 \) 时，参数 \( {\bf w} \) 的后验概率分布和其先验概率分布一致。另一个值得注意的地方是，当训练数据是序贯地到达时（在 online learning 中非常常见），每到达一份数据，我们都可以根据该数据计算出参数的后验概率分布，而这个后验概率分布又会被下一份数据当作该参数的先验概率分布，以此来估计新的后验概率分布。</p>
+<p>当取先验概率分布的参数 \( {\ m}_{0} = {\bf 0} \)，\( {\bf S}_{0} = \alpha^{-1} {\bf I} \) 时，后验概率分布的参数变为<br>$$<br>\begin{align}<br>{\bf m}_{N} &amp;= \beta {\bf S}_{N} {\bf \Phi}^{\text T}{\bf t}  \tag{32} \\<br>{\bf S}_{N}^{-1} &amp;= \alpha {\bf I} + \beta{\bf \Phi}^{\text T}{\bf \Phi} \tag{33}<br>\end{align}<br>$$</p>
+<p>对该后验概率分布取对数，可得<br>$$<br>\ln p({\bf w} | {\bf t}) = -\frac{\beta}{2} \sum_{n = 1}^{N} \lbrace t_{n} - {\bf w}^{\text T} {\bf \phi}({\bf x}_{n}) \rbrace^{2} - \frac{\alpha}{2} {\bf w}^{\text T} {\bf w} + {\text {const}}<br>\tag{34}<br>$$</p>
+<p>对该式求最大值（即对参数 \( {\bf w} \) 求最大后验概率估计）和对式（16）求最小值是等价的，这也印证了为什么在代价函数里面加入正则项会抑制过拟合：加入正则项本质上是采用了 Bayesian 的方法，即我们作了系统偏好于简单的模型的假设（在参数的先验概率分布中体现）。</p>
+<p>计算出了参数 \( {\bf w} \) 的后验概率分布后，我们可以直接用其对新数据进行预测。假定给定的新数据为 \( {\bf x} \)，输出 \( t \) 的分布即是对输出分布按照 \( {\bf w} \) 的后验概率作加权平均，如下所示：<br>$$<br>\begin{align}<br>p(t|{\bf x}, {\bf t}, \alpha, \beta) &amp;= \int p(t|{\bf x}, {\bf w}, \beta)p({\bf w} | {\bf t}, \alpha, \beta) {\text d} {\bf w} \\<br>&amp;= {\cal N}(t | {\bf m}_{N}^{\text T} {\bf \phi}({\bf x}), \sigma_{N}^{2}({\bf x}))<br>\end{align}<br>\tag{35}<br>$$</p>
+<p>可以看到，输出 \( t \) 仍然服从高斯分布，其方差为<br>$$<br>\sigma_{N}^{2}({\bf x}) = \frac{1}{\beta} + {\bf \phi}({\bf x})^{\text T} {\text S}_{N} {\bf \phi}({\bf x})<br>\tag{36}<br>$$</p>
+<p>在 Bayesian 的框架下，我们可以给出关于输出 \( t \) 的更丰富的信息，而不像之前一样根据一个数据集学习到一个参数，然后再根据该参数算出一个确定的输出值。分析输出 \( t \) 的分布可知，其均值为 \( {\bf m}_{N}^{\text T} {\bf \phi}({\bf x}) \)，和最大后验概率得到的模型对新数据的输出一致；方差分为两个部分，一部分为噪声，另一部分为由训练集带来的不确定性，\( \sigma_{N}^{2}({\bf x}) \) 是关于训练样本数 \( N \) 的减函数，且 \( \lim_{N \to +\infty} \sigma_{N}^{2}({\bf x}) = \frac{1}{\beta} \)，因而训练样本数越多，我们对 \( t = {\bf m}_{N}^{\text T} {\bf \phi}({\bf x}) \) 的把握越大。</p>
+<p>Bayesian 方法也可以被用于作模型选择，思路和我们前面讲到的一致，这里不加赘述。</p>
+
       
     </div>
     
