@@ -127,7 +127,7 @@
 
 
 
-  <title>标签: 生成模型 | Heathcliff's Notes</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>线性回归模型 | Heathcliff's Notes</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -146,7 +146,7 @@
     
   
 
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left ">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -288,52 +288,225 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>生成模型<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
+
+  
 
   <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://heathcliff.me/线性回归模型/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Heathcliff">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myicon.JPEG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Heathcliff's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/聚类分析（三）：高斯混合模型与EM算法/" itemprop="url">
-              
-                <span itemprop="name">聚类分析（三）：高斯混合模型与 EM 算法</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">线性回归模型</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-03-12T21:26:08+08:00" content="2018-03-12">
-          03-12
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-29T22:10:14+08:00">2018-03-29</time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/machine-learning-algorithms/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/线性回归模型/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="线性回归模型/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/线性回归模型/" class="leancloud_visitors" data-flag-title="线性回归模型">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    </div>
+      
 
+      
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
+<h1 id="线性回归模型"><a href="#线性回归模型" class="headerlink" title="线性回归模型"></a>线性回归模型</h1><p>一般来讲，监督学习问题可分为两类，一类是分类问题，另一类是回归问题。这两类问题的核心都是“根据一个输入数据预测出一个输出值”，只不过分类问题的输出值是离散、可数的，而回归问题的输出值是连续的。本文主要聚焦用于解决回归问题的一类最基本的模型——线性回归模型。</p>
+<p>最简单的线性回归模型就是将输出表示为输入数据各个特征的一个线性组合：<br>$$<br>y({\bf x}, {\bf w}) = w_{0} + w_{1}x_{1} + … + w_{D}x_{D}<br>\tag{1}<br>$$</p>
+<p>其中 \( {\bf x} = (x_{1}, …, x_{D})^{\text T} \)。可以看到，上式不仅是关于参数 \( w_{0}, …, w_{D} \) 的线性函数，也是关于输入数据各特征 \( x_{i} \) 的线性函数。但这样会对模型造成很大的局限性，所以我们转而考虑以下的线性模型：<br>$$<br>y({\bf x}, {\bf w}) = w_{0} + \sum_{j = 1}^{M - 1} w_{j}\phi_{j}({\bf x})<br>\tag{2}<br>$$ </p>
+<p>其中函数 \( \phi_{j} ({\bf x}) \) 被称为基函数（basis functions），因而以上模型相当于先对输入数据进行了预处理和特征变换，产生出了一组新的特征 \( \phi_{j} ({\bf x}) \)，然后再将这一组新的特征作一个线性组合作为输出，这样一来就大大地增加了模型的丰富程度。注意到，现在式 （2）不再是关于 \( x_{i} \) 的线性函数，但仍然是关于参数 \( w_{i} \) 的线性函数，前者丰富了模型的复杂度，而后者则使得问题的求解仍然十分简单。</p>
+<p>参数 \( w_{0} \) 用来刻画输出相对于输入数据的一个偏移，我们需要它是因为关于输入数据的某个仿射空间比关于输入数据的某个线性空间更加具有一般性。以下为分析方便，假设 \( \phi_{0} = 1 \)，则 式 （2）可以改写为<br>$$<br>y({\bf x}, {\bf w}) = {\bf w}^{\text T} {\bf \phi}({\bf x})<br>\tag{3}<br>$$</p>
+<p>其中 \( {\bf w} = (w_{0}, …, w_{M - 1})^{\text T} \)，\( {\bf \phi} = (\phi_{0}, …, \phi_{M - 1} ^{\text T}) \) 。</p>
+<p>一般情况下，我们会先确定好基函数 \( \phi_{j} ({\bf x}) \) 的形式，常用的有多项式函数、高斯函数、sigmoid 函数等等（预处理、特征变换）；然后我们再用式（3）来拟合训练集，使得某个代价函数最小，以此求得参数 \( {\bf w} \) 的值（训练）；最后再用求得的模型来对新的输入数据进行预测（预测）。</p>
+<hr>
+<h1 id="最小二乘估计与最大似然估计"><a href="#最小二乘估计与最大似然估计" class="headerlink" title="最小二乘估计与最大似然估计"></a>最小二乘估计与最大似然估计</h1><p>监督学习的核心问题即是根据训练数据找到一个合理的模型，在线性回归问题中，模型已经确定了下来，所以问题简化为估计模型的参数 \( {\bf w} \)，这一部分将阐述参数 \( {\bf w} \) 的最小二乘估计方法及其与最大似然估计问题的联系。</p>
+<h2 id="最小二乘参数估计"><a href="#最小二乘参数估计" class="headerlink" title="最小二乘参数估计"></a>最小二乘参数估计</h2><p>假设训练集的输入数据为 \( {\bf X} = \lbrace {\bf x}_{1}, …, {\bf x}_{N} \rbrace \)，其中 \( {\bf x}_{i} \in {\Bbb R}^{D} \)，  对应的输出值为 \( {\bf t} = \lbrace t_{1}, …, t_{N} \rbrace \)，那么最小二乘估计希望由下式所表达的真实输出值与拟合得到的输出值之间的平方误差和最小：<br>$$<br>E_{D}({\bf w}) = \frac{1}{2} \sum_{n = 1}^{N} \lbrace t_{n} - {\bf w}^{\text T} {\bf \phi} ({\bf x}_{n}) \rbrace^{2}<br>\tag{4}<br>$$</p>
+<p>上式中的系数 \( \frac{1}{2} \) 是为了后续处理的方便。将上式对 \( {\bf w} \) 求导可得<br>$$<br>\nabla E_{D}({\bf w}) = -\sum_{n = 1}^{N} \lbrace t_{n} - {\bf w}^{\text T} {\bf \phi} ({\bf x}_{n}) \rbrace {\bf \phi} ({\bf x}_{n})<br>\tag{5}<br>$$</p>
+<p>将以上关于  \( {\bf w} \) 的导数置为 \( {\bf 0} \) 可得<br>$$<br>\sum_{n = 1}^{N} t_{n} {\bf \phi} ({\bf x}_{n}) - \left( \sum_{n = 1}^{N} {\bf \phi} ({\bf x}_{n}){\bf \phi} ({\bf x}_{n}) ^{\text T} \right) {\bf w} = {\bf 0}<br>\tag{6}<br>$$</p>
+<p>可以求得参数 \( {\bf w} \) 的最小二乘估计为<br>$$<br>{\bf w}_{\text {LS}} = \left( {\bf \Phi}^{\text T} {\bf \Phi} \right)^{-1} {\bf \Phi}^{\text T} {\bf t}<br>\tag{7}<br>$$</p>
+<p>该式被称为最小二乘问题的正规方程（normal equations），其中矩阵 \( {\bf \Phi} \in {\Bbb R}^{N \times M} \) 的具体形式为<br>$$<br>{\bf \Phi} = \begin{pmatrix} {\bf \phi}({\bf x}_{1})^{\text T} \\ {\bf \phi}({\bf x}_{2})^{\text T} \\ \vdots \\ {\bf \phi}({\bf x}_{N})^{\text T} \end{pmatrix} = \begin{pmatrix} \phi_{0}({\bf x}_{1}) &amp; \phi_{1}({\bf x}_{1}) &amp; \cdots &amp; \phi_{M - 1}({\bf x}_{1}) \\ \phi_{0}({\bf x}_{2}) &amp; \phi_{1}({\bf x}_{2}) &amp; \cdots &amp; \phi_{M - 1}({\bf x}_{2}) \\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\ \phi_{0}({\bf x}_{N}) &amp; \phi_{1}({\bf x}_{N}) &amp; \cdots &amp; \phi_{M - 1}({\bf x}_{N}) \end{pmatrix}<br>\tag{8}<br>$$ </p>
+<p>注意到，最小二乘估计的目的是想求得以下线性方程组的近似解：<br>$$<br>{\bf \Phi} {\bf w} = {\bf t}<br>\tag{9}<br>$$</p>
+<p>当 \( N >> M \) 时（一般情况下都会要求训练样本数远远大于数据的维度，否则容易出现过拟合），\( {\bf \Phi} \) 的列空间为一个嵌在 \( N \) 维空间中的 \( M \) 维子空间，而当 \( {\bf t} \) 正好也在该 \( M \) 维子空间中时，方程（7）有解，而由于 \( N >> M \)， \( {\bf t} \) 正好落在 \( {\bf \Phi} \) 的列空间的可能性极小（如果出现这种情况，说明数据集不够好，导致出现过拟合现象），因而我们希望找到一个 \( {\bf w} \)，使得 \( {\bf \Phi} {\bf w} \) 与 \( {\bf t} \) 尽可能地接近，\( {\bf t} \) 到 \( {\bf \Phi} \) 的列空间的最近距离为 \( {\bf t} \) 到其在\( {\bf \Phi} \) 的列空间上的投影的距离，因而我们可以求向量 \( {\bf t} \) 在 \( {\bf \Phi} \) 的列空间上的投影，可求得该投影为<br>$$<br>{\bf y}_{\text {proj}} = {\bf \Phi} \left( {\bf \Phi}^{\text T} {\bf \Phi} \right)^{-1} {\bf \Phi}^{\text T} {\bf t} = {\bf \Phi} {\bf w}_{\text {proj}}<br>\tag{10}<br>$$</p>
+<p>可以看到，式（10）得出的最佳 \( {\bf w}_{\text {proj}} \) 和式（7）中的 \( {\bf w}_{\text {LS}} \) 一致，而以上的阐述正好直观地反映了最小二乘方法的几何意义。</p>
+<h2 id="与最大似然估计的联系"><a href="#与最大似然估计的联系" class="headerlink" title="与最大似然估计的联系"></a>与最大似然估计的联系</h2><p>假设输出值 \( t \) 是由下式所产生：<br>$$<br>t = y({\bf x}, {\bf w}) + \epsilon<br>\tag{11}<br>$$</p>
+<p>即我们假设 \( t \) 是由 y({\bf x}, {\bf w}) 受到一个加性噪声的扰动所产生的，噪声 \( \epsilon \) 服从均值为 \( 0 \)，方差为 \( \beta^{-1} \) 的高斯分布，则我们可以得出输出值 \( t \) 服从分布<br>$$<br>p(t|{\bf x}, {\bf w}, \beta) = {\cal N}(t| y({\bf x}, {\bf w}), \beta^{-1})<br>\tag{12}<br>$$</p>
+<p>给定训练集 \( {\bf X} \) 和 \( {\bf t} \) 后，我们可以写出参数 \( {\bf w} \) 的对数似然函数：<br>$$<br>\begin{aligned}<br>\ln p({\bf t} | {\bf w}, \beta) &amp;= \sum_{n = 1}^{N} \ln {\cal N}(t_{n}| {\bf w}^{\text T} {\bf \phi}({\bf x}_{n}), \beta^{-1}) \\<br>&amp;= \frac{N}{2} \ln \beta - \frac{N}{2} \ln(2 \pi) - \beta E_{D}({\bf w})<br>\end{aligned}<br>\tag{13}<br>$$</p>
+<p>其中 \( E_{D}({\bf w}) \) 的定义见式（4），可以看到，为使似然函数最大，我们希望  \( E_{D}({\bf w}) \)  最小（上式中的前两项均为常数），由此说明了该模型下的关于参数 \( {\bf w} \) 的最大似然估计等价于最小二乘估计。</p>
+<h2 id="含正则项的最小二乘估计"><a href="#含正则项的最小二乘估计" class="headerlink" title="含正则项的最小二乘估计"></a>含正则项的最小二乘估计</h2><p>最大似然估计的一大问题就是容易出现过拟合，过拟合就是模型在训练集上表现得太好，学习到了训练集的一些非泛化的特点（如噪声），从而导致训练出来的模型在真实的数据上表现得不佳。当输入数据的维度较大、而训练样本数较少时，容易出现过拟合现象，表现形式为训练出来的模型过于复杂。因而我们需要适当地限制模型的复杂度，这一点可以通过在代价函数中加入一项用来衡量模型复杂度的正则项 \( E_{W}({\bf w}) \)，这样，新的代价函数变为<br>$$<br>E_{D}({\bf w}) + \lambda E_{W}({\bf w})<br>\tag{14}<br>$$</p>
+<p>其中 \( \lambda \) 为权衡正则化项与最小二乘代价项的参数， \( \lambda \) 越大，我们越倾向于选择复杂度越低的模型。值得指出的是，\( \lambda \) 为一个超参数（hyperparameter），属于模型的一部分，需要在确定模型的时候指定它的值。 </p>
+<p>模型的复杂度常常体现在参数 \( {\bf w} \) 的各个分量的幅度上，因而一个最常用的正则项为 \( {\bf w} \) 的 \( {\text L}2 \) 范数，如下式所示，同样地，前面的 \( \frac{1}{2} \) 系数是为了处理方便。<br>$$<br>E_{W}({\bf w}) = \frac{1}{2} {\bf w}^{\text T}{\bf w}<br>\tag{15}<br>$$</p>
+<p>该正则项会将参数 \( {\bf w} \) 向 \( {\bf 0} \) 的方向引导，将式（4）和式（15）代入式（14），可以写出新的代价函数为<br>$$<br>\frac{1}{2} \sum_{n = 1}^{N} \lbrace t_{n} - {\bf w}^{\text T} {\bf \phi} ({\bf x}_{n}) \rbrace^{2} + \frac{\lambda}{2} {\bf w}^{\text T}{\bf w}<br>\tag{16}<br>$$</p>
+<p>由于式（16）仍然是参数 \( {\bf w} \) 的二次函数，因而将其对 \( {\bf w} \) 求导并置为 \( {\bf 0} \)，可得<br>$$<br>{\bf w}_{\text {LSR}} = (\lambda {\bf I} + {\bf \Phi}^{\text T} {\bf \Phi})^{-1} {\bf \Phi}^{\text T} {\bf t}<br>\tag{17}<br>$$ </p>
+<p>可以看到，加了正则项之后，求得的 \( {\bf w} \) 的表达式中是对 \( (\lambda {\bf I} + {\bf \Phi}^{\text T} {\bf \Phi}) \) 求逆，而原先是直接对 \( {\bf \Phi}^{\text T} {\bf \Phi}) \) 求逆。方阵  \( (\lambda {\bf I} + {\bf \Phi}^{\text T} {\bf \Phi}) \) 相对于 \( {\bf \Phi}^{\text T} {\bf \Phi}) \) 来说有两点好处：一是保证可逆，二是条件数（condition number）比较小。而这两点就可以保证 \( {\bf w} \) 的每个分量不会很大，从而也就抑制了过拟合现象的发生。</p>
+<p>事实上，\( {\bf w} \) 的 \( \rm{L}\it{p}\) 范数都可以被选作正则项。但 \( \rm{L}2\) 范数和 \( \rm{L}1\) 范数被应用的最广泛，将 \( \rm{L}2\) 范数作为正则项的线性回归问题一般被称作 Ridge 回归问题，而含有 \( \rm{L}1\) 范数约束的优化问题被称作 <a href="https://en.wikipedia.org/wiki/Lasso_(statistics)%0A" rel="external nofollow noopener noreferrer" target="_blank"> LASSO 问题 </a>。\( {\bf w} \) 的\( \rm{L}1\) 范数约束相较于 \( \rm{L}2\) 范数约束来说更倾向于选择出一组稀疏的解。</p>
+<hr>
+<h1 id="Bias-Variance-分解与折中"><a href="#Bias-Variance-分解与折中" class="headerlink" title="Bias-Variance 分解与折中"></a>Bias-Variance 分解与折中</h1><hr>
+<h1 id="Bayesian-线性回归模型"><a href="#Bayesian-线性回归模型" class="headerlink" title="Bayesian 线性回归模型"></a>Bayesian 线性回归模型</h1>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/线性模型/" rel="tag"># 线性模型</a>
+          
+            <a href="/tags/线性回归/" rel="tag"># 线性回归</a>
+          
+            <a href="/tags/监督学习/" rel="tag"># 监督学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/聚类分析（四）：DBSCAN-算法/" rel="next" title="聚类分析（四）：DBSCAN 算法">
+                <i class="fa fa-chevron-left"></i> 聚类分析（四）：DBSCAN 算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -341,6 +514,20 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -361,8 +548,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -431,6 +627,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#线性回归模型"><span class="nav-number">1.</span> <span class="nav-text">线性回归模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最小二乘估计与最大似然估计"><span class="nav-number">2.</span> <span class="nav-text">最小二乘估计与最大似然估计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#最小二乘参数估计"><span class="nav-number">2.1.</span> <span class="nav-text">最小二乘参数估计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#与最大似然估计的联系"><span class="nav-number">2.2.</span> <span class="nav-text">与最大似然估计的联系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#含正则项的最小二乘估计"><span class="nav-number">2.3.</span> <span class="nav-text">含正则项的最小二乘估计</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Bias-Variance-分解与折中"><span class="nav-number">3.</span> <span class="nav-text">Bias-Variance 分解与折中</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Bayesian-线性回归模型"><span class="nav-number">4.</span> <span class="nav-text">Bayesian 线性回归模型</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -555,6 +767,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.0"></script>
+
+
 
   
 
@@ -572,6 +788,18 @@
       <script id="dsq-count-scr" src="https://heathcliff.disqus.com/count.js" async></script>
     
 
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://heathcliff.me/线性回归模型/';
+          this.page.identifier = '线性回归模型/';
+          this.page.title = '线性回归模型';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://heathcliff.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
     
 
   
