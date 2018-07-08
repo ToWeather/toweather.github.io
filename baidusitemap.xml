@@ -4,8 +4,40 @@
 
     
   <url>
+    <loc>http://heathcliff.me/%E5%9B%BE%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%92%8C%E7%A7%AF%E7%AE%97%E6%B3%95/</loc>
+    <lastmod>2018-07-08T04:01:36.553Z</lastmod>
+    <data>
+        <display>
+        <title>图模型与和积算法</title>
+        <pubTime>2018-05-06T11:47:22.000Z</pubTime>
+        
+        <tag>概率分布</tag>
+         
+        <tag>图模型</tag>
+         
+        <tag>马尔可夫随机场</tag>
+         
+        <tag>和积算法</tag>
+         
+        <tag>贝叶斯网络</tag>
+         
+        <tag>最大和算法</tag>
+         
+        <tag>动态规划</tag>
+         
+         
+           
+             
+              <breadCrumb title="机器学习算法" url="http://heathcliff.me/categories/machine-learning-algorithms/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://heathcliff.me/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E6%A8%A1%E5%9E%8B/</loc>
-    <lastmod>2018-05-06T11:38:28.716Z</lastmod>
+    <lastmod>2018-05-06T11:53:58.220Z</lastmod>
     <data>
         <display>
         <title>线性回归模型</title>
