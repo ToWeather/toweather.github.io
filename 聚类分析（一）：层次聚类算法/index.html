@@ -602,7 +602,20 @@
 <div align="center"><br><img src="https://raw.githubusercontent.com/ToWeather/MarkdownPhotos/master/aggm_clust_linkage_comparing.png" width="780" height="650" alt="不同方法下的聚类结果" align="center"><br></div>
 
 <p>在上面的过程中，我们还为每一种聚类产生的结果计算了一个用于评估聚类结果与样本的真实类之间的相近程度的 <a href="">AMI</a>()（Adjust Mutual Information）量，该量越接近于 <code>1</code> 则说明聚类算法产生的类越接近于真实情况。程序的打印结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">method single:</div><div class="line">Adjust mutual information: 0.001</div><div class="line">time used: 0.008 seconds</div><div class="line">method complete:</div><div class="line">Adjust mutual information: 0.838</div><div class="line">time used: 0.013 seconds</div><div class="line">method average:</div><div class="line">Adjust mutual information: 0.945</div><div class="line">time used: 0.019 seconds</div><div class="line">method ward:</div><div class="line">Adjust mutual information: 0.956</div><div class="line">time used: 0.015 seconds</div></pre></td></tr></table></figure>
+<p><code>``
+method single:
+Adjust mutual information: 0.001
+time used: 0.008 seconds
+method complete:
+Adjust mutual information: 0.838
+time used: 0.013 seconds
+method average:
+Adjust mutual information: 0.945
+time used: 0.019 seconds
+method ward:
+Adjust mutual information: 0.956
+time used: 0.015 seconds
+\</code>``</p>
 <p>从上面的图和 AMI 量的表现来看，Single-link 方法下的层次聚类结果最差，它几乎将所有的点都聚为一个 <code>cluster</code>，而其他两个 <code>cluster</code> 则都仅包含个别稍微有点偏离中心的样本点，这充分体现了 Single-link 方法下的“链式效应”，也体现了 Agglomerative 算法的一个特点，即“赢者通吃”（rich getting richer）： Agglomerative 算法倾向于聚出不均匀的类，尺寸大的类倾向于变得更大，对于 Single-link 和 UPGMA（Average） 方法尤其如此。由于本次实验的样本集较为理想，因此除了 Single-link 之外的其他方法都表现地还可以，但当样本集变复杂时，上述“赢者通吃” 的特点会显现出来。</p>
 
       
@@ -761,7 +774,7 @@
                 
                 <div class="site-state-item site-state-tags">
                   <a href="/tags/index.html">
-                    <span class="site-state-item-count">22</span>
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
