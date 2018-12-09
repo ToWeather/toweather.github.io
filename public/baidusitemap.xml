@@ -4,8 +4,33 @@
 
     
   <url>
+    <loc>http://heathcliff.me/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/</loc>
+    <lastmod>2018-12-09T15:36:16.500Z</lastmod>
+    <data>
+        <display>
+        <title>逻辑回归</title>
+        <pubTime>2018-07-09T14:23:52.000Z</pubTime>
+        
+        <tag>监督学习</tag>
+         
+        <tag>线性分类算法</tag>
+         
+        <tag>判别模型</tag>
+         
+         
+           
+             
+              <breadCrumb title="机器学习算法" url="http://heathcliff.me/categories/machine-learning-algorithms/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+    
+  <url>
     <loc>http://heathcliff.me/%E5%9B%BE%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%92%8C%E7%A7%AF%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2018-07-08T04:01:36.553Z</lastmod>
+    <lastmod>2018-07-08T16:11:47.897Z</lastmod>
     <data>
         <display>
         <title>图模型与和积算法</title>
@@ -15,15 +40,39 @@
          
         <tag>图模型</tag>
          
+        <tag>贝叶斯网络</tag>
+         
         <tag>马尔可夫随机场</tag>
          
         <tag>和积算法</tag>
          
-        <tag>贝叶斯网络</tag>
-         
         <tag>最大和算法</tag>
          
         <tag>动态规划</tag>
+         
+         
+           
+             
+              <breadCrumb title="机器学习算法" url="http://heathcliff.me/categories/machine-learning-algorithms/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://heathcliff.me/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E5%B1%82%E6%AC%A1%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95/</loc>
+    <lastmod>2018-07-08T15:03:04.003Z</lastmod>
+    <data>
+        <display>
+        <title>聚类分析（一）：层次聚类算法</title>
+        <pubTime>2017-12-01T12:59:23.000Z</pubTime>
+        
+        <tag>聚类</tag>
+         
+        <tag>非监督学习</tag>
+         
+        <tag>层次聚类</tag>
          
          
            
@@ -127,30 +176,6 @@
         <tag>非监督学习</tag>
          
         <tag>k-means 算法</tag>
-         
-         
-           
-             
-              <breadCrumb title="机器学习算法" url="http://heathcliff.me/categories/machine-learning-algorithms/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://heathcliff.me/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E5%B1%82%E6%AC%A1%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2018-03-22T12:14:49.825Z</lastmod>
-    <data>
-        <display>
-        <title>聚类分析（一）：层次聚类算法</title>
-        <pubTime>2017-12-01T12:59:23.000Z</pubTime>
-        
-        <tag>聚类</tag>
-         
-        <tag>非监督学习</tag>
-         
-        <tag>层次聚类</tag>
          
          
            

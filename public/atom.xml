@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://heathcliff.me/"/>
-  <updated>2018-07-08T04:01:36.553Z</updated>
+  <updated>2018-12-09T15:36:16.500Z</updated>
   <id>http://heathcliff.me/</id>
   
   <author>
@@ -17,11 +17,40 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>逻辑回归</title>
+    <link href="http://heathcliff.me/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/"/>
+    <id>http://heathcliff.me/逻辑回归/</id>
+    <published>2018-07-09T14:23:52.000Z</published>
+    <updated>2018-12-09T15:36:16.500Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;script type=&quot;text/javascript&quot; src=&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;&lt;em&gt;本篇文章为讲述经典分类算法的第一篇文章，其
+      
+    
+    </summary>
+    
+      <category term="机器学习算法" scheme="http://heathcliff.me/categories/machine-learning-algorithms/"/>
+    
+    
+      <category term="监督学习" scheme="http://heathcliff.me/tags/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="线性分类算法" scheme="http://heathcliff.me/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/"/>
+    
+      <category term="判别模型" scheme="http://heathcliff.me/tags/%E5%88%A4%E5%88%AB%E6%A8%A1%E5%9E%8B/"/>
+    
+  </entry>
+  
+  <entry>
     <title>图模型与和积算法</title>
     <link href="http://heathcliff.me/%E5%9B%BE%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%92%8C%E7%A7%AF%E7%AE%97%E6%B3%95/"/>
     <id>http://heathcliff.me/图模型与和积算法/</id>
     <published>2018-05-06T11:47:22.000Z</published>
-    <updated>2018-07-08T04:01:36.553Z</updated>
+    <updated>2018-07-08T16:11:47.897Z</updated>
     
     <summary type="html">
     
@@ -41,11 +70,11 @@
     
       <category term="图模型" scheme="http://heathcliff.me/tags/%E5%9B%BE%E6%A8%A1%E5%9E%8B/"/>
     
+      <category term="贝叶斯网络" scheme="http://heathcliff.me/tags/%E8%B4%9D%E5%8F%B6%E6%96%AF%E7%BD%91%E7%BB%9C/"/>
+    
       <category term="马尔可夫随机场" scheme="http://heathcliff.me/tags/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%9A%8F%E6%9C%BA%E5%9C%BA/"/>
     
       <category term="和积算法" scheme="http://heathcliff.me/tags/%E5%92%8C%E7%A7%AF%E7%AE%97%E6%B3%95/"/>
-    
-      <category term="贝叶斯网络" scheme="http://heathcliff.me/tags/%E8%B4%9D%E5%8F%B6%E6%96%AF%E7%BD%91%E7%BB%9C/"/>
     
       <category term="最大和算法" scheme="http://heathcliff.me/tags/%E6%9C%80%E5%A4%A7%E5%92%8C%E7%AE%97%E6%B3%95/"/>
     
@@ -180,7 +209,7 @@
     <link href="http://heathcliff.me/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E5%B1%82%E6%AC%A1%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95/"/>
     <id>http://heathcliff.me/聚类分析（一）：层次聚类算法/</id>
     <published>2017-12-01T12:59:23.000Z</published>
-    <updated>2018-03-22T12:14:49.825Z</updated>
+    <updated>2018-07-08T15:03:04.003Z</updated>
     
     <summary type="html">
     
