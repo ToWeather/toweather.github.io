@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://heathcliff.me/"/>
-  <updated>2018-07-08T16:11:47.897Z</updated>
+  <updated>2018-12-09T15:36:16.500Z</updated>
   <id>http://heathcliff.me/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>逻辑回归</title>
+    <link href="http://heathcliff.me/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/"/>
+    <id>http://heathcliff.me/逻辑回归/</id>
+    <published>2018-07-09T14:23:52.000Z</published>
+    <updated>2018-12-09T15:36:16.500Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;script type=&quot;text/javascript&quot; src=&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;&lt;em&gt;本篇文章为讲述经典分类算法的第一篇文章，其
+      
+    
+    </summary>
+    
+      <category term="机器学习算法" scheme="http://heathcliff.me/categories/machine-learning-algorithms/"/>
+    
+    
+      <category term="监督学习" scheme="http://heathcliff.me/tags/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="线性分类算法" scheme="http://heathcliff.me/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/"/>
+    
+      <category term="判别模型" scheme="http://heathcliff.me/tags/%E5%88%A4%E5%88%AB%E6%A8%A1%E5%9E%8B/"/>
+    
+  </entry>
   
   <entry>
     <title>图模型与和积算法</title>
