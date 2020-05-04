@@ -127,7 +127,7 @@
 
 
 
-  <title>逻辑回归 | Heathcliff's Notes</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>凸优化基础：拉格朗日乘数法、对偶与 KKT 条件 | Heathcliff's Notes</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -304,7 +304,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://heathcliff.me/逻辑回归/">
+    <link itemprop="mainEntityOfPage" href="http://heathcliff.me/凸优化基础：拉格朗日乘数法、对偶与-KKT-条件/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Heathcliff">
@@ -321,7 +321,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">逻辑回归</h1>
+          <h1 class="post-title" itemprop="name headline">凸优化基础：拉格朗日乘数法、对偶与 KKT 条件</h1>
         
 
         <div class="post-meta">
@@ -333,7 +333,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-09T22:23:52+08:00">2018-07-09</time>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-01T12:26:57+08:00">2019-05-01</time>
             
 
             
@@ -354,8 +354,8 @@
               
               
                 <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/machine-learning-algorithms/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
+                  <a href="/categories/数学基础/" itemprop="url" rel="index">
+                    <span itemprop="name">数学基础</span>
                   </a>
                 </span>
 
@@ -372,8 +372,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/逻辑回归/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="逻辑回归/" itemprop="commentCount"></span>
+                <a href="/凸优化基础：拉格朗日乘数法、对偶与-KKT-条件/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="凸优化基础：拉格朗日乘数法、对偶与-KKT-条件/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -381,7 +381,7 @@
 
           
           
-             <span id="/逻辑回归/" class="leancloud_visitors" data-flag-title="逻辑回归">
+             <span id="/凸优化基础：拉格朗日乘数法、对偶与-KKT-条件/" class="leancloud_visitors" data-flag-title="凸优化基础：拉格朗日乘数法、对偶与 KKT 条件">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -412,152 +412,265 @@
       
 
       
-        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+        <h1 id="数学优化概述"><a href="#数学优化概述" class="headerlink" title="数学优化概述"></a>数学优化概述</h1><p>所谓数学优化，就是在给定约束的情况下对某个目标函数求最小值或最大值。信号处理领域和通信领域的很多问题，最终的求解形式都可以归结为数学优化问题。</p>
+<p>凸优化问题是数学优化问题的一个子类，该问题的目标函数是凸函数，且可行域是一个凸集。对于很多数学优化问题，科学界并没有一套通用且可行的解法，但对于解决凸优化问题，其理论和方法都已经很成熟了。因而现在对于非凸问题的解法通常都是先将原问题松弛至一个凸问题，然后再求解该凸问题。</p>
+<p>本文先讲述用于求解局部最优化问题的拉格朗日乘数法（Lagrange Multipliers）以及局部最优解需满足的 KKT 条件；然后再讲述对偶（duality）—— 一种将原优化问题简化的方法；最后再对凸优化问题、对偶、KKT 条件三者之间的关系做一个简单的讲解。</p>
+<p>在讲述前先对数学优化问题给出一个正式且通用的定义：</p>
+<blockquote>
+<p><strong>定义 1：</strong> 函数 $f,g_1,\cdots,g_m$ 以及   $h_1,\cdots,h_l$ 均被定义在自变量空间 $\Omega = {\Bbb R}^n $ 上，则一般的优化问题具有如下形式</p>
+<script type="math/tex; mode=display">
+\min_{ {\bf x} \in \Omega} f({\bf x}) \quad {\text {s.t.} }  \quad g_j({\bf x}) \leq 0 \ \  \forall j  \ \   {\text {and}  }  \ \   h_i({\bf x}) = 0 \  \  \forall i
+\tag{1}</script></blockquote>
+<p>后面都会遵循这个定义及对应的符号。比如后面我们都会假定优化问题为求目标函数在可行域内的最小值（或极小值），并且假定不等式约束的方向是“约束函数小于等于0”。这样的假设是合理的，因为任何一个其他优化问题都可以转换为上述形式。</p>
+<hr>
+<h1 id="局部最优化问题及其解法"><a href="#局部最优化问题及其解法" class="headerlink" title="局部最优化问题及其解法"></a>局部最优化问题及其解法</h1><p>局部最优即是函数的极小值（或极大值）。对于无约束条件的目标函数（假设其连续可导），极值处的点  ${\bf x}^{\ast}$  必然满足导数或梯度为 ${\bf 0}$  的性质：</p>
+<script type="math/tex; mode=display">
+\nabla_{\bf x} f({\bf x}^{\ast}) = {\bf 0}
+\tag{2}</script><p>但满足式（2）的点并不一定是极值点，还有可能是鞍点（saddle point）。为此，我们进一步考虑目标函数的二阶特性，若在满足式（2）的地方同时满足如下二阶正定的特性（式（3）），则该点必然是目标函数的一个极小值点。</p>
+<script type="math/tex; mode=display">
+{\bf v}^t \nabla^2 f({\bf x}^{\ast}) {\bf v} > {\bf 0},\ \forall {\bf v} \in {\Bbb R}^{n} \backslash \lbrace {\bf 0} \rbrace
+\tag{3}</script><p>其中  $ \nabla^2 f({\bf x}) $  为 Hessian 矩阵，体现的是目标函数  $f({\bf x})$  的二阶特性。在某一点处的 Hessian 矩阵是正定矩阵说明在该点的邻域内目标函数是一个凸函数，这也符合直觉。</p>
+<p>这样，式（2）和式（3）构成了无约束局部最小化问题的解的充要条件。类似地，式（2）和 “Hessian 矩阵为负定矩阵”则是无约束局部最大化问题的解的充要条件，后面除非特殊说明，我们不再讨论求最大值或极大值的问题。</p>
+<h2 id="等式约束优化问题"><a href="#等式约束优化问题" class="headerlink" title="等式约束优化问题"></a>等式约束优化问题</h2><p>我们通过一个例子来说明等式约束优化问题的解法。</p>
+<blockquote>
+<p><strong> 问题 1:  </strong> 求解等式约束优化问题 $\min_{ {\bf x} \in {\Bbb R}^2 } f({\bf x}) \ \  {\text {s.t.} }  \ \   h({\bf x}) = 0$ ，其中  $ f({\bf x}) = x_1 + x_2 ,\ h({\bf x}) = x_{1}^2 + x_{2}^2 - 2 $。</p>
+</blockquote>
+<p>我们可以看到该例中的自变量 $ {\bf x} $ 为一个二维向量，$ x_1 $ 和 $x_2$ 分别是 ${\bf x} $ 的两个分量，这样的设定也非常利于我们作可视化的展示。</p>
+<p>我们可以在一个二维坐标系中画出目标函数  $ f({\bf x}) = x_1 + x_2$ 在给定函数值下的图像，变化函数值我们可以得出一组类似等高线的图像（如下图中蓝色曲线）；同时我们还可以画出由等式约束  $h({\bf x}) =  0 $ 所构成的可行域的图像（如下图中红色曲线）。</p>
+<div align="center">
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/114022/29/4113/192146/5eab0404E70052ef1/ce72208d06341c07.png" width="900" height="600" alt="f(x) 图像及 h(x) = 0 图像" align="center">
+</div>
 
-<p><em>本篇文章为讲述经典监督学习算法的第二篇文章，其它相关文章请参见 <a href="../classic-classifiers/index.html"><strong>经典监督学习算法系列文章</strong></a></em>。</p>
-<h1 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h1><p>逻辑回归（logistic regression）模型是一种非常简单、但又非常具有启发性的线性分类算法。所谓线性分类算法，是指经过训练产出特征空间中的超平面，并将超平面分隔出来的不同的子空间归于不同的类别的一类分类算法。逻辑回归模型在产出用于分类的超平面上又多了一层概率解释，其给出的并不只是简单的非此即彼的分类信息，而是某个样本属于某一类的置信度，这也是其在经典分类算法中具有代表性的原因。</p>
-<p> 我们先从生成模型的角度来推导逻辑回归模型。考虑二类分类问题，类别分别用 $ {\cal C}_1 $ 和 $ {\cal C}_2 $ 表示。假设输入的样本为 $ {\bf x} $，类别的先验概率为 $ p({\cal C}_k) $，指定类别下产生 $ {\bf x} $ 的概率为 $ p({\bf x} | {\cal C}_k) $。则我们可根据贝叶斯公式计算出类别 $ {\cal C}_1 $ 的后验概率为</p>
+<p>给定可行域上的某个点  ${\bf x}_{\text F}$，若我们想要向问题的最优解逼近（假设将自变量变化 $\delta {\bf x}$ ），须满足以下两个条件：</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
-p({\cal C}_1 | {\bf x}) &= \frac{p({\bf x} | {\cal C}_1) p({\cal C}_1)}{p({\bf x} | {\cal C}_1) p({\cal C}_1)) + p({\bf x} | {\cal C}_2) p({\cal C}_2)} \\
-&= \frac{1}{1 + \exp(-a) } = \sigma(a)
-\end{aligned}
-\tag{1}</script><p>其中 $ a $ 被定义为</p>
-<script type="math/tex; mode=display">
-a = \ln \frac{p({\bf x} | {\cal C}_1) p({\cal C}_1)} {p({\bf x} | {\cal C}_2) p({\cal C}_2)}
-\tag{2}</script><p>它衡量的是给定样本 $ {\bf x} $ 下类 $ {\cal C}_1 $ 的后验概率相对于类 $ {\cal C}_2 $ 的后验概率的增益。另外，式（1）中的函数 $ \sigma(a) $ 被称为 sigmoid 函数，定义为</p>
-<script type="math/tex; mode=display">
-\sigma(a) = \frac {1} {1 + \exp(-a) }
-\tag{3}</script><p>sigmoid 函数有具有以下非常好的计算性质：</p>
-<script type="math/tex; mode=display">
-\sigma(-a) = 1 - \sigma(a)
+h({\bf x}_{\text F} + \alpha \delta {\bf x}) = 0 
 \tag{4}</script><script type="math/tex; mode=display">
-\sigma^{\prime}(a) = \sigma(a) (1 - \sigma(a))
-\tag{5}</script><p>sigmoid 函数的图像如下所示</p>
+f({\bf x}_{\text F} + \alpha \delta {\bf x}) \lt f({\bf x}_{\text F})
+\tag{5}</script><p>要想满足条件（4），$\delta {\bf x}$  的方向必须与等式约束所构成的曲面  $h({\bf x}) =  0$  的切向量平行，亦即与约束函数的梯度方向 $\nabla_{\bf x} h({\bf x}_{\text F}) $ 正交，如下图所示。</p>
 <div align="center">
-<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/111146/26/1859/41157/5e9d269dEb82b3ae9/f8cde10c641ef079.png" width="700" height="500" alt="sigmoid 函数图像" align="center">
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/119212/24/4045/167464/5eab0405Ea52dc99a/6c7ab40a66d1a952.png" width="900" height="600" alt="可行域曲面的切向量方向" align="center">
 </div>
 
 
-<p>从上图中可以看出，sigmoid 函数将自变量压缩在了 $ [0, 1] $ 区间，因而很适合作为产出概率的函数；另外，由于其非线性特性以及易于计算等特点，sigmoid 函数及其变种也经常被用于神经网络（neural networks）的激活层（activation layer）。</p>
-<p>再回到我们求解类别 $ {\cal C}_1 $ 的后验概率的问题。由式（1）可知，问题可以转换为将 $ a $ 表征为含有参数的表达式，然后再在某个最优准则下求解这些参数。</p>
-<p>当我们假设在给定类别下的样本 $ {\bf x } $ 的条件概率分布为具有相同协方差矩阵（这一假设很重要，正是由于假设不同类别的条件概率分布具有相同的协方差矩阵才使得不同高斯密度函数中的二次项能够抵消）的高斯分布时，$ a $ 正好是 $ {\bf x} $ 的线性函数。具体地，假设</p>
+<p>要想满足条件（5），则  $\delta {\bf x}$  须有与目标函数的梯度反方向  $-\nabla_{\bf x} f({\bf x}_{\text F})$ 方向一致的分量，即须满足</p>
 <script type="math/tex; mode=display">
-p({\bf x} | {\cal C}_k) = \frac{1} {(2 \pi)^{D/2} } \frac {1} {|{\bf \Sigma}| ^ {1 / 2} } \exp \lbrace - \frac{1} {2} ({\bf x} - {\bf \mu}_k)^{\text T} {\bf \Sigma}^{-1} ({\bf x} - {\bf \mu}_k) \rbrace
-\tag{6}</script><p>将上式代入式（2）中，可得</p>
-<script type="math/tex; mode=display">
-a = {\bf w}^{\text T} {\bf x} + w_0
-\tag{7}</script><p>其中</p>
-<script type="math/tex; mode=display">
-{\bf w} = {\bf \Sigma}^{-1} ({\bf \mu}_1 - {\bf \mu}_2)
-\tag{8}</script><script type="math/tex; mode=display">
-w_0 = -\frac{1} {2} {\bf \mu}_{1}^{\text T} {\bf \Sigma}^{-1} {\bf \mu}_1 + \frac{1} {2} {\bf \mu}_{2}^{\text T} {\bf \Sigma}^{-1} {\bf \mu}_2 + \ln {\frac {p({\cal C}_1)} {p({\cal C}_2)} }
-\tag{9}</script><p>由于我们要求解的是各个类别的后验概率 $ p({\cal C}_k | {\bf x}) $，而它具有以下形式（以二分类模型中的类别 $ {\cal C}_1 $ 为例）：</p>
-<script type="math/tex; mode=display">
-p({\cal C}_1 | {\bf x}) = \sigma({\bf w}^{\text T} {\bf x} + w_0)
-\tag{10}</script><p>因此假设中的与高斯分布有关的参数都对我们来说都不重要，此后我们专注于求解 $ {\bf w} $ 和 $ w_0 $ 就行了。公式（10）即是逻辑回归模型的核心假设，而求解参数 $ {\bf w} $ 和 $ w_0 $ 则是逻辑回归模型的核心问题。</p>
-<hr>
-<h1 id="最大似然参数估计"><a href="#最大似然参数估计" class="headerlink" title="最大似然参数估计"></a>最大似然参数估计</h1><p>和<a href="../%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E6%A8%A1%E5%9E%8B/">线性回归问题</a>一样，我们仍然会预先将样本 $ {\bf x} $ 做特征变换得到 $ \phi = \phi({\bf x}) $；另外为便于处理，我们还假设二类分类中的类别分别为 $ {\cal C}_1 = +1 $，$ {\cal C}_2 = -1 $。那么对于某对样本 $ ({\phi}_n, t_n) $，我们可以写出其在逻辑回归模型下关于参数 $ {\bf w} $ （这里的 $ {\bf w} $ 已经涵盖了偏置量 $ w_0 $ ）的似然函数</p>
-<script type="math/tex; mode=display">
-p(t_n|{\bf w}) = y_n = \sigma(t_n{\bf w}^{\text T} {\phi}_n)
-\tag{11}</script><p>将上述似然函数求对数再取负，便可得到交叉熵（cross entropy）</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-E_n({\bf w}) &= -\ln p(t_n|{\bf w})  \\
-&= \ln(1 + \exp(-t_n a_n) \\
-&= \ln(1 + \exp(-t_n {\bf w}^{\text T} \phi_n))
-\end{aligned}
-\tag{12}</script><p>式（12）也被称作 logistic 损失函数，它与 0-1 损失函数的对比如下图所示（其中自变量为估计量 $ a $ 与实际量 $ t $ 的乘积）。</p>
+\delta {\bf x} \cdot (-\nabla_{\bf x} f({\bf x}_{\text F})) \gt 0
+\tag{6}</script><p>如下图所示。</p>
 <div align="center">
-<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/117812/13/1913/49358/5e9d26bfE22b05bd3/9bdc4510ccca76ed.png" width="700" height="500" alt="logistic 损失函数" align="center">
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/114174/14/4016/165911/5eab0418E97cc904d/1111ed8fde2717d1.png" width="900" height="600" alt="目标函数的负梯度方向" align="center">
 </div>
 
-<p>0-1 损失函数是对于二分类问题最优的一个衡量准则，在该准则下，只要估计量与实际量符号相同就认为估计器估计正确，从而没有损失；反之则认为估计器估计失败，给出一个常量损失值。虽然 0-1 损失函数是最优的，但实际场景中一般都不采用该损失函数，一是因为它不可导，不方便计算；二是它对所有错误情形一视同仁，不利于算法学习到有用且详尽的关于样本集的信息。</p>
-<p>而 logistic 损失函数则是对 0-1 损失函数的一个近似，它不仅希望估计量与实际量符号相同，它还希望估计量与实际量的乘积 $ ta $ 越大越好，这一点也是逻辑回归模型容易对线性可分（linear separable）的数据集造成严重的过拟合现象的主要原因：对于线性可分的数据集，采用最大似然方法求解参数的逻辑回归模型会产出一个分割不同类别的超平面 $ {\bf w}^{\text T} \phi = 0 $，且会将 $ {\bf w} $ 的幅度设为无穷大，从而使得训练集里面的每一个样本点所属类别的后验概率 $ p({\cal C}_k | {\bf x}) $ 都为 1；而这样的超平面不止一个，但最大似然方法没有机制来选取一个合理的超平面，最终产出的超平面完全取决于优化方法和初始值的选取。不过该过拟合问题仍然可以通过采用 Bayesian 的方法或正则化得到缓解。</p>
-<p>给定数据集 $ \lbrace \phi_n, t_n \rbrace $, 其中 $ t_n \in \lbrace -1, +1 \rbrace $，$ \phi_n = \phi({\bf x}_n) $，$ n = 1, …, N $。可以写出该数据集关于 $ {\bf w} $ 的交叉熵（或损失函数）为</p>
+<p>将以上两点结合起来看，我们很快就可以找到求解等式约束下的优化问题的最优解须满足的条件</p>
 <script type="math/tex; mode=display">
-E({\bf w}) = -\sum_{n=1}^{N} \ln y_n = -\sum_{n=1}^{N} \ln \sigma(t_n{\bf w}^{\text T} {\phi}_n)
-\tag{13}</script><p>下面讲述对参数 $ {\bf w} $ 的求解方法。</p>
-<h2 id="梯度下降法"><a href="#梯度下降法" class="headerlink" title="梯度下降法"></a>梯度下降法</h2><p>由于逻辑回归模型中的 sigmoid 函数的非线性特性，导致最大似然方法得不到关于参数 $ {\bf w} $ 的一个闭式解。梯度下降法可以提供对参数 $ {\bf w}$ 的一个简单的迭代求解过程。损失函数 $ E({\bf w}) $ 的一阶导数为</p>
+\nabla_{\bf x} f({\bf x}_{\text F}) = \mu \nabla_{\bf x} h({\bf x}_{\text F})
+\tag{7}</script><p>其中  $\mu$  为任意标量。在该场景下，由于  $\delta {\bf x}$  需要正交于  $h({\bf x}_{\text F})$ ，即有</p>
 <script type="math/tex; mode=display">
-\nabla E({\bf w}) = \sum_{n = 1}^{N} (y_n - 1)t_n \phi_n
-\tag{14}</script><p>上式用到了式（5）。梯度下降法会将 $ {\bf w} $ 朝着 $ E({\bf w}) $ 下降最快的方向逼近，其迭代公式为</p>
+\delta {\bf x} \cdot (-\nabla_{\bf x} f({\bf x}_{\text F})) = -\delta {\bf x} \cdot \mu \nabla_{\bf x} h({\bf x}_{\text F}) = 0</script><p>即在满足式（7）的  ${\bf x}_{\text F}$ 处，再也找不到一个变化自变量的方向，使得变化后的 $ {\bf x} $ 仍然在可行域内的同时使得目标函数减小，因而式（7）构成了求解等式约束问题的一个必要条件。</p>
+<p>下图展示了问题 1 中满足式（7）的两个点（critical points）。</p>
+<div align="center">
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/115424/33/3987/147120/5eab0418Eff2d667c/038d019c3fcab7ea.png" width="900" height="600" alt="critical points" align="center">
+</div>
+
+<p>但仅仅满足式（7）并不能保证  ${\bf x}_{\text F}$ 是带等式约束的局部最小值问题的解，它同样有可能是局部最大值问题的解或者鞍点，因而我们仍然需要再加上二阶正定的条件。综上所述，式（7）和二阶正定特性一起构成了带等式约束的局部最小问题的解，我们通过如下定理对上面的结论做一个正式的阐述。</p>
+<blockquote>
+<p><strong> 定理 1: </strong>  对于等式约束优化问题</p>
 <script type="math/tex; mode=display">
-{\bf w}^{({\text {new} })} = {\bf w}^{({\text {old} })} - \eta \nabla E({\bf w}) 
-\tag{15}</script><p>其中 $ \eta $ 为学习率（learning rate），是一个超参数。从式（14）与（15）中可以看出，每一个训练样本都会对 $ {\bf w}$ 的更新有所贡献，具体来说，某样本计算出的输出类别后验概率值 $ y $ 与 1 的差距越大，其贡献越大。</p>
-<h2 id="牛顿法"><a href="#牛顿法" class="headerlink" title="牛顿法"></a>牛顿法</h2><p>牛顿法是一种比梯度下降法更高效、且更容易求得最优解的迭代方法。该方法用到了对于参数 $ {\bf w} $ 的二阶导数。其迭代公式（推导放在下一小节）为</p>
+\min_{ {\bf x} \in {\Bbb R}^n} f({\bf x}) \ \ \  \text {s.t.} \ \ \ h({\bf x}) = 0\tag{8}</script><p>定义拉格朗日乘数</p>
 <script type="math/tex; mode=display">
-{\bf w}^{({\text {new} })} = {\bf w}^{({\text {old} })} - {\bf H}^{-1} \nabla E({\bf w})
-\tag{16}</script><p>其中 $ {\bf H} $ 为 Hessian 矩阵，其元素由函数 $ E({\bf w}) $ 对 $ {\bf w} $ 的二阶导数构成，具体地，</p>
+{\cal L}({\bf x}, \mu) = f({\bf x}) + \mu h({\bf x})\tag{9}</script><p>则若 ${\bf x}^{\ast}$ 为该问题的解，则必存在 $\mu^{\ast}$，满足如下条件</p>
 <script type="math/tex; mode=display">
-{\bf H}_{ij} = \frac{\partial^{2} E({\bf w})} {\partial w_i \partial w_j}
-\tag{17}</script><p>现在我们来推导牛顿法对于参数 $ {\bf w} $ 的更新。首先将 $ \nabla E({\bf w}) $ 以矩阵的形式表示</p>
+\nabla_{\bf x} {\cal L}({\bf x}^{\ast}, \mu^{\ast}) = {\bf 0}\tag{10}</script><script type="math/tex; mode=display">
+\nabla_{\mu} {\cal L}({\bf x}^{\ast}, \mu^{\ast}) = 0\tag{11}</script><script type="math/tex; mode=display">
+{\bf y}^t(\nabla_{\bf x\bf x} {\cal L}({\bf x}^{\ast}, \mu^{\ast})){\bf y} \geq 0 \ \ \ \forall {\bf y} \ \ \text {s.t.} \ \ \nabla_{\bf x}h({\bf x}^{\ast})^t {\bf y} = 0\tag{12}</script><p>反过来，若式（10）～（12）成立，则 ${\bf x}^{\ast}$ 必然为原优化问题的一个局部最小解。</p>
+</blockquote>
+<p>即式（10）～（12）是该等式约束局部优化问题有解的充要条件。注意到 ${\cal L}({\bf x}^{\ast}, \mu^{\ast}) = f({\bf x}^{\ast})$ ，式（10）等价于式（7）；式（11）强调了最优解一定满足等式约束条件；式（12）即为二阶正定性条件。</p>
+<h2 id="不等式约束优化问题"><a href="#不等式约束优化问题" class="headerlink" title="不等式约束优化问题"></a>不等式约束优化问题</h2><p>我们仍然通过一个例子来说明不等式约束优化问题的解法。</p>
+<blockquote>
+<p><strong>问题 2：</strong>求解不等式约束优化问题 $\min_{ {\bf x} \in {\Bbb R}^2 } f({\bf x}) \ \  {\text {s.t.} }  \ \   g({\bf x}) \leq 0$ ，其中  $f({\bf x}) = x_1^2 + x_2^2, \  \ g({\bf x}) = x_1^2 + x_2^2 - 1$.</p>
+</blockquote>
+<p>函数 $f({\bf x}) = x_1^2 + x_2^2$ 的等高线如下图所示。</p>
+<div align="center">
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/114653/18/4098/234669/5eabdf05E04347c35/dab2dcebde1ce8e9.png" width="900" height="600" alt="iso-contours of the objective function" align="center">
+</div>
+
+<p>不等式约束 $g({\bf x}) \leq 0$ 所产生的可行域如下图所示。</p>
+<div align="center">
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/119328/17/4115/225961/5eabf6d0E1fd0530e/08af8353e35bc7f6.png" width="900" height="600" alt="feasible region" align="center">
+</div>
+
+<p>我们可以看到在这个例子中，无约束条件下优化问题的解 ${\bf x}^{\ast}$ 正好落在可行域内，即 $g({\bf x}^{\ast}) &lt; 0$，如下图所示。此时不等式约束优化问题的解即等价于无约束优化问题的解，即式（2）和式（3）是该问题的解的充要条件。 </p>
+<div align="center">
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/108799/16/15149/275001/5eabf923E758a94f0/826e7a7ae4c9f78f.png" width="900" height="600" alt="unconstraint minimum lies in the feasible region" align="center">
+</div>
+
+<p>再考虑无约束条件下优化问题的解落在可行域之外的情形，考虑如下例子。</p>
+<blockquote>
+<p><strong>问题 3：</strong>求解不等式约束优化问题 $\min_{ {\bf x} \in {\Bbb R}^2 } f({\bf x}) \ \  {\text {s.t.} }  \ \   g({\bf x}) \leq 0$ ，其中  $f({\bf x}) = (x_1 - 1.1)^2 + (x_2 - 1.1)^2$, $g({\bf x}) = x_1^2 + x_2^2 - 1$.</p>
+</blockquote>
+<p>此时目标函数的等高线和可行域如下图所示，此时无约束优化问题的解落在可行域之外。我们可以推断，该情形下不等式约束优化问题的解必然在可行域的边界上，即此时问题退化为等式约束优化问题的求解。</p>
+<div align="center">
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/113252/28/4109/227223/5eabf922E32286a84/1a8bb891e14e22ad.png" width="900" height="600" alt="unconstraint minimum lies outside the feasible region" align="center">
+</div>
+
+<p>回忆之前等式约束优化问题须满足的条件：</p>
 <script type="math/tex; mode=display">
-\nabla E({\bf w}) = \sum_{n = 1}^{N} (y_n - 1)t_n \phi_n = {\bf \Phi}^{\text T} [ ({\bf y} - {\bf 1}) \circ {\bf t} ]
-\tag{18}</script><p>其中 $ {\bf \Phi}^{\text T} = [\phi_1, \cdots, \phi_N ] $，$ {\bf y} = (y_1, \cdots, y_N) $，$ {\bf t} = (t_1, \cdots, t_N) $，$ {\bf 1} = (1, \cdots, 1) $，$ \circ $ 为元素层面（element-wise）的乘法。 </p>
-<p>然后可以求得 Hessian 矩阵</p>
+-\nabla_{\bf x} f({\bf x}) = \lambda \nabla_{\bf x} g({\bf x})
+\tag{13}</script><p>即需要目标函数的梯度的反方向（目标函数下降最快方向）与约束函数的梯度方向平行。但考虑到此时可行域是由曲面所包裹的空间而不仅仅是曲面，目标函数的梯度的反方向需要与约束函数的梯度方向一致，即  $\lambda &gt; 0$，直观来理解就是在可行域的表面上，目标函数的下降方向与可行域的扩张方向一致，导致可行域无法再扩张（注意当前在可行域的表面），因而目标函数的值将降无可降。如下图所示。</p>
+<div align="center">
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/111099/7/4127/272579/5eabf92fEfeaaa0b2/d44115a9495597c6.png" width="900" height="600" alt="gradient descent direction of the objective function should be the same as the gradient direction of the constraint function" align="center">
+</div>
+
+<p>因此，不等式约束优化问题的解法可以由以上两种情形所概括，用如下定理作一个总结，后面也会对该定理作进一步阐释。</p>
+<blockquote>
+<p><strong>定理 2：</strong> 对于不等式约束优化问题</p>
 <script type="math/tex; mode=display">
-{\bf H} = \nabla \nabla E({\bf w}) = \sum_{n=1}^{N} (1 - y_n)y_n \phi_n \phi_n^{\text T} = {\bf \Phi}^{\text T} {\bf R} {\bf \Phi}
-\tag{19}</script><p>其中 $ {\bf R} $ 为一 $ N \times N $ 的对角矩阵，其对角元素为</p>
+\min_{ {\bf x} \in {\Bbb R}^n} f({\bf x}) \ \ \  \text {s.t.} \ \ \ g({\bf x}) \leq 0\tag{14}</script><p>定义拉格朗日乘数</p>
 <script type="math/tex; mode=display">
-R_{nn} = (1 - y_n)y_n
-\tag{20}</script><p>可以看出，该 Hessian 矩阵依赖于参数 $ {\bf w} $，根本原因是损失函数（13）不是一个二次函数，而牛顿法的本质是将目标函数近似为二次函数，这就导致近似值与真实值之间存在差距，需要通过多次迭代来逼近。另一方面，由于 $ y_{n} \in (0, 1) $，从而使得 $ {\bf H} $ 为一个正定（positive-definite）矩阵（对任意非零向量 $ {\bf u} $，都有 $ {\bf u}^{\text T} {\bf H} {\bf u} > 0 $ ）。$ {\bf H} $ 为正定矩阵则意味着损失函数（13）是一个凸函数，存在一个极小值（或一片连续的极小值区域），且该极小值就是全局最优解。</p>
-<p>我们将式（18）与式（19）代入式（16）中，可以得到 $ {\bf w} $ 在牛顿法下的更新方程为</p>
+{\cal L}({\bf x}, \lambda) = f({\bf x}) + \lambda g({\bf x})\tag{15}</script><p>则若 ${\bf x}^{\ast}$ 为该问题的解，则必存在 $\lambda^{\ast}$，满足如下条件</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
-{\bf w}^{({\text {new} })} &= {\bf w}^{({\text {old} })} - ({\bf \Phi}^{\text T} {\bf R} {\bf \Phi})^{-1} {\bf \Phi}^{\text T} [ ({\bf y} - {\bf 1}) \circ {\bf t} ] \\
-&= ({\bf \Phi}^{\text T} {\bf R} {\bf \Phi})^{-1} \lbrace {\bf \Phi}^{\text T} {\bf R} {\bf \Phi} {\bf w}^{({\text {old} })} - {\bf \Phi}^{\text T} [ ({\bf y} - {\bf 1}) \circ {\bf t} ] \rbrace  \\
-&= ({\bf \Phi}^{\text T} {\bf R} {\bf \Phi})^{-1} {\bf \Phi}^{\text T}  {\bf R} {\bf z}
-\end{aligned}
-\tag{21}</script><p>其中 $ {\bf z} $ 为一 $ N $ 维的列向量</p>
+\nabla_{\bf x} {\cal L}({\bf x}^{\ast}, \lambda^{\ast}) = {\bf 0}
+\tag{16}</script><script type="math/tex; mode=display">
+\lambda^{\ast} \geq 0
+\tag{17}</script><script type="math/tex; mode=display">
+\lambda^{\ast}g({\bf x}^{\ast}) = 0
+\tag{18}</script><script type="math/tex; mode=display">
+g({\bf x}^{\ast}) \leq 0
+\tag{19}</script><script type="math/tex; mode=display">
+{\bf y}^t \nabla_{\bf x \bf x} {\cal L}({\bf x}^{\ast}, \lambda^{\ast}){\bf y} \geq 0  \ \ \ \text {for certain} \ \ {\bf y}
+\tag{20}</script><p>反过来，若式（16）～（20）成立，则 ${\bf x}^{\ast}$ 必然是原优化问题的一个局部最优解。</p>
+</blockquote>
+<p>上面定理中式（20）为二阶正定性条件，当不等式约束没有起到实质作用时（即无约束优化问题的解在可行域内），${\bf y} \in {\Bbb R}^n \backslash \lbrace {\bf 0} \rbrace$；当不等式约束起到实质作用时，${\bf y}$ 为与 $\nabla_{\bf x} g({\bf x}^{\ast})$ 正交的任意向量。后面不再对拉格朗日乘数的二阶正定性约束条件进行说明。</p>
+<p>我们可以看到，在不等式约束没有起到实质性作用时，由于 $g({\bf x}^{\ast}) &lt; 0$，由式（18）可知， $\lambda^{\ast}$ 取值为 0，式（16）退化为 $\nabla_{\bf x} f({\bf x}^{\ast}) = {\bf 0}$；在不等式约束起到实质作用时，$g({\bf x}^{\ast}) = 0$，则 $\lambda^{\ast} &gt; 0$，故 ${\cal L}({\bf x}^{\ast}, \lambda^{\ast}) = f({\bf x}^{\ast}) + \lambda^{\ast}g({\bf x}^{\ast})$，式（16）即为式（13）。</p>
+<h2 id="KKT-条件"><a href="#KKT-条件" class="headerlink" title="KKT 条件"></a>KKT 条件</h2><p>分别考虑了等式约束优化问题和不等式约束优化问题之后，我们可以将一般优化问题（1）的解的充要条件总结成如下定理。</p>
+<blockquote>
+<p><strong>定理 3：</strong> 对于一般优化问题（1），定义拉格朗日乘数为</p>
 <script type="math/tex; mode=display">
-{\bf z} = {\bf \Phi} {\bf w}^{({\text {old} })} - {\bf R}^{-1}  [ ({\bf y} - {\bf 1}) \circ {\bf t} ]
-\tag{22}</script><p>式（21）的形式和线性回归中求解 $ {\bf w} $ 的正规方程的形式很像，只是多了一个权值矩阵 $ {\bf R} $，因此该方法又被称为 iterative reweighted least squares （IRLS）。可以理解为该方法对每一个样本点进行了加权，加权值的大小与 $ R_{nn} $ 成比例，而 $ R_{nn} $ 的大小又与 $ t_n $ 在逻辑回归模型假设中的输出分布情况下的方差 $ {\text {var} } [t_n] $ 成正比；从直觉上来讲，IRLS 方法是对当前参数下变数更大（对给定输入的输出类别的不确定性很大）的训练样本赋予更重的权重，以提高模型对这些样本的预测能力。</p>
-<h2 id="梯度下降法与牛顿法比较"><a href="#梯度下降法与牛顿法比较" class="headerlink" title="梯度下降法与牛顿法比较"></a>梯度下降法与牛顿法比较</h2><p>梯度下降法与牛顿法均为可以用来求解最优化问题的迭代算法。二者有一些共同点：1）都为贪心算法；2）都只能获得局部最优解（若证明目标函数是凸函数，例如 logistic 损失函数（13），则可获得全局最优解）。假设目标函数为 $ f({\bf x}) $，下面分别给出梯度下降法和牛顿法的推导。</p>
-<h3 id="梯度下降法的推导"><a href="#梯度下降法的推导" class="headerlink" title="梯度下降法的推导"></a>梯度下降法的推导</h3><p>对函数值 $ f({\bf x} + {\bf v}) $ 在 $ {\bf x} $ 处作一阶泰勒级数展开得</p>
+{\cal L}({\bf x}, {\bf \mu}, {\bf \lambda}) = f({\bf x}) + {\bf \mu}^t {\bf h}({\bf x}) + {\bf \lambda}^t {\bf g} ({\bf x})
+\tag{21}</script><p>其中 ${\bf \mu} = (\mu_1, \cdots,\mu_l)$，${\bf h}({\bf x}) = (h_1({\bf x}),\cdots,h_l({\bf x}))$，${\bf \lambda} = (\lambda_1,\cdots,\lambda_m)$，${\bf g}({\bf x}) = (g_1({\bf x}), \cdots, g_m({\bf x}))$ 均为向量。</p>
+<p>则优化问题（1）的局部最优解的充要条件为</p>
 <script type="math/tex; mode=display">
-f({\bf x} + {\bf v}) \approx f({\bf x}) + (\nabla f({\bf x}))^{\text T} {\bf v}
-\tag{23}</script><p>假设 $ || {\bf v} || = 1 $（固定更新步长），想要 $ f({\bf x} + {\bf v}) $ 相比 $ f({\bf x}) $ 下降最多，则要使 $ (\nabla f({\bf x}))^{\text T} {\bf v} $ 最小，即 $ {\bf v} $ 的方向要与 $ \nabla f({\bf x}) $ 的方向相反，即有</p>
-<script type="math/tex; mode=display">
-{\bf v}_s = -\frac{\nabla f({\bf x})} {|| \nabla f({\bf x}) ||}
-\tag{24}</script><p>又由于我们希望更新的步长与梯度的大小成正比（因为梯度越小，越接近最优点，更新的步长要减小），可以写出 $ {\bf x} $ 的更新公式为</p>
-<script type="math/tex; mode=display">
-{\bf x}^{({\text {new} })} = {\bf x}^{({\text {old} })} + \eta || \nabla f({\bf x}) || {\bf v}_s = {\bf x}^{({\text {old} })} - \eta \nabla f({\bf x})
-\tag{25}</script><p>其中 $ \eta $ 即为学习率，需要根据情况调整，既不可设置的太大（容易跳出最佳区域），也不可设置的太小（迭代次数变多，降低算法效率）。</p>
-<h3 id="牛顿法的推导"><a href="#牛顿法的推导" class="headerlink" title="牛顿法的推导"></a>牛顿法的推导</h3><p>对函数值 $ f({\bf x} + {\bf v}) $ 在 $ {\bf x} $ 处作二阶泰勒级数展开得</p>
-<script type="math/tex; mode=display">
- f({\bf x} + {\bf v}) \approx f({\bf x}) + (\nabla f({\bf x}))^{\text T} {\bf v} + \frac{1}{2} {\bf v}^{\text T} \nabla^{2} f({\bf x}) {\bf v}
-\tag{26}</script><p>要想使 $ f({\bf x} + {\bf v}) $ 最小（给定 $ {\bf x} $），即要求使 $ (\nabla f({\bf x}))^{\text T} {\bf v} + \frac{1}{2} {\bf v}^{\text T} \nabla^{2} f({\bf x}) {\bf v} $ 最小的 $ {\bf v}_s $，很容易求得</p>
-<script type="math/tex; mode=display">
-{\bf v}_s = -(\nabla^{2} f({\bf x}))^{-1} \nabla f({\bf x})
-\tag{27}</script><p>因而 $ {\bf x} $ 的更新公式为</p>
-<script type="math/tex; mode=display">
-{\bf x}^{({\text {new} })} = {\bf x}^{({\text {old} })} + {\bf v}_s = {\bf x}^{({\text {old} })} - (\nabla^{2} f({\bf x}))^{-1} \nabla f({\bf x})
-\tag{28}</script><p>上式与式（15）一致。</p>
-<p>完成上面的推导之后，我们很容易看到牛顿法与梯度下降法之间的一些显著的差异。</p>
-<p>首先，梯度下降法需要设置一个超参数——学习率；而牛顿法则不需要。避免设置超参数可以省掉很多事。</p>
-<p>其次，牛顿法一般比梯度下降法更快获得收敛，但其需要更多的计算开销和内存开销（需计算和保存 Hessian 矩阵）。牛顿法是二阶近似，而梯度下降法是一阶近似。通俗来讲，假如你想找一条最短的路径走到一个盆地的最底部，梯度下降法每次只从你当前所选的位置选一个坡度最大的方向走一步；而牛顿法会在选择方向时，不仅会考虑坡度是否足够大，还会考虑你走了一步之后坡度是否会变得更大。所以，牛顿法比梯度下降法利用的信息更多一些，看得更远一些，从而能更快地到达盆地底部。从几何上来讲，牛顿法就是用一个二次曲面去拟合当前所处位置的局部曲面，而梯度下降法则是用一个平面去拟合当前的局部曲面，很显然，二次曲面要比平面更接近于当前的局部曲面，因而牛顿法会比梯度下降法收敛得更快。</p>
+\nabla_{\bf x} {\cal L}({\bf x}^{\ast}, {\bf \mu}^{\ast}, {\bf \lambda}^{\ast}) = {\bf 0}
+\tag{22}</script><script type="math/tex; mode=display">
+\lambda_j^{\ast} \geq 0 \ \ \ \text {for} \ \ j = 1,\cdots,m
+\tag{23}</script><script type="math/tex; mode=display">
+\lambda_j^{\ast} g_j({\bf x}^{\ast}) = 0 \ \ \ \text {for} \ \ j = 1, \cdots, m
+\tag{24}</script><script type="math/tex; mode=display">
+g_j({\bf x}^{\ast}) \leq 0 \ \ \ \text {for} \ \ j = 1, \cdots, m
+\tag{25}</script><script type="math/tex; mode=display">
+h_i({\bf x}^{\ast}) = 0 \ \ \ \text {for} \ \ i = 1, \cdots, l
+\tag{26}</script><script type="math/tex; mode=display">
+{\bf y}^t \nabla_{\bf x \bf x} {\cal L}({\bf x}^{\ast}, {\bf \mu}^{\ast}, {\bf \lambda}^{\ast}){\bf y} \geq 0  \ \ \ \text {for certain} \ \ {\bf y}
+\tag{27}</script></blockquote>
+<p>我们称式（22）～（27）为一般优化问题（1）的 <a href="https://en.wikipedia.org/wiki/Karush–Kuhn–Tucker_conditions" rel="external nofollow noopener noreferrer" target="_blank">Karush-Kuhn-Tucker（KKT） 条件</a>。</p>
 <hr>
-<h1 id="softmax-回归"><a href="#softmax-回归" class="headerlink" title="softmax 回归"></a>softmax 回归</h1><p>将逻辑回归模型被拓展到多类别的情形时的模型被称为 softmax 回归模型。具体地，softmax 回归假定类别 $ {\cal C}_k $ 的后验概率为</p>
+<h1 id="拉格朗日对偶"><a href="#拉格朗日对偶" class="headerlink" title="拉格朗日对偶"></a>拉格朗日对偶</h1><h2 id="对偶问题形式"><a href="#对偶问题形式" class="headerlink" title="对偶问题形式"></a>对偶问题形式</h2><p>仍然考虑一般优化问题（1），拉格朗日函数为式（21），定义</p>
 <script type="math/tex; mode=display">
-p({\cal C}_k | \phi) = y_k (\phi) = \frac {\exp(a_k)} {\sum_i \exp(a_i) }
-\tag{29}</script><p>其中 $ a_k $ 被定义为</p>
+p({\bf x}) = \max_{ {\bf \mu}, {\bf \lambda}: \ \lambda_j \geq 0} {\cal L}({\bf x}, {\bf \mu}, {\bf \lambda})
+\tag{28}</script><p>很容易发现</p>
 <script type="math/tex; mode=display">
-a_k = {\bf w}_k^{\text T} \phi
-\tag{30}</script><p>softmax 回归的核心问题即是估计参数 $ \lbrace {\bf w}_k \rbrace $，$ k = 1, …, K $。为方便推导，假设输出类别由一个 $ K $ 维向量 $ {\bf t} $ 表征，该向量有且仅有一个元素的值为 1，其他元素的值均为 0，非零元素的序位代表输出的类别（例如，输出类别 $ {\cal C}_k $ 对应的向量的第 $ k $ 个元素为非零）。则可以写出给定数据集 $ \lbrace \phi_n, {\bf t}_n \rbrace $ 下参数 $ \lbrace {\bf w}_k \rbrace $ 的似然函数为</p>
+p({\bf x}) = 
+\begin{cases}
+f({\bf x}),   & \text {当} \ {\bf x } \ \text {在可行域内} \\
++\infty,      & 其他
+\end{cases}
+\tag{29}</script><p>因为当 ${\bf x}$ 在可行域内时，有 $g_j({\bf x}) \leq 0$，$h_i({\bf x}) = 0$，又要求 $\lambda_j \geq 0$，因此要对 ${\cal L}({\bf x}, {\bf \mu}, {\bf \lambda})$ 关于 $\bf \mu$ 和 $\bf \lambda$ 取最大值，只能将 $\lambda_j$ 都置为 0，因此此时拉格朗日函数的最大取值为 $f({\bf x})$；当 $\bf x$ 在可行域之外时，我们可以将项 $\sum_j \lambda_j g_j(\bf x)$ 和 $\sum_i \mu_ih_i({\bf x})$ 设置的任意大，因此此时拉格朗日函数的最大取值为 $+\infty$.</p>
+<p>则一般优化问题（1）等价于以下问题：</p>
 <script type="math/tex; mode=display">
-p({\bf T} | {\bf w}_1, \cdots, {\bf w}_K) = \prod_{n=1}^{N} \prod_{k=1}^{K} p({\cal C}_k | \phi_n)^{t_{nk} } = \prod_{n=1}^{N} \prod_{k=1}^{K} y_{nk} ^ {t_{nk} }
-\tag{31}</script><p>其中 $ y_{nk} = y_k(\phi_n) $，$ {\bf T} \in \lbrace 0, 1 \rbrace^{N \times K } $ 由输出的类别向量所组成。对似然函数求对数再取负可得交叉熵为</p>
+\min_{\bf x} p({\bf x}) = \min_{\bf x} \max_{ {\bf \mu}, {\bf \lambda}: \ \lambda_j \geq 0} {\cal L}({\bf x}, {\bf \mu}, {\bf \lambda})
+\tag{30}</script><p>我们称该问题或一般优化问题（1）为主问题（primal problem），记 $p^{\ast} = \min_{\bf x} p({\bf x})$  为主问题的值。</p>
+<p>定义对偶函数为</p>
 <script type="math/tex; mode=display">
-E({\bf w}_1, \cdots, {\bf w}_K) = -\ln p({\bf T} | {\bf w}_1, \cdots, {\bf w}_K) = -\sum_{n=1}^{N} \sum_{k=1}^{K} t_{nk} \ln y_{nk}
-\tag{32}</script><p>对 $ E({\bf w}_1, \cdots, {\bf w}_K) $ 求一阶导数可得</p>
+q({\bf \mu, \bf \lambda}) = \min_{\bf x} {\cal L}({\bf x}, {\bf \mu}, {\bf \lambda})
+\tag{31}</script><p>则对偶问题（dual problem）为</p>
 <script type="math/tex; mode=display">
-\nabla_{\bf {w}_j} E({\bf w}_1, \cdots, {\bf w}_K) = \sum_{n = 1}^{N} (y_{nj} - t_{nj}) \phi_n
-\tag{33}</script><p>上式用到了以下导数公式</p>
+\max_{\mu, \lambda: \ \lambda_j \geq 0} q({\bf \mu}, {\bf \lambda}) = \max_{\mu, \lambda: \ \lambda_j \geq 0} \min_{\bf x} {\cal L}({\bf x}, {\bf \mu}, {\bf \lambda})
+\tag{32}</script><p>对偶问题（32）与主问题（30）相比交换了对不同变量的优化顺序。记 $q^{\ast} = \max_{\mu, \lambda: \lambda_j \geq 0} {\cal L}({\bf x}, \mu, \lambda)$ 为对偶问题的值。</p>
+<p>对偶问题有一些比较好的性质，使其相对来说比较容易求解。不管原始优化问题是否为凸问题，对偶函数 $q(\mu, \lambda)$ 都是一个凹函数，因而对偶问题是一个凸问题，可以简单证明如下。</p>
+<p>为表述方便，$\beta = (\mu_1, \cdots, \mu_l, \lambda_1, \cdots, \lambda_m)$，对偶函数的定义域为 $D_q = \lbrace \beta \ | \ q(\beta) &gt; -\infty \rbrace$，则对任意 ${\bf x} \in {\Bbb R}^n$， $\beta_a,\beta_b \in D_q$ 以及 $\alpha \in (0, 1)$，有</p>
 <script type="math/tex; mode=display">
-\frac {\partial y_k} {\partial a_j} = y_k (I_{kj} - y_j)
-\tag{34}</script><p>其中 $ I_{kj} $ 是单位矩阵 $ {\bf I}_{KK} $ 中位置为 $ (k, j) $ 的元素。</p>
-<p>有了式（33）之后，我们就可以对参数 $ \lbrace {\bf w}_k \rbrace $ 按照梯度下降方法进行更新了。利用牛顿法更新参数的方法和前面类似，只需求出交叉熵关于参数 $ \lbrace {\bf w}_k \rbrace $ 的 Hessian 矩阵即可，这里不加赘述。</p>
+\begin{align}
+{\cal L}({\bf x}, \alpha\beta_a + (1 - \alpha)\beta_b) &= f({\bf x}) + (\alpha\mu_a + (1-\alpha)\mu_b)^t h({\bf x}) + (\alpha\lambda_a + (1 - \alpha)\lambda_b)^t g({\bf x}) \\
+&= \alpha [f({\bf x}) + \mu_a^th({\bf x}) + \lambda_a^tg({\bf x})] + (1 - \alpha)[f({\bf x}) + \mu_b^th({\bf x}) + \lambda_b^tg({\bf x})] \\
+&= \alpha {\cal L}({\bf x}, \beta_a) + (1 - \alpha) {\cal L} ({\bf x}, \beta_b)
+\end{align}
+\tag{33}</script><p>对上式两边同时对 $\bf x$ 取最小值，有</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\min_{\bf x}{\cal L}({\bf x}, \alpha\beta_a + (1 - \alpha)\beta_b) &= \min_{\bf x}[\alpha {\cal L}({\bf x}, \beta_a) + (1 - \alpha) {\cal L} ({\bf x}, \beta_b)] \\
+&\geq \alpha \min_{\bf x} {\cal L}({\bf x}, \beta_a) + (1 - \alpha)\min_{\bf x}{\cal L}({\bf x}, \beta_b)
+\end{align}
+\tag{34}</script><p>上式说明了对偶函数 $q(\mu, \lambda)$ 为凹函数。</p>
+<p>引入对偶问题的目的就是想通过它来求解主问题，但二者并不一定等价，后面我们会讨论对偶问题与主问题之间的关系（弱对偶定理），以及满足什么条件的情况下二者等价（强对偶定理）。在此之前，我们先来看一下对偶问题的几何阐释，以便我们对问题本质认识得更加深刻。</p>
+<h2 id="对偶问题的几何阐释"><a href="#对偶问题的几何阐释" class="headerlink" title="对偶问题的几何阐释"></a>对偶问题的几何阐释</h2><p>我们还是通过例子来阐释对偶问题。</p>
+<blockquote>
+<p><strong>问题 4：</strong>求解以下不等式约束优化问题 $\min_{ {\bf x} \in {\Bbb R}^2} f({\bf x}) \ \ \text {s.t.} \ \ g({\bf x}) \leq 0$，其中 $ f({\bf x}) = 0.4(x_1^2 + x_2^2)$，$g({\bf  x}) = 2 - x_1 - x_2$.</p>
+</blockquote>
+<p>函数 $f({\bf x})$ 的等高线和由不等式约束 $g({\bf x}) \leq 0$ 所决定的可行域如下图所示。</p>
+<div align="center">
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/119752/32/3443/285202/5eafe387Ec77dcb81/c9868648311c7f9c.png" width="800" height="550" alt="the iso contour and the feasible region" align="center">
+</div>
+
+<p>我们将该坐标系下的每个点 ${\bf x} \in {\Bbb R}^2$ 映射至空间 $(g({\bf x}), f({\bf x})) \in {\Bbb R}^2$，定义该映射产生的新的点集为</p>
+<script type="math/tex; mode=display">
+G = \lbrace (y, z) \ | \ y = g({\bf x}), z = f({\bf x}) \ \ \text {for} \ \ {\bf x} \in {\Bbb R}^2 \rbrace
+\tag{35}</script><p>该映射产生的点集在坐标系 $y-z$ 下如下图所示</p>
+<div align="center">
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/116803/39/4778/169787/5eafe968Eedb17e1b/0d18f8737eb352a3.png" width="900" height="600" alt="the map of the original space" align="center">
+</div>
+
+<p>上图中蓝色部分为所有 ${\bf x} \in {\Bbb R}^2$ 按照 (35) 映射之后所构成的点集，可行域为 $y \leq 0$，如上图中红色部分所示。可以很容易地看到，问题 4 要求解的“在 $y \leq 0$ 的条件下 $z$ 最小”这个问题的解即为上图中的红色点 $(y^{\ast}, z^{\ast})$。 </p>
+<p>我们再来分析问题 4 的拉格朗日对偶问题，其对应的拉格朗日函数为</p>
+<script type="math/tex; mode=display">
+{\cal L}({\bf x}, \lambda) = f({\bf x}) + \lambda g({\bf x}) = z + \lambda y, \ \ \ \lambda  \geq 0
+\tag{36}</script><p>我们考虑直线 $z + \lambda y = \alpha$ 的特点，该直线的斜率为 $-\lambda$，与 $z$ 轴的截距为 $\alpha$，如下图所示</p>
+<div align="center">
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/117192/4/4753/124232/5eb0025dEf022018c/22586fe127c6d6b8.png" width="900" height="600" alt="the line of lagrangian in z-y space" align="center">
+</div>
+
+<p>固定 $\lambda$ 时（即固定直线的斜率），我们在 $G$ 内平移直线（即需要直线经过 $G$ 内至少一个点），此时我们根据 $G$ 内所有斜率为 $-\lambda$ 的直线与 $z$ 轴的最小截距来求得拉格朗日对偶函数 $ q(\lambda) = \min_{\bf x} {\cal L}({\bf x}, \lambda) = \min_{(y, z) \in G} (z + \lambda y) $ 的值，如下图所示</p>
+<div align="center">
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/112451/10/4731/133581/5eb00999E2f36c388/59a2972bb84762c4.png" width="900" height="600" alt="the lagrangian duality function in z-y space" align="center">
+</div>
+
+<p>我们再来变化 $\lambda$，来求解对偶问题 $\max_{\lambda: \lambda \geq0} q(\lambda)$，在几何意义上，就是变化上述直线的斜率，找到使得以斜率来划分的可行直线族中的最小 $z$ 截距 $q(\lambda)$ 最大的 $\lambda^{\ast}$.  我们可以看到，在这个问题中，对偶问题的解与主问题的解一致（我们称该现象为强对偶），如下图所示。</p>
+<div align="center">
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/118669/6/4814/157717/5eb00be2Ee921610b/725e0af5bade5b15.png" width="900" height="600" alt="the optimum of the lagrangian duality problem in z-y space" align="center">
+</div>
+
+<h2 id="弱对偶定理"><a href="#弱对偶定理" class="headerlink" title="弱对偶定理"></a>弱对偶定理</h2><p>弱对偶定理给出了一般情形下，对偶问题与主问题的最优值之间的关系，如下所述。</p>
+<blockquote>
+<p><strong>定理 4：</strong>令 ${\bf x} \in {\Bbb R}^n$ 为一般优化问题（1）的主问题（30）的一个可行解； 令 $({\bf \mu}, {\bf \lambda})$ 为对偶问题（32）的一个可行解，即满足 $\lambda_j \geq {\bf 0}$，则有</p>
+<script type="math/tex; mode=display">
+p({\bf x}) \geq q({\bf \mu, \bf \lambda})
+\tag{37}</script><p>更进一步，令主问题的最优值为 $p^{\ast} = \min_{\bf x} p({\bf x})$，令对偶问题的最优值为 $q^{\ast} = \max_{\mu, \lambda: \lambda_j \geq 0} q(\mu, \lambda)$，有</p>
+<script type="math/tex; mode=display">
+p^{\ast} \geq q^{\ast}
+\tag{38}</script></blockquote>
+<p>证明过程非常简单，有</p>
+<script type="math/tex; mode=display">
+p({\bf x}) = \max_{\mu, \lambda: \lambda_j \geq 0} {\cal L}({\bf x}, \mu, \lambda) \geq  {\cal L}({\bf x}, \mu, \lambda) \geq \min_{\bf x} {\cal L}({\bf x, \mu, \lambda}) = q({\mu, \lambda})
+\tag{39}</script><p>上式即证明了（37），再对（39）左边关于 $\bf x$ 求极小值，右边关于 $(\mu, \lambda)$ 求极大值，可证明（38）：</p>
+<script type="math/tex; mode=display">
+p^{\ast} = \min_{\bf x} p({\bf x}) \geq \max_{\mu, \lambda: \lambda_j \geq 0} q(\mu, \lambda) = q^{\ast}
+\tag{40}</script><p>弱对偶定理说明了对一般优化问题 （1），对偶问题的最优值 $p^{\ast}$ 是主问题的最优值 $q^{\ast}$ 的一个下限，我们称 $p^{\ast}$ 与 $q^{\ast}$ 之间的差异为对偶差（duality gap）。</p>
+<p>举个对偶差的简单例子，考虑下图所示的一维优化问题</p>
+<div align="center">
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/112274/1/4871/182239/5eb01949E591f4f7a/677dfd5d01bd6291.png" width="900" height="600" alt="the duality gap example-1" align="center">
+</div>
+
+<p>可以看到目标函数 $f(x)$ 是非凸的，不等式约束函数 $g(x) = -x - m$，按照式（35）的做法，将 $x \in {\Bbb R}$ 映射至 $z-y$ 平面中，如下图所示</p>
+<div align="center">
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/117656/32/4845/201074/5eb01948E4e37434b/19bb13d944ee0198.png" width="900" height="600" alt="the duality gap example-2" align="center">
+</div>
+
+<p>可以看到这个问题中，主问题的最优值和对偶问题的最优值并不一致，两者之间存在对偶差。</p>
+<p>那么在什么情形下，主问题的解与对偶问题的解一致呢？以下的强对偶定理给出回答。</p>
+<h2 id="强对偶定理"><a href="#强对偶定理" class="headerlink" title="强对偶定理"></a>强对偶定理</h2><blockquote>
+<p><strong>定理 5：</strong> 对于一般优化问题（1），若 $f({\bf x})$ 和 $g_j({\bf x}), \ j = 1,\cdots,m$ 均为凸函数，且 $h_i({\bf x}), \ i = 1,\cdots,l$ 均为仿射函数，且约束 $g_j({\bf x}) \leq 0$ 是严格可行的，则存在 ${\bf x}^{\ast}$，${\mu}^{\ast}$，${\lambda}^{\ast}$ ，使得 ${\bf x}^{\ast}$ 是主问题（30）的解，$(\mu^{\ast}, \lambda^{\ast})$ 是对偶问题（32）的解，有</p>
+<script type="math/tex; mode=display">
+p^{\ast} = q^{\ast} = {\cal L}({\bf x}^{\ast}, \mu^{\ast}, \lambda^{\ast})
+\tag{41}</script></blockquote>
+<p>定理 5 说明了在一定的条件下（该条件为 <a href="[https://en.wikipedia.org/wiki/Slater%27s_condition](https://en.wikipedia.org/wiki/Slater&#39;s_condition">Slater 条件</a>) ），强对偶成立，我们可以通过解决对偶问题来解决主问题，对强对偶定理的证明详见 <a href="https://www.ece.nus.edu.sg/stfpage/vtan/ee5138/slater.pdf" rel="external nofollow noopener noreferrer" target="_blank">Slater 强对偶条件证明</a>。另外，当 Slater 条件满足时，优化问题的最优解满足式（22）～（27）所列出的 KKT 条件。</p>
 
       
     </div>
@@ -575,11 +688,15 @@ E({\bf w}_1, \cdots, {\bf w}_K) = -\ln p({\bf T} | {\bf w}_1, \cdots, {\bf w}_K)
       
         <div class="post-tags">
           
-            <a href="/tags/线性分类算法/" rel="tag"># 线性分类算法</a>
+            <a href="/tags/凸优化/" rel="tag"># 凸优化</a>
           
-            <a href="/tags/监督学习/" rel="tag"># 监督学习</a>
+            <a href="/tags/数学优化/" rel="tag"># 数学优化</a>
           
-            <a href="/tags/判别模型/" rel="tag"># 判别模型</a>
+            <a href="/tags/对偶/" rel="tag"># 对偶</a>
+          
+            <a href="/tags/拉格朗日乘数法/" rel="tag"># 拉格朗日乘数法</a>
+          
+            <a href="/tags/KKT-条件/" rel="tag"># KKT 条件</a>
           
         </div>
       
@@ -592,8 +709,8 @@ E({\bf w}_1, \cdots, {\bf w}_K) = -\ln p({\bf T} | {\bf w}_1, \cdots, {\bf w}_K)
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/图模型与和积算法/" rel="next" title="图模型与和积算法">
-                <i class="fa fa-chevron-left"></i> 图模型与和积算法
+              <a href="/逻辑回归/" rel="next" title="逻辑回归">
+                <i class="fa fa-chevron-left"></i> 逻辑回归
               </a>
             
           </div>
@@ -601,10 +718,6 @@ E({\bf w}_1, \cdots, {\bf w}_K) = -\ln p({\bf T} | {\bf w}_1, \cdots, {\bf w}_K)
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/凸优化基础：拉格朗日乘数法、对偶与-KKT-条件/" rel="prev" title="凸优化基础：拉格朗日乘数法、对偶与 KKT 条件">
-                凸优化基础：拉格朗日乘数法、对偶与 KKT 条件 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -755,7 +868,7 @@ E({\bf w}_1, \cdots, {\bf w}_K) = -\ln p({\bf T} | {\bf w}_1, \cdots, {\bf w}_K)
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#逻辑回归"><span class="nav-number">1.</span> <span class="nav-text">逻辑回归</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最大似然参数估计"><span class="nav-number">2.</span> <span class="nav-text">最大似然参数估计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#梯度下降法"><span class="nav-number">2.1.</span> <span class="nav-text">梯度下降法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#牛顿法"><span class="nav-number">2.2.</span> <span class="nav-text">牛顿法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#梯度下降法与牛顿法比较"><span class="nav-number">2.3.</span> <span class="nav-text">梯度下降法与牛顿法比较</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#梯度下降法的推导"><span class="nav-number">2.3.1.</span> <span class="nav-text">梯度下降法的推导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#牛顿法的推导"><span class="nav-number">2.3.2.</span> <span class="nav-text">牛顿法的推导</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#softmax-回归"><span class="nav-number">3.</span> <span class="nav-text">softmax 回归</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数学优化概述"><span class="nav-number">1.</span> <span class="nav-text">数学优化概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#局部最优化问题及其解法"><span class="nav-number">2.</span> <span class="nav-text">局部最优化问题及其解法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#等式约束优化问题"><span class="nav-number">2.1.</span> <span class="nav-text">等式约束优化问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不等式约束优化问题"><span class="nav-number">2.2.</span> <span class="nav-text">不等式约束优化问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KKT-条件"><span class="nav-number">2.3.</span> <span class="nav-text">KKT 条件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#拉格朗日对偶"><span class="nav-number">3.</span> <span class="nav-text">拉格朗日对偶</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#对偶问题形式"><span class="nav-number">3.1.</span> <span class="nav-text">对偶问题形式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对偶问题的几何阐释"><span class="nav-number">3.2.</span> <span class="nav-text">对偶问题的几何阐释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#弱对偶定理"><span class="nav-number">3.3.</span> <span class="nav-text">弱对偶定理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#强对偶定理"><span class="nav-number">3.4.</span> <span class="nav-text">强对偶定理</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -909,9 +1022,9 @@ E({\bf w}_1, \cdots, {\bf w}_K) = -\ln p({\bf T} | {\bf w}_1, \cdots, {\bf w}_K)
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://heathcliff.me/逻辑回归/';
-          this.page.identifier = '逻辑回归/';
-          this.page.title = '逻辑回归';
+          this.page.url = 'http://heathcliff.me/凸优化基础：拉格朗日乘数法、对偶与-KKT-条件/';
+          this.page.identifier = '凸优化基础：拉格朗日乘数法、对偶与-KKT-条件/';
+          this.page.title = '凸优化基础：拉格朗日乘数法、对偶与 KKT 条件';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://heathcliff.disqus.com/embed.js';
