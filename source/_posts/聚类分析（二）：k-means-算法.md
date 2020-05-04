@@ -12,35 +12,35 @@ keywords: 聚类,k-means,中心点,非监督学习,clustering,machine learning
 
 ---
 
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 *本篇文章为讲述聚类算法的第二篇文章，其它相关文章请参见 [**聚类分析系列文章**][1]*。
 
 # k-means 聚类算法
-k-means 算法是一种经典的针对数值型样本的聚类算法。如前面的博文 [*聚类分析（一）：层次聚类算法*][2] 中所述，k-means 算法是一种基于中心点模型的聚类算法，它所产生的每一个 `cluster` 都维持一个中心点（为属于该 `cluster` 的所有样本点的均值，k-means 算法由此得名），每一个样本点被分配给距离其最近的中心点所对应的 `cluster`。在该算法中，`cluster` 的数目 \\( K \\) 需要事先指定。我们可以很清楚地看到，在以上聚类场景中，一个最佳的目标是找到 \\( K \\) 个中心点以及每个样本点的分配方法，使得每个样本点距其被分配的 `cluster` 所对应的中心点的平方 Euclidean 距离之和最小。而 k-means 算法正是为实现这个目标所提出。
+k-means 算法是一种经典的针对数值型样本的聚类算法。如前面的博文 [*聚类分析（一）：层次聚类算法*][2] 中所述，k-means 算法是一种基于中心点模型的聚类算法，它所产生的每一个 `cluster` 都维持一个中心点（为属于该 `cluster` 的所有样本点的均值，k-means 算法由此得名），每一个样本点被分配给距离其最近的中心点所对应的 `cluster`。在该算法中，`cluster` 的数目 $ K $ 需要事先指定。我们可以很清楚地看到，在以上聚类场景中，一个最佳的目标是找到 $ K $ 个中心点以及每个样本点的分配方法，使得每个样本点距其被分配的 `cluster` 所对应的中心点的平方 Euclidean 距离之和最小。而 k-means 算法正是为实现这个目标所提出。
 
 ## 表示为求解特定的优化问题
-假定数据集为 \\( \\lbrace {\\bf x}\_1, {\\bf x}\_2, …, {\\bf x}\_N \\rbrace \\)，其包含 \\( N \\) 个样本点，每个样本点的维度为 \\( D \\)。我们的目的是将该数据集划分为 \\( K \\) 个 `cluster`，其中 \\( K \\) 是一个预先给定的值。假设每个 `cluster` 的中心点为向量 \\( {\\bf \\mu}\_k  \\in \\Bbb{R}^{d} \\)，其中 \\( k = 1, …, K \\)。如前面所述，我们的目的是找到中心点 \\( \\lbrace {\\bf \\mu}\_k \\rbrace \\)，以及每个样本点所属的类别，以使每个样本点距其被分配的 `cluster` 所对应的中心点的平方 Euclidean 距离之和最小。
+假定数据集为 $ \lbrace {\bf x}_1, {\bf x}_2, …, {\bf x}_N \rbrace $，其包含 $ N $ 个样本点，每个样本点的维度为 $ D $。我们的目的是将该数据集划分为 $ K $ 个 `cluster`，其中 $ K $ 是一个预先给定的值。假设每个 `cluster` 的中心点为向量 $ {\bf \mu}_k  \in \Bbb{R}^{d} $，其中 $ k = 1, …, K $。如前面所述，我们的目的是找到中心点 $ \lbrace {\bf \mu}_k \rbrace $，以及每个样本点所属的类别，以使每个样本点距其被分配的 `cluster` 所对应的中心点的平方 Euclidean 距离之和最小。
 
-为方便用数学符号描述该优化问题，我们以变量 \\( r\_{nk} \\in \\lbrace 0, 1 \\rbrace \\) 来表示样本点 \\( {\\bf x}\_n \\) 是否被分配至第 \\( k \\) 个 `cluster`，若样本点 \\( {\\bf x}\_n \\) 被分配至第 \\( k \\) 个 `cluster`，则 \\( r\_{nk} = 1 \\) 且 \\( r\_{nj} = 0  \\) \\( (j \\neq k) \\)。由此我们可以写出目标函数
-$$  J = \\sum\_{n = 1}^{N} \\sum\_{k = 1}^{K} r\_{nk} \\| {\\bf x}\_n -  {\\bf \\mu}\_k \\|^{2} $$
-它表示的即是每个样本点与其被分配的 `cluster` 的中心点的平方 Euclidean 距离之和。整个优化问题用数学语言描述即是寻找优化变量 \\( \\lbrace r\_{nk} \\rbrace \\) 和 \\( \\lbrace {\\bf \\mu}\_k \\rbrace \\) 的值，以使得目标函数 \\( J \\) 最小。
+为方便用数学符号描述该优化问题，我们以变量 $ r_{nk} \in \lbrace 0, 1 \rbrace $ 来表示样本点 $ {\bf x}_n $ 是否被分配至第 $ k $ 个 `cluster`，若样本点 $ {\bf x}_n $ 被分配至第 $ k $ 个 `cluster`，则 $ r_{nk} = 1 $ 且 $ r_{nj} = 0  $ $ (j \neq k) $。由此我们可以写出目标函数
+$$  J = \sum_{n = 1}^{N} \sum_{k = 1}^{K} r_{nk} \| {\bf x}_n -  {\bf \mu}_k \|^{2} $$
+它表示的即是每个样本点与其被分配的 `cluster` 的中心点的平方 Euclidean 距离之和。整个优化问题用数学语言描述即是寻找优化变量 $ \lbrace r_{nk} \rbrace $ 和 $ \lbrace {\bf \mu}_k \rbrace $ 的值，以使得目标函数 $ J $ 最小。
 
-我们可以看到，由于 \\( \\lbrace r\_{nk} \\rbrace \\) 的定义域是非凸的，因而整个优化问题也是非凸的，从而寻找全局最优解变得十分困难，因此，我们转而寻找能得到局部最优解的算法。
+我们可以看到，由于 $ \lbrace r_{nk} \rbrace $ 的定义域是非凸的，因而整个优化问题也是非凸的，从而寻找全局最优解变得十分困难，因此，我们转而寻找能得到局部最优解的算法。
 
-k-means 算法即是一种简单高效的可以解决上述问题的迭代算法。k-means 算法是一种交替优化（alternative optimization）算法，其每一步迭代包括两个步骤，这两个步骤分别对一组变量求优而将另一组变量视为定值。具体地，首先我们为中心点 \\( \\lbrace {\\bf \\mu}\_k \\rbrace \\) 选定初始值；然后在第一个迭代步骤中固定 \\( \\lbrace {\\bf \\mu}\_k \\rbrace \\) 的值，对目标函数 \\( J \\) 根据  \\( \\lbrace r\_{nk} \\rbrace \\) 求最小值；再在第二个迭代步骤中固定 \\( \\lbrace r\_{nk} \\rbrace \\) 的值，对  \\( J \\) 根据 \\( {\\bf \\mu}\_k \\) 求最小值；如此交替迭代，直至目标函数收敛。
+k-means 算法即是一种简单高效的可以解决上述问题的迭代算法。k-means 算法是一种交替优化（alternative optimization）算法，其每一步迭代包括两个步骤，这两个步骤分别对一组变量求优而将另一组变量视为定值。具体地，首先我们为中心点 $ \lbrace {\bf \mu}_k \rbrace $ 选定初始值；然后在第一个迭代步骤中固定 $ \lbrace {\bf \mu}_k \rbrace $ 的值，对目标函数 $ J $ 根据  $ \lbrace r_{nk} \rbrace $ 求最小值；再在第二个迭代步骤中固定 $ \lbrace r_{nk} \rbrace $ 的值，对  $ J $ 根据 $ {\bf \mu}_k $ 求最小值；如此交替迭代，直至目标函数收敛。
 
-考虑迭代过程中的两个优化问题。首先考虑固定 \\( {\\bf \\mu}\_k \\) 求解 \\( r\_{nk} \\) 的问题，可以看到 \\( J \\) 是关于 \\( r\_{nk} \\) 的线性函数，因此我们很容易给出一个闭式解：\\( J \\) 包含 \\( N \\) 个独立的求和项，因此我们可以对每一个项单独求其最小值，显然，\\( r\_{nk} \\) 的解为
-$$ r\_{nk} = \\begin{cases} 1, & \\text {if \\( k = \\rm {arg}  \\rm {min}\_{j}  \\| {\\bf x}\_n -  {\\bf \\mu}\_j \\|^{2} \\) } \\\\ 0, & \\text {otherwise} \\end{cases} $$
+考虑迭代过程中的两个优化问题。首先考虑固定 $ {\bf \mu}_k $ 求解 $ r_{nk} $ 的问题，可以看到 $ J $ 是关于 $ r_{nk} $ 的线性函数，因此我们很容易给出一个闭式解：$ J $ 包含 $ N $ 个独立的求和项，因此我们可以对每一个项单独求其最小值，显然，$ r_{nk} $ 的解为
+$$ r_{nk} = \begin{cases} 1, & \text {if $ k = \rm {arg}  \rm {min}_{j}  \| {\bf x}_n -  {\bf \mu}_j \|^{2} $ } \\ 0, & \text {otherwise} \end{cases} $$
 从上式可以看出，此步迭代的含义即是将每个样本点分配给距离其最近的中心点所对应的 `cluster`。
 
-再来考虑固定  \\( r\_{nk} \\) 求解 \\( {\\bf \\mu}\_k \\) 的问题，目标函数 \\( J \\) 是关于 \\( {\\bf \\mu}\_k \\) 的二次函数，因此可以通过将 \\( J \\) 关于 \\( {\\bf \\mu}\_k \\) 的导数置为 0 来求解 \\( J \\) 关于  \\( {\\bf \\mu}\_k \\) 的最小值：
-$$ 2 \\sum\_{n = 1}^{N} r\_{nk}({\\bf x}\_n -  {\\bf \\mu}\_k) = 0 $$
-容易求出 \\( {\\bf \\mu}\_k \\) 的值为
-$$ {\\bf \\mu}\_k = \\frac {\\sum\_{n} r\_{nk} {\\bf x}\_n} {\\sum\_{n} r\_{nk} } $$
+再来考虑固定  $ r_{nk} $ 求解 $ {\bf \mu}_k $ 的问题，目标函数 $ J $ 是关于 $ {\bf \mu}_k $ 的二次函数，因此可以通过将 $ J $ 关于 $ {\bf \mu}_k $ 的导数置为 0 来求解 $ J $ 关于  $ {\bf \mu}_k $ 的最小值：
+$$ 2 \sum_{n = 1}^{N} r_{nk}({\bf x}_n -  {\bf \mu}_k) = 0 $$
+容易求出 $ {\bf \mu}_k $ 的值为
+$$ {\bf \mu}_k = \frac {\sum_{n} r_{nk} {\bf x}_n} {\sum_{n} r_{nk} } $$
 该式表明，这一步迭代是将中心点更新为所有被分配至该 `cluster` 的样本点的均值。
 
-k-means 算法的核心即是以上两个迭代步骤，由于每一步迭代均会减小或保持（不会增长）目标函数 \\( J \\) 的值，因而该算法最终一定会收敛，但可能会收敛至某个局部最优解而不是全局最优解。
+k-means 算法的核心即是以上两个迭代步骤，由于每一步迭代均会减小或保持（不会增长）目标函数 $ J $ 的值，因而该算法最终一定会收敛，但可能会收敛至某个局部最优解而不是全局最优解。
 
 虽然上面已经讲的很清楚了，但在这里我们还是总结一下 k-means 算法的过程：
 
@@ -49,15 +49,16 @@ k-means 算法的核心即是以上两个迭代步骤，由于每一步迭代均
 3. 更新每个 `cluster` 的中心点为被分配给该 `cluster` 的所有样本点的均值；
 4. 交替进行 2～3 步，直至迭代到了最大的步数或者前后两次目标函数的值的差值小于一个阈值为止。
 
-[ PRML 教材 ][3]中给出的 k-means 算法的运行示例非常好，这里拿过来借鉴一下，如下图所示。数据集为经过标准化处理（减去均值、对标准差归一化）后的 Old Faithful 数据集，记录的是黄石国家公园的 Old Faithful 热喷泉喷发的时长与此次喷发距离上次喷发的等待时间。我们选取 \\( K = 2 \\)，小图（a）为对中心点初始化，小图（b）至小图（i）为交替迭代过程，可以看到，经过短短的数次迭代，k-means 算法就已达到了收敛。
+[ PRML 教材 ][3]中给出的 k-means 算法的运行示例非常好，这里拿过来借鉴一下，如下图所示。数据集为经过标准化处理（减去均值、对标准差归一化）后的 Old Faithful 数据集，记录的是黄石国家公园的 Old Faithful 热喷泉喷发的时长与此次喷发距离上次喷发的等待时间。我们选取 $ K = 2 $，小图（a）为对中心点初始化，小图（b）至小图（i）为交替迭代过程，可以看到，经过短短的数次迭代，k-means 算法就已达到了收敛。
 <div align = center>
-<img src="https://raw.githubusercontent.com/ToWeather/MarkdownPhotos/master/illustration_of_k-means_algorithm.png" width = "660" height = "550" alt = "k-means 算法运行图示" align = center />
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/119583/4/518/365049/5e9d20c0Ec32fe6fa/65c3e61f56e00df9.png" width = "660" height = "550" alt = "k-means 算法运行图示" align = center />
 </div>
+
 
 ## 算法复杂度及其优缺点
 ### 算法复杂度
-k-means 算法每次迭代均需要计算每个样本点到每个中心点的距离，一共要计算 \\( O(NK) \\) 次，而计算某一个样本点到某一个中心点的距离所需时间复杂度为 \\(  O(D) \\)，其中 \\( N \\) 为样本点的个数，\\( K \\) 为指定的聚类个数，\\( D \\) 为样本点的维度；因此，一次迭代过程的时间复杂度为 \\( O(NKD) \\)，又由于迭代次数有限，所以 k-means 算法的时间复杂度为 \\( O(NKD) \\)。
-  
+k-means 算法每次迭代均需要计算每个样本点到每个中心点的距离，一共要计算 $ O(NK) $ 次，而计算某一个样本点到某一个中心点的距离所需时间复杂度为 $  O(D) $，其中 $ N $ 为样本点的个数，$ K $ 为指定的聚类个数，$ D $ 为样本点的维度；因此，一次迭代过程的时间复杂度为 $ O(NKD) $，又由于迭代次数有限，所以 k-means 算法的时间复杂度为 $ O(NKD) $。
+
 实际实现中，一般采用高效的数据结构（如 kd 树）来结构化地存储对象之间的距离信息，因而可减小 k-means 算法运行的时间开销。
 
 ### 缺点
@@ -66,7 +67,7 @@ k-means 算法虽简单易用，但其有一些很明显的缺点，总结如下
 - 由于其假设每一个 `cluster` 的分布形状都为球形（spherical），（“球形分布”表明一个 `cluster` 内的数据在每个维度上的方差都相同，且不同维度上的特征都不相关），这样其产生的聚类结果也趋向于球形的 `cluster` ，对于具有非凸的或者形状很特别的 `cluster` 的数据集，其聚类效果往往很差。
 - 由于其假设不同的 `cluster` 具有相似的密度，因此对于具有密度差别较大的 `cluster` 的数据集，其聚类效果不好。
 - 其对异常点（outliers）很敏感，这是由于其采用了平方 Euclidean 距离作为距离衡量准则。
-- `cluster` 的数目 \\( K \\) 需要预先指定，但由于很多情况下我们对数据也是知之甚少的，因而怎么选择一个合适的 \\( K \\) 值也是一个问题。一般确定 \\( K \\) 的值的方法有以下几种：a）选定一个 \\( K \\) 的区间，例如 2～10，对每一个 \\( K \\) 值分别运行多次 k-means 算法，取目标函数 \\( J \\) 的值最小的 \\( K \\) 作为聚类数目；b）利用 [ Elbow 方法 ][4] 来确定 \\( K \\) 的值；c）利用 [ gap statistics ][5] 来确定 \\( K \\) 的值；d）根据问题的目的和对数据的粗略了解来确定 \\( K \\) 的值。
+- `cluster` 的数目 $ K $ 需要预先指定，但由于很多情况下我们对数据也是知之甚少的，因而怎么选择一个合适的 $ K $ 值也是一个问题。一般确定 $ K $ 的值的方法有以下几种：a）选定一个 $ K $ 的区间，例如 2～10，对每一个 $ K $ 值分别运行多次 k-means 算法，取目标函数 $ J $ 的值最小的 $ K $ 作为聚类数目；b）利用 [ Elbow 方法 ][4] 来确定 $ K $ 的值；c）利用 [ gap statistics ][5] 来确定 $ K $ 的值；d）根据问题的目的和对数据的粗略了解来确定 $ K $ 的值。
 - 其对初始值敏感，不好的初始值往往会导致效果不好的聚类结果（收敛到不好的局部最优解）。一般采取选取多组初始值的方法或采用优化初始值选取的算法（如 [ k-means++ 算法 ][6]）来克服此问题。
 - 其仅适用于数值类型的样本。但其扩展算法 [ k-modes 算法 ][7]（专门针对离散型数据所设计） 和 k-medoid 算法（中心点只能在样本数据集中取得） 适用于离散类型的样本。
 
@@ -78,7 +79,7 @@ k-means 算法虽简单易用，但其有一些很明显的缺点，总结如下
 - 其产生的聚类结果容易阐释。
 - 在实际应用中，数据集如果不满足以上部分假设条件，仍然有可能产生比较让人满意的聚类结果。
 
----- 
+----
 # 实现 k-means 聚类
 在这一部分，我们首先手写一个简单的 k-means 算法，然后用该算法来展示一下不同的初始化值对聚类结果的影响；然后再使用 scikit-learn 中的 `KMeans` 类来展示 k-means 算法对不同类型的数据集的聚类效果。
 
@@ -209,13 +210,15 @@ total iteration num: 19, final value of J: 3.1657, time used: 0.3488 seconds
 ```
 
 <div align = center>
-<img src="https://raw.githubusercontent.com/ToWeather/MarkdownPhotos/master/kmeans_result(good_initialization).png" width = "1000" height = "500" alt = "k-means 算法运行结果（好的初始化）" align = center />
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/117435/1/1968/666134/5e9d2107Eb6f19bba/2a9ff64f580f44c1.png" width = "1000" height = "450" alt = "k-means 算法运行结果（好的初始化）" align = center />
 </div>
+
 
 可以看到，这次算法产生的聚类结果比较好；但并不总是这样，例如某次运行该算法产生的聚类结果如下图所示，可以看出，这一次由于初始值的不同，该算法收敛到了一个不好的局部最优解。
 <div align = center>
-<img src="https://raw.githubusercontent.com/ToWeather/MarkdownPhotos/master/kmeans_result(bad_initialization).png" width = "1000" height = "500" alt = "k-means 算法运行结果（不好的初始化）" align = center />
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/99647/29/19371/745631/5e9d2106E95772b3c/2067e237eb062d8a.png" width = "1000" height = "450" alt = "k-means 算法运行结果（不好的初始化）" align = center />
 </div>
+
 
 ## 利用 sklearn 实现 k-means 聚类
 sklearn 中的 `KMeans` 类可以用来进行 k-means 聚类，sklearn 对该模块进行了计算的优化以及中心点初始化的优化，因而其效果和效率肯定要比上面手写的 k-means 算法要好。在这里，我们直接采用 sklearn 官网的 [demo][10] 来展示 `KMeans` 类的用法，顺便看一下 k-means 算法在破坏了其假设条件的数据集下的运行结果。代码如下（直接照搬 sklearn 官网）：
@@ -272,10 +275,11 @@ plt.show()
 
 运行结果如下图所示：
 <div align = center>
-<img src="https://raw.githubusercontent.com/ToWeather/MarkdownPhotos/master/kmeans_different_datasets.png" width = "780" height = "650" alt = "k-means 算法在不同数据集下的表现" align = center />
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/110025/24/13130/303358/5e9d219cE0ecb25f2/9254089d64989e5b.png" width = "780" height = "650" alt = "k-means 算法在不同数据集下的表现" align = center />
 </div>
 
-上述代码分别产生了四个数据集，并分别对它们进行 k-means 聚类。第一个数据集符合所有 k-means 算法的假设条件，但是我们给定的 \\( K \\) 值与实际数据不符；第二个数据集破坏了球形分布的假设条件；第三个数据集破坏了各 `cluster` 的密度相近的假设条件；第四个数据集则破坏了各 `cluster` 内的样本数目相近的假设条件。可以看到，虽然有一些数据集破坏了 k-means 算法的某些假设条件（密度相近、数目相近），但算法的聚类结果仍然比较好；但如果数据集的分布偏离球形分布太远的话，最终的聚类结果会很差。
+
+上述代码分别产生了四个数据集，并分别对它们进行 k-means 聚类。第一个数据集符合所有 k-means 算法的假设条件，但是我们给定的 $ K $ 值与实际数据不符；第二个数据集破坏了球形分布的假设条件；第三个数据集破坏了各 `cluster` 的密度相近的假设条件；第四个数据集则破坏了各 `cluster` 内的样本数目相近的假设条件。可以看到，虽然有一些数据集破坏了 k-means 算法的某些假设条件（密度相近、数目相近），但算法的聚类结果仍然比较好；但如果数据集的分布偏离球形分布太远的话，最终的聚类结果会很差。
 
 
 

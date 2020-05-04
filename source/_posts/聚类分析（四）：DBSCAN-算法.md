@@ -11,7 +11,7 @@ keywords: 聚类,非监督学习,密度聚类,clustering,machine learning
 
 ---
 
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 *本篇文章为讲述聚类算法的第四篇文章，其它相关文章请参见 [**聚类分析系列文章**][1]*。
 
@@ -21,53 +21,54 @@ DBSCAN（Density-Based Spatial Clustering of Applications with Noise) 算法是�
 要想描述清楚 DBSCAN 算法，我们得先定义好一些概念，例如何为密度高的区域、何为密度低的区域等等。
 
 ## 几个定义
+
 在密度聚类算法中，我们需要区分密度高的区域以及密度低的区域，并以此作为聚类的依据。DBSCAN 通过将样本点划分为三种类型来达到此目的：核心点（core points）、边缘点（border points）以及噪声点（noise），核心点和边缘点共同构成一个一个的 `cluster`，而噪声点则存在于各 `cluster` 之间的区域。为区分清楚这三类样本点，我们首先定义一些基本的概念。
 
->**定义1：** （样本点的 \\( \\text {Eps} \\)-邻域）假设数据集为 \\( \\bf X \\)，则样本点 \\( \\bf p \\) 的 \\( \\text {Eps} \\)-邻域定义为 \\( N\_{\\text {Eps}} ({\\bf p}) = \\lbrace {\\bf q} \\in {\\bf X} | d({\\bf p}, {\\bf q}) \\le {\\text {Eps}} \rbrace \\). 
+> **定义1：** （样本点的 $ \text {Eps} $-邻域）假设数据集为 $ \bf X $，则样本点 $ \bf p $ 的 $ \text {Eps} $-邻域定义为 $ N_{\text {Eps}} ({\bf p}) = \lbrace {\bf q} \in {\bf X} | d({\bf p}, {\bf q}) \le {\text {Eps}} \rbrace $. 
 
-我们再给定一个参数 \\( \\text {MinPts} \\)，并定义核心点须满足的条件为：其 \\( \\text {Eps} \\)-邻域内包含的样本点的数目不小于 \\( \\text {MinPts} \\) ， 因而核心点必然在密度高的区域，我们可能很自然地想到一种简单的聚类方法：聚类产生的每一个 `cluster` 中的所有点都是核心点，而所有非核心点都被归为噪声。但仔细地想一想，这种方式其实是不太有道理的，因为一个符合密度高的 `cluster` 的边界处的点并不一定需要是核心点，它可以是非核心点（我们称这类非核心点为边缘点，称其它的非核心点为噪声点），如下图中的图（a）所示。我们通过以下定义来继续刻画 DBSCAN 里面的 `cluster` 所具有的形式。
+我们再给定一个参数 $ \text {MinPts} $，并定义核心点须满足的条件为：其 $ \text {Eps} $-邻域内包含的样本点的数目不小于 $ \text {MinPts} $ ， 因而核心点必然在密度高的区域，我们可能很自然地想到一种简单的聚类方法：聚类产生的每一个 `cluster` 中的所有点都是核心点，而所有非核心点都被归为噪声。但仔细地想一想，这种方式其实是不太有道理的，因为一个符合密度高的 `cluster` 的边界处的点并不一定需要是核心点，它可以是非核心点（我们称这类非核心点为边缘点，称其它的非核心点为噪声点），如下图中的图（a）所示。我们通过以下定义来继续刻画 DBSCAN 里面的 `cluster` 所具有的形式。
 
->**定义2： **（密度直达）我们称样本点 \\( \\bf p \\) 是由样本点 \\( \\bf q \\) 对于参数 \\( \\lbrace \\text {Eps}, \\text {MinPts} \\rbrace \\) 密度直达的，如果它们满足 \\( {\\bf p} \\in N\_{\\text {Eps}} ({\\bf q}) \\) 且 \\( |N\_{\\text {Eps}}({\\bf q})| \\ge \\text {MinPts} \\) （即样本点 \\( \\bf q \\) 是核心点）. 
+> **定义2： **（密度直达）我们称样本点 $ \bf p $ 是由样本点 $ \bf q $ 对于参数 $ \lbrace \text {Eps}, \text {MinPts} \rbrace $ 密度直达的，如果它们满足 $ {\bf p} \in N_{\text {Eps}} ({\bf q}) $ 且 $ |N_{\text {Eps}}({\bf q})| \ge \text {MinPts} $ （即样本点 $ \bf q $ 是核心点）. 
 
-很显然，密度直达并不是一个对称的性质，如下图中的图（b）所示，其中 \\( \\text {Eps} = 5 \\)，可以看到，样本点 \\( \\bf q \\) 为核心点，样本点 \\( \\bf p \\) 不是核心点，且 \\( \\bf p \\) 在 \\( \\bf q \\) 的 \\( \\text {Eps} \\)-邻域内，因而 \\( \\bf p \\) 可由 \\( \\bf q \\) 密度直达，而反过来则不成立。有了密度直达的定义后，我们再来给出密度可达的定义。
+很显然，密度直达并不是一个对称的性质，如下图中的图（b）所示，其中 $ \text {Eps} = 5 $，可以看到，样本点 $ \bf q $ 为核心点，样本点 $ \bf p $ 不是核心点，且 $ \bf p $ 在 $ \bf q $ 的 $ \text {Eps} $-邻域内，因而 $ \bf p $ 可由 $ \bf q $ 密度直达，而反过来则不成立。有了密度直达的定义后，我们再来给出密度可达的定义。
 
 <div align = center>
-<img src="https://raw.githubusercontent.com/ToWeather/MarkdownPhotos/master/illustration_of_definition_in_dbscan.png" width = "900" height = "600" alt = "DBSCAN 中的相关概念的图示" align = center />
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/109401/10/12995/402816/5e9d2383Ef04b670f/12c90b332f55e6e4.png" width = "900" height = "600" alt = "DBSCAN 中的相关概念的图示" align = center />
 </div>
 
->**定义3：**（密度可达）我们称样本点 \\( \\bf p \\) 是由样本点 \\( \\bf q \\) 对于参数 \\( \\lbrace \\text {Eps}, \\text {MinPts} \\rbrace \\) 密度可达的，如果存在一系列的样本点 \\( {\\bf p}\_{1}, ..., {\\bf p}\_n \\)（其中 \\( {\\bf p}\_1 = {\\bf q}, {\\bf p}\_n = {\\bf p} \\)）使得对于 \\( i = 1, ..., n-1 \\)，样本点 \\( {\\bf p}\_{i + 1} \\) 可由样本点 \\( {\\bf p}\_{i} \\) 密度可达.
+> **定义3：**（密度可达）我们称样本点 $ \bf p $ 是由样本点 $ \bf q $ 对于参数 $ \lbrace \text {Eps}, \text {MinPts} \rbrace $ 密度可达的，如果存在一系列的样本点 $ {\bf p}_{1}, ..., {\bf p}_n $（其中 $ {\bf p}_1 = {\bf q}, {\bf p}_n = {\bf p} $）使得对于 $ i = 1, ..., n-1 $，样本点 $ {\bf p}_{i + 1} $ 可由样本点 $ {\bf p}_{i} $ 密度可达.
 
 我们可以看到，密度直达是密度可达的特例，同密度直达一样，密度可达同样不是一个对称的性质，如上图中的图（c）所示。为描述清楚我们希望得到的 `cluster` 中的任意两个样本点所需满足的条件，我们最后再给出一个密度相连的概念。
 
->**定义4：**（密度相连）我们称样本点 \\( \\bf p \\) 与样本点 \\( \\bf q \\) 对于参数 \\( \\lbrace \\text {Eps}, \\text {MinPts} \\rbrace \\) 是密度相连的，如果存在一个样本点 \\( {\\bf o} \\)，使得 \\( \\bf p \\) 和 \\( \\bf q \\) 均由样本点 \\( \\bf o \\) 密度可达。
+> **定义4：**（密度相连）我们称样本点 $ \bf p $ 与样本点 $ \bf q $ 对于参数 $ \lbrace \text {Eps}, \text {MinPts} \rbrace $ 是密度相连的，如果存在一个样本点 $ {\bf o} $，使得 $ \bf p $ 和 $ \bf q $ 均由样本点 $ \bf o $ 密度可达。
 
 密度相连是一个对称的性质，如上图中的图（d）所示。DBSCAN 算法期望找出一些 `cluster` ，使得每一个 `cluster` 中的任意两个样本点都是密度相连的，且每一个 `cluster` 在密度可达的意义上都是最大的。`cluster` 的定义如下：
 
->**定义5：**（`cluster`）假设数据集为 \\( \\bf X \\)，给定参数 \\( \\lbrace \\text {Eps}, \\text {MinPts} \\rbrace \\)，则某个 `cluster` \\( C \\) 是数据集  \\( \\bf X \\) 的一个非空子集，且满足如下条件：
-		>1）对于任意的样本点 \\( \\bf p \\) 和 \\( \\bf q \\)，如果 \\( {\\bf p} \\in C \\) 且 \\( \\bf q \\) 可由 \\( \\bf p \\) 密度可达，则 \\( {\\bf q} \\in C \\) .（最大性）
-		>2）对于 \\( C \\) 中的任意样本点 \\( \\bf p \\) 和 \\( \\bf q \\)， \\( \\bf p \\) 和 \\( \\bf q \\) 关于参数 \\( \\lbrace \\text {Eps}, \\text {MinPts} \\rbrace \\) 是密度相连的.（连接性）
+> **定义5：**（`cluster`）假设数据集为 $ \bf X $，给定参数 $ \lbrace \text {Eps}, \text {MinPts} \rbrace $，则某个 `cluster` $ C $ 是数据集  $ \bf X $ 的一个非空子集，且满足如下条件：
+	    >1）对于任意的样本点 $ \bf p $ 和 $ \bf q $，如果 $ {\bf p} \in C $ 且 $ \bf q $ 可由 $ \bf p $ 密度可达，则 $ {\bf q} \in C $ .（最大性）
+	    >2）对于 $ C $ 中的任意样本点 $ \bf p $ 和 $ \bf q $， $ \bf p $ 和 $ \bf q $ 关于参数 $ \lbrace \text {Eps}, \text {MinPts} \rbrace $ 是密度相连的.（连接性）
 
-这样我们就定义出了 DBSCAN 算法最终产生的 `cluster` 的形式，它们就是所谓的密度高的区域；那么，噪声点就是不属于任何 `cluster` 的样本点。根据以上定义，由于一个 `cluster` 中的任意两个样本点都是密度相连的，每一个 `cluster` 至少包含 \\( \\text {MinPts} \\) 个样本点。 
+这样我们就定义出了 DBSCAN 算法最终产生的 `cluster` 的形式，它们就是所谓的密度高的区域；那么，噪声点就是不属于任何 `cluster` 的样本点。根据以上定义，由于一个 `cluster` 中的任意两个样本点都是密度相连的，每一个 `cluster` 至少包含 $ \text {MinPts} $ 个样本点。 
 
 ## 算法描述
-DBSCAN 算法就是为了寻找以上定义 5 中定义的 `cluster`，其主要思路是先指定一个核心点作为种子，寻找所有由该点密度可达的样本点组成一个 `cluster`，再从未被聚类的核心点中指定一个作为种子，寻找所有由该点密度可达的样本点组成第二个 `cluster`，…，依此过程，直至没有未被聚类的核心点为止。依照 `cluster` 的“最大性”和“连接性”，在给定参数 \\( \\lbrace \\text {Eps}, \\text {MinPts} \\rbrace \\) 的情况下，最终产生的 `cluster` 的结果是一致的，与种子的选取顺序无关（某些样本点位于多个 `cluster` 的边缘的情况除外，这种情况下，这些临界位置的样本点的 `cluster` 归属与种子的选取顺序有关）。
+DBSCAN 算法就是为了寻找以上定义 5 中定义的 `cluster`，其主要思路是先指定一个核心点作为种子，寻找所有由该点密度可达的样本点组成一个 `cluster`，再从未被聚类的核心点中指定一个作为种子，寻找所有由该点密度可达的样本点组成第二个 `cluster`，…，依此过程，直至没有未被聚类的核心点为止。依照 `cluster` 的“最大性”和“连接性”，在给定参数 $ \lbrace \text {Eps}, \text {MinPts} \rbrace $ 的情况下，最终产生的 `cluster` 的结果是一致的，与种子的选取顺序无关（某些样本点位于多个 `cluster` 的边缘的情况除外，这种情况下，这些临界位置的样本点的 `cluster` 归属与种子的选取顺序有关）。
 
 ## 合理地选取参数
-DBSCAN 的聚类结果和效果取决于参数 \\( \\text {Eps} \\) 和 \\( \\text {MinPts} \\) 以及距离衡量方法的选取。
+DBSCAN 的聚类结果和效果取决于参数 $ \text {Eps} $ 和 $ \text {MinPts} $ 以及距离衡量方法的选取。
 
 由于算法中涉及到寻找某个样本点的指定邻域内的样本点，因而需要衡量两个样本点之间的距离。这里选取合适的距离衡量函数也变得比较关键，一般而言，我们需要根据所要处理的数据的特点来选取距离函数，例如，当处理的数据是空间地理位置信息时，Euclidean 距离是一个比较合适的选择。各种不同的距离函数可参见 [*聚类分析（一）：层次聚类算法*][2]。
 
-然后我们再来看参数的选取方法，我们一般选取数据集中最稀疏的 `cluster` 所对应的 \\( \\text {Eps} \\) 和 \\( \\text {MinPts} \\)。这里我们给出一种启发式的参数选取方法。假设 \\( d \\) 是某个样本点 \\( \\bf p \\) 距离它的第 \\( k \\) 近邻的距离，则一般情况下 \\( \\bf p \\) 的 \\( d \\)-邻域内正好包含 \\( k + 1 \\) 个样本点。我们可以推断，在一个合理的 `cluster` 内，改变 \\( k \\) 的值不应该导致 \\( d \\) 值有较大的变化，除非 \\( \\bf p \\) 的第 \\( k \\) 近邻们（\\( k = 1, 2, 3,… \\) ） 都近似在一条直线上，而这种情形的数据不可能构成一个合理的 `cluster`。
+然后我们再来看参数的选取方法，我们一般选取数据集中最稀疏的 `cluster` 所对应的 $ \text {Eps} $ 和 $ \text {MinPts} $。这里我们给出一种启发式的参数选取方法。假设 $ d $ 是某个样本点 $ \bf p $ 距离它的第 $ k $ 近邻的距离，则一般情况下 $ \bf p $ 的 $ d $-邻域内正好包含 $ k + 1 $ 个样本点。我们可以推断，在一个合理的 `cluster` 内，改变 $ k $ 的值不应该导致 $ d $ 值有较大的变化，除非 $ \bf p $ 的第 $ k $ 近邻们（$ k = 1, 2, 3,… $ ） 都近似在一条直线上，而这种情形的数据不可能构成一个合理的 `cluster`。
 
-因而我们一般将 \\( k \\) 的值固定下来，一个合理的选择是令 \\( k = 3 \\) 或 \\( k = 4 \\)，那么 \\( \\text {MinPts} \\) 的值也确定了（为 \\( k + 1 \\)）；然后再来看每个样本点的 \\( \\text {k-dist} \\) 距离（即该样本点距离它的第 \\( k \\) 近邻的距离）的分布情况，我们把每个样本点的 \\( \\text {k-dist} \\) 距离从大到小排列，并将它绘制出来，如下图所示。我们再来根据这个图像来选择 \\( \\text {Eps} \\)，一种情况是我们对数据集有一定的了解，知道噪声点占总样本数的大致比例，则直接从图像中选取该比例处所对应的样本点的 \\( \\text {k-dist} \\) 距离作为 \\( \\text {Eps} \\)，如下图中的图（a）所示；另一种情况是，我们对数据集不太了解，此时就只能分析 \\( \\text {k-dist} \\) 图了，一般情况下，我们选取第一个斜率变化明显的“折点”所对应的 \\( \\text {k-dist} \\) 距离作为 \\( \\text {k-dist} \\) ，如下图中的图（b）所示。
+因而我们一般将 $ k $ 的值固定下来，一个合理的选择是令 $ k = 3 $ 或 $ k = 4 $，那么 $ \text {MinPts} $ 的值也确定了（为 $ k + 1 $）；然后再来看每个样本点的 $ \text {k-dist} $ 距离（即该样本点距离它的第 $ k $ 近邻的距离）的分布情况，我们把每个样本点的 $ \text {k-dist} $ 距离从大到小排列，并将它绘制出来，如下图所示。我们再来根据这个图像来选择 $ \text {Eps} $，一种情况是我们对数据集有一定的了解，知道噪声点占总样本数的大致比例，则直接从图像中选取该比例处所对应的样本点的 $ \text {k-dist} $ 距离作为 $ \text {Eps} $，如下图中的图（a）所示；另一种情况是，我们对数据集不太了解，此时就只能分析 $ \text {k-dist} $ 图了，一般情况下，我们选取第一个斜率变化明显的“折点”所对应的 $ \text {k-dist} $ 距离作为 $ \text {k-dist} $ ，如下图中的图（b）所示。
 
 <div align = center>
-<img src="https://raw.githubusercontent.com/ToWeather/MarkdownPhotos/master/illustration_of_parameter_selection_for_dbscan.png" width = "900" height = "500" alt = "DBSCAN 中数据集的 k-dist 图" align = center />
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/99668/13/19316/115333/5e9d23dbEcc8735bd/258ba789ef29f591.png" width = "900" height = "500" alt = "DBSCAN 中数据集的 k-dist 图" align = center />
 </div>
 
 ## 算法的复杂度及其优缺点
 ### 算法复杂度
-DBSCAN 算法的主要计算开销在于对数据集中的每一个样本点都判断一次其是否为核心点，而进行这一步骤的关键是求该样本点的 \\( \\text {Eps} \\)-邻域内的样本点，如果采用穷举的遍历的方法的话，该操作的时间复杂度为 \\( O(N) \\)，其中 \\( N \\) 为总样本数；但我们一般会对数据集建立索引，以此来加快查询某邻域内数据的速度，例如，当采用 [R\* tree][3] 建立索引时，查询邻域的平均时间复杂度为 \\( O(\\log N) \\)。因而，DBSCAN 算法的平均时间复杂度为 \\( O(N\\log N) \\)；由于只需要存储数据集以及索引信息，DBSCAN算法的空间复杂度与总样本数在一个量级，即 \\( O(N) \\)。
+DBSCAN 算法的主要计算开销在于对数据集中的每一个样本点都判断一次其是否为核心点，而进行这一步骤的关键是求该样本点的 $ \text {Eps} $-邻域内的样本点，如果采用穷举的遍历的方法的话，该操作的时间复杂度为 $ O(N) $，其中 $ N $ 为总样本数；但我们一般会对数据集建立索引，以此来加快查询某邻域内数据的速度，例如，当采用 [R\* tree][3] 建立索引时，查询邻域的平均时间复杂度为 $ O(\log N) $。因而，DBSCAN 算法的平均时间复杂度为 $ O(N\log N) $；由于只需要存储数据集以及索引信息，DBSCAN算法的空间复杂度与总样本数在一个量级，即 $ O(N) $。
 
 ### 优缺点
 DBSCAN 算法有很多优点，总结如下：
@@ -75,11 +76,11 @@ DBSCAN 算法有很多优点，总结如下：
 - DBSCAN 可以找到具有任意形状的 `cluster`，如非凸的 `cluster`，这基于其对 `cluster` 的定义（`cluster` 是由密度低的区域所隔开的密度高的区域）。
 - DBSCAN 对异常值鲁棒，因为它定义了噪声点的概念。
 - DBSCAN 算法在给定参数下对同一数据集的聚类结果是确定的（除非出现某些样本点位于多个 `cluster` 的边缘的情况，这种情况下，这些临界位置的样本点的 `cluster` 归属与种子的选取顺序有关，而它们对于聚类结果的影响也是微乎其微的）。
-- DBSCAN 的运行速度快，当采用索引时，其复杂度仅为  \\( O(N\\log N) \\)。
+- DBSCAN 的运行速度快，当采用索引时，其复杂度仅为  $ O(N\log N) $。
 
-当然，它也有一个主要缺点，即对于具有密度相差较大的 `cluster` 的数据集的聚类效果不好，这是因为在这种情况下，如果参数 \\( \\text {MinPts} \\) 和 \\( \\text {Eps} \\) 是参照数据集中最稀疏的 `cluster` 所选取的，那么很有可能最终所有的样本最终都被归为一个 `cluster`，因为可能数据集中的 `cluster` 之间的区域的密度和最稀疏的 `cluster` 的密度相当；如果选取的参数 \\( \\text {MinPts} \\) 和 \\( \\text {Eps} \\) 倾向于聚出密度比较大的 `cluster`，那么极有可能，比较稀疏的这些 `cluster` 都被归为噪声。[ OPTICS][4] 算法一般被用来解决这一问题。
+当然，它也有一个主要缺点，即对于具有密度相差较大的 `cluster` 的数据集的聚类效果不好，这是因为在这种情况下，如果参数 $ \text {MinPts} $ 和 $ \text {Eps} $ 是参照数据集中最稀疏的 `cluster` 所选取的，那么很有可能最终所有的样本最终都被归为一个 `cluster`，因为可能数据集中的 `cluster` 之间的区域的密度和最稀疏的 `cluster` 的密度相当；如果选取的参数 $ \text {MinPts} $ 和 $ \text {Eps} $ 倾向于聚出密度比较大的 `cluster`，那么极有可能，比较稀疏的这些 `cluster` 都被归为噪声。[ OPTICS][4] 算法一般被用来解决这一问题。
 
----- 
+----
 # 实现 DBSCAN 聚类
 现在我们来实现 DBSCAN 算法。首先我们定义一个用于进行 DBSCAN 聚类的类 `DBSCAN`，进行聚类时，我们得先构造一个该类的实例，初始化时，我们须指定 DBSCAN 算法的参数 `min_pts` 和 `eps` 以及距离衡量方法（默认为 `euclidean`），对数据集进行聚类时，我们对构造出来的实例调用方法 `predict`。`predict` 方法首先为“查询某样本点的邻域”这一经常被用到的操作做了一些准备工作，一般是计算各样本点间的距离并保存，但在当数据维度为 2、距离度量方法为 Euclidean 距离时，我们使用 `rtree` 模块为数据集建立了空间索引，以加速查询邻域的速度（一般来讲，为提高效率，应该对任意数据维度、任意距离度量方法下的数据集建立索引，但这里为实现方便，仅对此一种类型的数据集建立了索引，其它类型的数据集我们还是通过遍历距离矩阵的形式进行低效的邻域查找）。然后再对数据进行 DBSCAN 聚类，即遍历数据集中的样本点，若该样本点未被聚类且为核心点时，以该样本点为种子按照密度可达的方式扩展至最大为止。代码如下：
 ```python
@@ -254,7 +255,7 @@ propotion of noise data for dbscan_sklearn: 0.1220
 ```
 
 <div align = center>
-<img src="https://raw.githubusercontent.com/ToWeather/MarkdownPhotos/master/dbscan_clustering_results.png" width = "1000" height = "500" alt = "DBSCAN 的运行结果" align = center />
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/119261/29/1861/833242/5e9d23e6Ef461edd8/bdce1243099210c2.png" width = "1000" height = "500" alt = "DBSCAN 的运行结果" align = center />
 </div>
 
 上图中，大圆圈表示核心点、非黑色的小圆圈表示边缘点、黑色的小圆圈表示噪声点，它们的分布服从我们的直观感受。我们还可以看到，手写算法和 sklearn 实现的算法的产出时一模一样的（从可视化结果的对比以及噪声点所占的比例可以得出），这也验证了手写算法的正确性。
@@ -285,13 +286,13 @@ plt.show()
 运行的结果如下图所示：
 
 <div align = center>
-<img src="https://raw.githubusercontent.com/ToWeather/MarkdownPhotos/master/dbscan_clustering_result_for_nonconvex_datasets.png" width = "1000" height = "500" alt = "DBSCAN 在非凸数据集下的运行结果" align = center />
+<img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/104289/21/19318/979412/5e9d23e8E782d1df2/12ad36c600e0f1f3.png" width = "1000" height = "500" alt = "DBSCAN 在非凸数据集下的运行结果" align = center />
 </div>
 
 可以看到 DBSCAN 算法对非凸数据集的聚类效果非常好。
 
 
- 
+
 
 
 
