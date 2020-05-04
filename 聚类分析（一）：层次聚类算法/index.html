@@ -412,15 +412,17 @@
       
 
       
-        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 <p><em>本篇文章为讲述聚类算法的第一篇文章，其它相关文章请参见 <a href="../clustering-analysis/index.html"><strong>聚类分析系列文章</strong></a></em>。</p>
 <h1 id="聚类算法综述"><a href="#聚类算法综述" class="headerlink" title="聚类算法综述"></a>聚类算法综述</h1><p>聚类分析（clustering analysis）是将一组对象根据其特征分成不同的 <code>cluster</code>，使得同一 <code>cluster</code> 内的对象在某种意义上比不同的 <code>cluster</code> 之间的对象更为相似。</p>
 <p>由于 “<code>cluster</code>” 没有一个明确的定义，因而会有基于不同的模型的聚类算法，其中被广泛运用的聚类算法有以下几类：</p>
 <ul>
 <li>基于<strong>连通模型</strong>（connectivity-based）的聚类算法： 即本文将要讲述的<strong>层次聚类</strong>算法，其核心思想是按照对象之间的距离来聚类，两个离的近的对象要比两个离的远的对象更有可能属于同一 <code>cluster</code>。</li>
-<li>基于<strong>中心点模型</strong>（centroid-based）的聚类算法： 在此类算法中，每个 <code>cluster</code> 都维持一个中心点（centorid），该中心点不一定属于给定的数据集。当预先指定聚类数目 <code>k</code> 时，此类算法需要解决一个优化问题，目标函数为所有的对象距其所属的 <code>cluster</code> 的中心点的距离的平方和，优化变量为每个 <code>cluster</code> 的中心点以及每个对象属于哪个 <code>cluster</code>；此优化问题被证明是 NP-hard 的，但有一些迭代算法可以找到近似解，<a href="../%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9Ak-means-%E7%AE%97%E6%B3%95/"> k-means 算法 </a>即是其中的一种。</li>
-<li>基于<strong>分布模型</strong>（distribution-based）的聚类算法： 此类算法认为数据集中的数据是由一种混合概率模型所采样得到的，因而只要将可能属于同一概率分布所产生的数据归为同一 <code>cluster</code> 即可，最常被使用的此类算法为<a href="../%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E9%AB%98%E6%96%AF%E6%B7%B7%E5%90%88%E6%A8%A1%E5%9E%8B%E4%B8%8EEM%E7%AE%97%E6%B3%95/"> 高斯混合模型（GMM）聚类</a>。</li>
+<li><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</li>
+<li><p>基于<strong>分布模型</strong>（distribution-based）的聚类算法： 此类算法认为数据集中的数据是由一种混合概率模型所采样得到的，因而只要将可能属于同一概率分布所产生的数据归为同一 <code>cluster</code> 即可，最常被使用的此类算法为<a href="../%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E9%AB%98%E6%96%AF%E6%B7%B7%E5%90%88%E6%A8%A1%E5%9E%8B%E4%B8%8EEM%E7%AE%97%E6%B3%95/"> 高斯混合模型（GMM）聚类</a>。</p>
+</li>
 <li>基于<strong>密度</strong>（density-based）的聚类算法： 在此类算法中，密度高的区域被归为一个 <code>cluster</code>，<code>cluster</code> 之间由密度低的区域隔开，密度低的区域中的点被认为是噪声 （noise），常用的密度聚类算法为 <a href="../%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9ADBSCAN-%E7%AE%97%E6%B3%95/">DBSCAN</a> 和 OPTICS。</li>
 </ul>
 <hr>

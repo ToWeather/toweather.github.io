@@ -412,7 +412,7 @@
       
 
       
-        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 <p><em>本篇文章为讲述聚类算法的第三篇文章，其它相关文章请参见 <a href="../clustering-analysis/index.html"><strong>聚类分析系列文章</strong></a></em>。</p>
 <h1 id="高斯混合模型"><a href="#高斯混合模型" class="headerlink" title="高斯混合模型"></a>高斯混合模型</h1><h2 id="高斯混合模型简介"><a href="#高斯混合模型简介" class="headerlink" title="高斯混合模型简介"></a>高斯混合模型简介</h2><p>高斯混合模型（Gaussian Mixture Model，GMM）即是几个高斯分布的线性叠加，其可提供更加复杂但同时又便于分析的概率密度函数来对现实世界中的数据进行建模。具体地，高斯混合分布的概率密度函数如下所示：</p>
@@ -464,23 +464,36 @@ L({\bf \pi}, {\bf \mu}, {\bf \Sigma}) = \ln p({\bf X} | {\bf \pi}, {\bf \mu}, {\
 <div align="center">
 <img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/95119/36/19198/564054/5e9d2234E755f59ca/df0c82b898c6b3e1.png" width="660" height="550" alt="EM 算法求解 GMM 运行过程" align="center">
 </div>
+----
+# 一般 EM 算法
 
-<hr>
-<h1 id="一般-EM-算法"><a href="#一般-EM-算法" class="headerlink" title="一般 EM 算法"></a>一般 EM 算法</h1><p>前面我们只是启发式地推导了用于求解 GMM 的最大似然估计问题的 EM 算法，但这仅仅只是 EM 算法的一个特例。实际上，EM 算法可用于求解各种含有隐变量的模型的最大似然参数估计问题或者最大后验概率参数估计问题。在这里，我们将以一种更正式的形式来推导这类适用范围广泛的 EM 算法。</p>
-<p>假设观测到的变量集为 $ {\bf X} $，隐变量集为 $ {\bf Z} $，模型中所涉及到的参数集为 $ {\bf \theta} $，我们的目的是最大化关于 $ {\bf X} $ 的似然函数</p>
-<script type="math/tex; mode=display">
+前面我们只是启发式地推导了用于求解 GMM 的最大似然估计问题的 EM 算法，但这仅仅只是 EM 算法的一个特例。实际上，EM 算法可用于求解各种含有隐变量的模型的最大似然参数估计问题或者最大后验概率参数估计问题。在这里，我们将以一种更正式的形式来推导这类适用范围广泛的 EM 算法。
+
+假设观测到的变量集为 $ {\bf X} $，隐变量集为 $ {\bf Z} $，模型中所涉及到的参数集为 $ {\bf \theta} $，我们的目的是最大化关于 $ {\bf X} $ 的似然函数
+$$
 p({\bf X} | {\bf \theta}) = \sum_{\bf Z} p({\bf X}, {\bf Z} | {\bf \theta})
-\tag {11}</script><p>一般来讲，直接优化 $ p({\bf X} | {\bf \theta}) $ 是比较困难的，而优化完全数据集的似然函数 $ p({\bf X}, {\bf Z} | {\bf \theta}) $ 的难度则会大大减小，EM 算法就是基于这样的思路。</p>
-<p>首先我们引入一个关于隐变量 $ {\bf Z} $ 的分布 $ q({\bf Z}) $，然后我们可以将对数似然函数 $ \ln p({\bf X} | {\bf \theta}) $ 分解为如下</p>
-<script type="math/tex; mode=display">
+\tag {11}
+$$
+一般来讲，直接优化 $ p({\bf X} | {\bf \theta}) $ 是比较困难的，而优化完全数据集的似然函数 $ p({\bf X}, {\bf Z} | {\bf \theta}) $ 的难度则会大大减小，EM 算法就是基于这样的思路。
+
+首先我们引入一个关于隐变量 $ {\bf Z} $ 的分布 $ q({\bf Z}) $，然后我们可以将对数似然函数 $ \ln p({\bf X} | {\bf \theta}) $ 分解为如下
+$$
 \ln p({\bf X} | {\bf \theta}) = {\cal L}(q, {\bf \theta}) + {\text KL}(q || p) 
-\tag {12}</script><p>其中</p>
-<script type="math/tex; mode=display">
+\tag {12}
+$$
+其中
+$$
 {\cal L}(q, {\bf \theta}) = \sum_{\bf Z} q({\bf Z}) \ln \lbrace \frac{p({\bf X}, {\bf Z} | {\bf \theta})} {q({\bf Z})} \rbrace
-\tag {13}</script><script type="math/tex; mode=display">
+\tag {13}
+$$
+$$
 {\text KL}(q || p) = - \sum_{\bf Z} q({\bf Z}) \ln \lbrace \frac{ p({\bf Z} | {\bf X}, {\bf \theta})} {q({\bf Z})} \rbrace
-\tag {14}</script><p>其中 $ {\cal L}(q, {\bf \theta}) $ 为关于概率分布 $ q({\bf Z}) $ 的泛函，且为关于参数集 $ {\bf \theta} $ 的函数，另外，$ {\cal L}(q, {\bf \theta}) $ 的表达式中包含了关于完全数据集的似然函数 $ p({\bf X}, {\bf Z} | {\bf \theta}) $，这是我们需要好好加以利用的；$ {\text KL}(q || p) $ 为概率分布 $ q({\bf Z}) $ 与隐变量的后验概率分布 $ p({\bf Z} | {\bf X}, {\bf \theta}) $ 间的 <a href="https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence?oldformat=true" rel="external nofollow noopener noreferrer" target="_blank">KL 散度</a>，它的值一般大于 $ 0 $，只有在两个概率分布完全相同的情况下才等于 $ 0 $，因而其一般被用来衡量两个概率分布之间的差异。</p>
-<p>利用 $ {\text KL}(q || p) \ge 0 $ 的性质，我们可以得到 $ {\cal L}(q, {\bf \theta}) \le \ln p({\bf X} | {\bf \theta}) $，即 $ {\cal L}(q, {\bf \theta}) $ 是对数似然函数 $ \ln p({\bf X} | {\bf \theta}) $ 的一个下界。 $ \ln p({\bf X} | {\bf \theta}) $ 与 $ {\cal L}(q, {\bf \theta}) $  及 $ {\text KL}(q || p) $ 的关系可用下图中的图（a）来表示。 </p>
+\tag {14}
+$$
+其中 $ {\cal L}(q, {\bf \theta}) $ 为关于概率分布 $ q({\bf Z}) $ 的泛函，且为关于参数集 $ {\bf \theta} $ 的函数，另外，$ {\cal L}(q, {\bf \theta}) $ 的表达式中包含了关于完全数据集的似然函数 $ p({\bf X}, {\bf Z} | {\bf \theta}) $，这是我们需要好好加以利用的；$ {\text KL}(q || p) $ 为概率分布 $ q({\bf Z}) $ 与隐变量的后验概率分布 $ p({\bf Z} | {\bf X}, {\bf \theta}) $ 间的 [KL 散度][3]，它的值一般大于 $ 0 $，只有在两个概率分布完全相同的情况下才等于 $ 0 $，因而其一般被用来衡量两个概率分布之间的差异。
+
+利用 $ {\text KL}(q || p) \ge 0 $ 的性质，我们可以得到 $ {\cal L}(q, {\bf \theta}) \le \ln p({\bf X} | {\bf \theta}) $，即 $ {\cal L}(q, {\bf \theta}) $ 是对数似然函数 $ \ln p({\bf X} | {\bf \theta}) $ 的一个下界。 $ \ln p({\bf X} | {\bf \theta}) $ 与 $ {\cal L}(q, {\bf \theta}) $  及 $ {\text KL}(q || p) $ 的关系可用下图中的图（a）来表示。 
+
 <div align="center">
 <img src="http://free-cn-01.cdn.bilnn.com/ddimg/jfs/t1/95615/21/19360/177497/5e9d2261E6567325f/4847b152a367efac.png" width="1000" height="600" alt="EM 算法的推导过程示意图" align="center">
 </div>
@@ -768,7 +781,7 @@ r_{nk} = \begin{cases} 1, & \text {if \( k = \rm {arg}  \rm {min}_{j}  \| {\bf x
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#高斯混合模型"><span class="nav-number">1.</span> <span class="nav-text">高斯混合模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#高斯混合模型简介"><span class="nav-number">1.1.</span> <span class="nav-text">高斯混合模型简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最大似然估计问题"><span class="nav-number">1.2.</span> <span class="nav-text">最大似然估计问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#EM-算法求解高斯混合模型"><span class="nav-number">2.</span> <span class="nav-text">EM 算法求解高斯混合模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一般-EM-算法"><span class="nav-number">3.</span> <span class="nav-text">一般 EM 算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#再探高斯混合模型"><span class="nav-number">4.</span> <span class="nav-text">再探高斯混合模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#推导过程"><span class="nav-number">4.1.</span> <span class="nav-text">推导过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#与-k-means-算法的关系"><span class="nav-number">4.2.</span> <span class="nav-text">与 k-means 算法的关系</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现-GMM-聚类"><span class="nav-number">5.</span> <span class="nav-text">实现 GMM 聚类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#利用-python-实现-GMM-聚类"><span class="nav-number">5.1.</span> <span class="nav-text">利用 python 实现 GMM 聚类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用-sklearn-实现-GMM-聚类"><span class="nav-number">5.2.</span> <span class="nav-text">利用 sklearn 实现 GMM 聚类</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#高斯混合模型"><span class="nav-number">1.</span> <span class="nav-text">高斯混合模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#高斯混合模型简介"><span class="nav-number">1.1.</span> <span class="nav-text">高斯混合模型简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最大似然估计问题"><span class="nav-number">1.2.</span> <span class="nav-text">最大似然估计问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#EM-算法求解高斯混合模型"><span class="nav-number">2.</span> <span class="nav-text">EM 算法求解高斯混合模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#再探高斯混合模型"><span class="nav-number">3.</span> <span class="nav-text">再探高斯混合模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#推导过程"><span class="nav-number">3.1.</span> <span class="nav-text">推导过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#与-k-means-算法的关系"><span class="nav-number">3.2.</span> <span class="nav-text">与 k-means 算法的关系</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现-GMM-聚类"><span class="nav-number">4.</span> <span class="nav-text">实现 GMM 聚类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#利用-python-实现-GMM-聚类"><span class="nav-number">4.1.</span> <span class="nav-text">利用 python 实现 GMM 聚类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用-sklearn-实现-GMM-聚类"><span class="nav-number">4.2.</span> <span class="nav-text">利用 sklearn 实现 GMM 聚类</span></a></li></ol></li></ol></div>
             
 
           </div>

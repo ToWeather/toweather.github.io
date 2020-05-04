@@ -412,7 +412,7 @@
       
 
       
-        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 <h1 id="图模型综述"><a href="#图模型综述" class="headerlink" title="图模型综述"></a>图模型综述</h1><p>概率在信号处理领域中扮演着重要的角色，很多问题的建模都需要引入概率（如贝叶斯模型），因而很多问题的求解也表现为对一些概率分布的计算（如计算参数的后验概率）。再复杂的概率计算都是对以下两个规则的重复应用：贝叶斯公式（$ P(A, B) = P(A)P(B | A) $）和边缘概率求取公式（$ P(A) = \sum_{B} P(A, B) $ ）。但当问题变得复杂之后，涉及到的变量会变多、概率模型会变得复杂，因而寻找一种简便直观的分析概率分布的方法就变得重要起来。</p>
 <p>图模型（Graphical Models）就是一种用来刻画变量之间的概率依赖关系的方法，它由节点和边组成，节点代表的是各个随机变量，边则代表不同随机变量之间的关系。多变量的概率分布的一些局部特征可以很直观地在图模型中显示出来，同时复杂的概率运算也可以通过一些与图有关的操作来完成，因而我们可以借助图模型来设计新的模型以及推导出更高效的算法。</p>

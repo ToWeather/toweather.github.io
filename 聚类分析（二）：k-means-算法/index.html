@@ -412,7 +412,7 @@
       
 
       
-        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 <p><em>本篇文章为讲述聚类算法的第二篇文章，其它相关文章请参见 <a href="../clustering-analysis/index.html"><strong>聚类分析系列文章</strong></a></em>。</p>
 <h1 id="k-means-聚类算法"><a href="#k-means-聚类算法" class="headerlink" title="k-means 聚类算法"></a>k-means 聚类算法</h1><p>k-means 算法是一种经典的针对数值型样本的聚类算法。如前面的博文 <a href="../%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E5%B1%82%E6%AC%A1%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95/"><em>聚类分析（一）：层次聚类算法</em></a> 中所述，k-means 算法是一种基于中心点模型的聚类算法，它所产生的每一个 <code>cluster</code> 都维持一个中心点（为属于该 <code>cluster</code> 的所有样本点的均值，k-means 算法由此得名），每一个样本点被分配给距离其最近的中心点所对应的 <code>cluster</code>。在该算法中，<code>cluster</code> 的数目 $ K $ 需要事先指定。我们可以很清楚地看到，在以上聚类场景中，一个最佳的目标是找到 $ K $ 个中心点以及每个样本点的分配方法，使得每个样本点距其被分配的 <code>cluster</code> 所对应的中心点的平方 Euclidean 距离之和最小。而 k-means 算法正是为实现这个目标所提出。</p>
