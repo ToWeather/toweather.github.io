@@ -412,9 +412,7 @@
       
 
       
-        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-<p><em>本篇文章为讲述经典监督学习算法的第一篇文章，其它相关文章请参见 <a href="../classic-classifiers/index.html"><strong>经典监督学习算法系列文章</strong></a></em>。</p>
+        <p><em>本篇文章为讲述经典监督学习算法的第一篇文章，其它相关文章请参见 <a href="../classic-classifiers/index.html"><strong>经典监督学习算法系列文章</strong></a></em>。</p>
 <h1 id="线性回归模型"><a href="#线性回归模型" class="headerlink" title="线性回归模型"></a>线性回归模型</h1><p>一般来讲，监督学习问题可分为两类，一类是分类问题，另一类是回归问题。这两类问题的核心都是“根据一个输入数据预测出一个输出值”，只不过分类问题的输出值是离散、可数的，而回归问题的输出值是连续的。本文主要聚焦用于解决回归问题的一类最基本的模型——线性回归模型。</p>
 <p>最简单的线性回归模型就是将输出表示为输入数据各个特征的线性组合：</p>
 <script type="math/tex; mode=display">
@@ -562,8 +560,8 @@ p({\bf w} | {\bf x}) = {\cal N}({\bf w} | {\bf m}_{N}, {\bf S}_{N})
 \begin{align}
 {\bf m}_{N} &= {\bf S}_{N}({\bf S}_{0}^{-1} {\bf m}_{0} + \beta {\bf \Phi}^{\text T} {\bf t})  \tag{30} \\
 {\bf S}_{N}^{-1} &= {\bf S}_{0}^{-1} + \beta{\bf \Phi}^{\text T}{\bf \Phi} \tag{31}
-\end{align}</script><p>注意到，由于参数 $ {\bf w} $ 的后验概率为高斯分布，因而其最大值与其均值一致，所以对参数 $ {\bf w} $ 的最大后验概率估计即为 $ {\bf w}_{\text {MAP}} = {\bf m}_{N} $。当参数 $ {\bf w} $ 的先验分布不偏好于任意的取值时，即 $ {\ S}_{0} = \alpha^{-1} {\bf I} $ 且 $ \alpha \to 0 $，均值 $ {\bf m}_{N} $ 退化为最大似然估计值 $ {\bf w}_{\text {ML}} $ （或 $ {\bf w}_{\text {LS}} $）；当样本数量 $ N = 0 $ 时，参数 $ {\bf w} $ 的后验概率分布和其先验概率分布一致。另一个值得注意的地方是，当训练数据是序贯地到达时（在 online learning 中非常常见），每到达一份数据，我们都可以根据该数据计算出参数的后验概率分布，而这个后验概率分布又会被下一份数据当作该参数的先验概率分布，以此来估计新的后验概率分布。</p>
-<p>当取先验概率分布的参数 $ {\ m}_{0} = {\bf 0} $，$ {\bf S}_{0} = \alpha^{-1} {\bf I} $ 时，后验概率分布的参数变为</p>
+\end{align}</script><p>注意到，由于参数 $ {\bf w} $ 的后验概率为高斯分布，因而其最大值与其均值一致，所以对参数 $ {\bf w} $ 的最大后验概率估计即为 $ {\bf w}_{\text {MAP}} = {\bf m}_{N} $。当参数 $ {\bf w} $ 的先验分布不偏好于任意的取值时，即 $ { S}_{0} = \alpha^{-1} {\bf I} $ 且 $ \alpha \to 0 $，均值 $ {\bf m}_{N} $ 退化为最大似然估计值 $ {\bf w}_{\text {ML}} $ （或 $ {\bf w}_{\text {LS}} $）；当样本数量 $ N = 0 $ 时，参数 $ {\bf w} $ 的后验概率分布和其先验概率分布一致。另一个值得注意的地方是，当训练数据是序贯地到达时（在 online learning 中非常常见），每到达一份数据，我们都可以根据该数据计算出参数的后验概率分布，而这个后验概率分布又会被下一份数据当作该参数的先验概率分布，以此来估计新的后验概率分布。</p>
+<p>当取先验概率分布的参数 $ { m}_{0} = {\bf 0} $，$ {\bf S}_{0} = \alpha^{-1} {\bf I} $ 时，后验概率分布的参数变为</p>
 <script type="math/tex; mode=display">
 \begin{align}
 {\bf m}_{N} &= \beta {\bf S}_{N} {\bf \Phi}^{\text T}{\bf t}  \tag{32} \\
@@ -1430,7 +1428,7 @@ p(t|{\bf x}, {\bf t}, \alpha, \beta) &= \int p(t|{\bf x}, {\bf w}, \beta)p({\bf 
         }
       });
     </script>
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config("");
 </script>

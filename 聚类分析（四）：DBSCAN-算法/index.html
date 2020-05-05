@@ -412,9 +412,7 @@
       
 
       
-        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-<p><em>本篇文章为讲述聚类算法的第四篇文章，其它相关文章请参见 <a href="../clustering-analysis/index.html"><strong>聚类分析系列文章</strong></a></em>。</p>
+        <p><em>本篇文章为讲述聚类算法的第四篇文章，其它相关文章请参见 <a href="../clustering-analysis/index.html"><strong>聚类分析系列文章</strong></a></em>。</p>
 <h1 id="DBSCAN-算法"><a href="#DBSCAN-算法" class="headerlink" title="DBSCAN 算法"></a>DBSCAN 算法</h1><p>DBSCAN（Density-Based Spatial Clustering of Applications with Noise) 算法是一种被广泛使用的<strong>密度聚类算法</strong>。密度聚类算法认为各个 <code>cluster</code> 是样本点密度高的区域，而 <code>cluster</code> 之间是由样本点密度低的区域所隔开的；这种聚类的方式实际上是符合人们的直觉的，这也是以 DBSCAN 算法为代表的密度聚类算法在实际应用中通常表现的比较好的原因之一。</p>
 <p>要想描述清楚 DBSCAN 算法，我们得先定义好一些概念，例如何为密度高的区域、何为密度低的区域等等。</p>
 <h2 id="几个定义"><a href="#几个定义" class="headerlink" title="几个定义"></a>几个定义</h2><p>在密度聚类算法中，我们需要区分密度高的区域以及密度低的区域，并以此作为聚类的依据。DBSCAN 通过将样本点划分为三种类型来达到此目的：核心点（core points）、边缘点（border points）以及噪声点（noise），核心点和边缘点共同构成一个一个的 <code>cluster</code>，而噪声点则存在于各 <code>cluster</code> 之间的区域。为区分清楚这三类样本点，我们首先定义一些基本的概念。</p>
@@ -1324,7 +1322,7 @@
         }
       });
     </script>
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config("");
 </script>

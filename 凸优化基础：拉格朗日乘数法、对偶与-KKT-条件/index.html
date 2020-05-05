@@ -412,9 +412,7 @@
       
 
       
-        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-<h1 id="数学优化概述"><a href="#数学优化概述" class="headerlink" title="数学优化概述"></a>数学优化概述</h1><p>所谓数学优化，就是在给定约束的情况下对某个目标函数求最小值或最大值。信号处理领域和通信领域的很多问题，最终的求解形式都可以归结为数学优化问题。</p>
+        <h1 id="数学优化概述"><a href="#数学优化概述" class="headerlink" title="数学优化概述"></a>数学优化概述</h1><p>所谓数学优化，就是在给定约束的情况下对某个目标函数求最小值或最大值。信号处理领域和通信领域的很多问题，最终的求解形式都可以归结为数学优化问题。</p>
 <p>凸优化问题是数学优化问题的一个子类，该问题的目标函数是凸函数，且可行域是一个凸集。对于很多数学优化问题，科学界并没有一套通用且可行的解法，但对于解决凸优化问题，其理论和方法都已经很成熟了。因而现在对于非凸问题的解法通常都是先将原问题松弛至一个凸问题，然后再求解该凸问题。</p>
 <p>本文先讲述用于求解局部最优化问题的拉格朗日乘数法（Lagrange Multipliers）以及局部最优解需满足的 KKT 条件；然后再讲述对偶（duality）—— 一种将原优化问题简化的方法；最后再对凸优化问题、对偶、KKT 条件三者之间的关系做一个简单的讲解。</p>
 <p>在讲述前先对数学优化问题给出一个正式且通用的定义：</p>
@@ -435,7 +433,7 @@
 <p>这样，式（2）和式（3）构成了无约束局部最小化问题的解的充要条件。类似地，式（2）和 “Hessian 矩阵为负定矩阵”则是无约束局部最大化问题的解的充要条件，后面除非特殊说明，我们不再讨论求最大值或极大值的问题。</p>
 <h2 id="等式约束优化问题"><a href="#等式约束优化问题" class="headerlink" title="等式约束优化问题"></a>等式约束优化问题</h2><p>我们通过一个例子来说明等式约束优化问题的解法。</p>
 <blockquote>
-<p><strong> 问题 1:  </strong> 求解等式约束优化问题 $\min_{ {\bf x} \in {\Bbb R}^2 } f({\bf x}) \ \  {\text {s.t.} }  \ \   h({\bf x}) = 0$ ，其中  $ f({\bf x}) = x_1 + x_2 ,\ h({\bf x}) = x_{1}^2 + x_{2}^2 - 2 $。</p>
+<p><strong> 问题 1:  </strong> 求解等式约束优化问题 $\min_{ {\bf x} \in {\Bbb R}^2 } f({\bf x})    {\text {s.t.} }      h({\bf x}) = 0$ ，其中  $ f({\bf x}) = x_1 + x_2 , h({\bf x}) = x_{1}^2 + x_{2}^2 - 2 $。</p>
 </blockquote>
 <p>我们可以看到该例中的自变量 $ {\bf x} $ 为一个二维向量，$ x_1 $ 和 $x_2$ 分别是 ${\bf x} $ 的两个分量，这样的设定也非常利于我们作可视化的展示。</p>
 <p>我们可以在一个二维坐标系中画出目标函数  $ f({\bf x}) = x_1 + x_2$ 在给定函数值下的图像，变化函数值我们可以得出一组类似等高线的图像（如下图中蓝色曲线）；同时我们还可以画出由等式约束  $h({\bf x}) =  0 $ 所构成的可行域的图像（如下图中红色曲线）。</p>
@@ -488,7 +486,7 @@ f({\bf x}_{\text F} + \alpha \delta {\bf x}) \lt f({\bf x}_{\text F})
 <p>即式（10）～（12）是该等式约束局部优化问题有解的充要条件。注意到 ${\cal L}({\bf x}^{\ast}, \mu^{\ast}) = f({\bf x}^{\ast})$ ，式（10）等价于式（7）；式（11）强调了最优解一定满足等式约束条件；式（12）即为二阶正定性条件。</p>
 <h2 id="不等式约束优化问题"><a href="#不等式约束优化问题" class="headerlink" title="不等式约束优化问题"></a>不等式约束优化问题</h2><p>我们仍然通过一个例子来说明不等式约束优化问题的解法。</p>
 <blockquote>
-<p><strong>问题 2：</strong>求解不等式约束优化问题 $\min_{ {\bf x} \in {\Bbb R}^2 } f({\bf x}) \ \  {\text {s.t.} }  \ \   g({\bf x}) \leq 0$ ，其中  $f({\bf x}) = x_1^2 + x_2^2, \  \ g({\bf x}) = x_1^2 + x_2^2 - 1$.</p>
+<p><strong>问题 2：</strong>求解不等式约束优化问题 $\min_{ {\bf x} \in {\Bbb R}^2 } f({\bf x})    {\text {s.t.} }      g({\bf x}) \leq 0$ ，其中  $f({\bf x}) = x_1^2 + x_2^2,    g({\bf x}) = x_1^2 + x_2^2 - 1$.</p>
 </blockquote>
 <p>函数 $f({\bf x}) = x_1^2 + x_2^2$ 的等高线如下图所示。</p>
 <div align="center">
@@ -507,7 +505,7 @@ f({\bf x}_{\text F} + \alpha \delta {\bf x}) \lt f({\bf x}_{\text F})
 
 <p>再考虑无约束条件下优化问题的解落在可行域之外的情形，考虑如下例子。</p>
 <blockquote>
-<p><strong>问题 3：</strong>求解不等式约束优化问题 $\min_{ {\bf x} \in {\Bbb R}^2 } f({\bf x}) \ \  {\text {s.t.} }  \ \   g({\bf x}) \leq 0$ ，其中  $f({\bf x}) = (x_1 - 1.1)^2 + (x_2 - 1.1)^2$, $g({\bf x}) = x_1^2 + x_2^2 - 1$.</p>
+<p><strong>问题 3：</strong>求解不等式约束优化问题 $\min_{ {\bf x} \in {\Bbb R}^2 } f({\bf x})    {\text {s.t.} }      g({\bf x}) \leq 0$ ，其中  $f({\bf x}) = (x_1 - 1.1)^2 + (x_2 - 1.1)^2$, $g({\bf x}) = x_1^2 + x_2^2 - 1$.</p>
 </blockquote>
 <p>此时目标函数的等高线和可行域如下图所示，此时无约束优化问题的解落在可行域之外。我们可以推断，该情形下不等式约束优化问题的解必然在可行域的边界上，即此时问题退化为等式约束优化问题的求解。</p>
 <div align="center">
@@ -588,7 +586,7 @@ q({\bf \mu, \bf \lambda}) = \min_{\bf x} {\cal L}({\bf x}, {\bf \mu}, {\bf \lamb
 \max_{\mu, \lambda: \ \lambda_j \geq 0} q({\bf \mu}, {\bf \lambda}) = \max_{\mu, \lambda: \ \lambda_j \geq 0} \min_{\bf x} {\cal L}({\bf x}, {\bf \mu}, {\bf \lambda})
 \tag{32}</script><p>对偶问题（32）与主问题（30）相比交换了对不同变量的优化顺序。记 $q^{\ast} = \max_{\mu, \lambda: \lambda_j \geq 0} {\cal L}({\bf x}, \mu, \lambda)$ 为对偶问题的值。</p>
 <p>对偶问题有一些比较好的性质，使其相对来说比较容易求解。不管原始优化问题是否为凸问题，对偶函数 $q(\mu, \lambda)$ 都是一个凹函数，因而对偶问题是一个凸问题，可以简单证明如下。</p>
-<p>为表述方便，$\beta = (\mu_1, \cdots, \mu_l, \lambda_1, \cdots, \lambda_m)$，对偶函数的定义域为 $D_q = \lbrace \beta \ | \ q(\beta) &gt; -\infty \rbrace$，则对任意 ${\bf x} \in {\Bbb R}^n$， $\beta_a,\beta_b \in D_q$ 以及 $\alpha \in (0, 1)$，有</p>
+<p>为表述方便，$\beta = (\mu_1, \cdots, \mu_l, \lambda_1, \cdots, \lambda_m)$，对偶函数的定义域为 $D_q = \lbrace \beta  |  q(\beta) &gt; -\infty \rbrace$，则对任意 ${\bf x} \in {\Bbb R}^n$， $\beta_a,\beta_b \in D_q$ 以及 $\alpha \in (0, 1)$，有</p>
 <script type="math/tex; mode=display">
 \begin{align}
 {\cal L}({\bf x}, \alpha\beta_a + (1 - \alpha)\beta_b) &= f({\bf x}) + (\alpha\mu_a + (1-\alpha)\mu_b)^t h({\bf x}) + (\alpha\lambda_a + (1 - \alpha)\lambda_b)^t g({\bf x}) \\
@@ -605,7 +603,7 @@ q({\bf \mu, \bf \lambda}) = \min_{\bf x} {\cal L}({\bf x}, {\bf \mu}, {\bf \lamb
 <p>引入对偶问题的目的就是想通过它来求解主问题，但二者并不一定等价，后面我们会讨论对偶问题与主问题之间的关系（弱对偶定理），以及满足什么条件的情况下二者等价（强对偶定理）。在此之前，我们先来看一下对偶问题的几何阐释，以便我们对问题本质认识得更加深刻。</p>
 <h2 id="对偶问题的几何阐释"><a href="#对偶问题的几何阐释" class="headerlink" title="对偶问题的几何阐释"></a>对偶问题的几何阐释</h2><p>我们还是通过例子来阐释对偶问题。</p>
 <blockquote>
-<p><strong>问题 4：</strong>求解以下不等式约束优化问题 $\min_{ {\bf x} \in {\Bbb R}^2} f({\bf x}) \ \ \text {s.t.} \ \ g({\bf x}) \leq 0$，其中 $ f({\bf x}) = 0.4(x_1^2 + x_2^2)$，$g({\bf  x}) = 2 - x_1 - x_2$.</p>
+<p><strong>问题 4：</strong>求解以下不等式约束优化问题 $\min_{ {\bf x} \in {\Bbb R}^2} f({\bf x})   \text {s.t.}   g({\bf x}) \leq 0$，其中 $ f({\bf x}) = 0.4(x_1^2 + x_2^2)$，$g({\bf  x}) = 2 - x_1 - x_2$.</p>
 </blockquote>
 <p>函数 $f({\bf x})$ 的等高线和由不等式约束 $g({\bf x}) \leq 0$ 所决定的可行域如下图所示。</p>
 <div align="center">
@@ -668,7 +666,7 @@ p^{\ast} = \min_{\bf x} p({\bf x}) \geq \max_{\mu, \lambda: \lambda_j \geq 0} q(
 <p>可以看到这个问题中，主问题的最优值和对偶问题的最优值并不一致，两者之间存在对偶差。</p>
 <p>那么在什么情形下，主问题的解与对偶问题的解一致呢？以下的强对偶定理给出回答。</p>
 <h2 id="强对偶定理"><a href="#强对偶定理" class="headerlink" title="强对偶定理"></a>强对偶定理</h2><blockquote>
-<p><strong>定理 5：</strong> 对于一般优化问题（1），若 $f({\bf x})$ 和 $g_j({\bf x}), \ j = 1,\cdots,m$ 均为凸函数，且 $h_i({\bf x}), \ i = 1,\cdots,l$ 均为仿射函数，且约束 $g_j({\bf x}) \leq 0$ 是严格可行的，则存在 ${\bf x}^{\ast}$，${\mu}^{\ast}$，${\lambda}^{\ast}$ ，使得 ${\bf x}^{\ast}$ 是主问题（30）的解，$(\mu^{\ast}, \lambda^{\ast})$ 是对偶问题（32）的解，有</p>
+<p><strong>定理 5：</strong> 对于一般优化问题（1），若 $f({\bf x})$ 和 $g_j({\bf x}),  j = 1,\cdots,m$ 均为凸函数，且 $h_i({\bf x}),  i = 1,\cdots,l$ 均为仿射函数，且约束 $g_j({\bf x}) \leq 0$ 是严格可行的，则存在 ${\bf x}^{\ast}$，${\mu}^{\ast}$，${\lambda}^{\ast}$ ，使得 ${\bf x}^{\ast}$ 是主问题（30）的解，$(\mu^{\ast}, \lambda^{\ast})$ 是对偶问题（32）的解，有</p>
 <script type="math/tex; mode=display">
 p^{\ast} = q^{\ast} = {\cal L}({\bf x}^{\ast}, \mu^{\ast}, \lambda^{\ast})
 \tag{41}</script></blockquote>
@@ -1520,7 +1518,7 @@ p^{\ast} = q^{\ast} = {\cal L}({\bf x}^{\ast}, \mu^{\ast}, \lambda^{\ast})
         }
       });
     </script>
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config("");
 </script>
